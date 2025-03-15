@@ -24,9 +24,9 @@
 
 ## CÔNG NGHỆ SỬ DỤNG
 
--    **Backend:** 
+-    **Backend:** [PHP](https://www.php.net/), [NodeJS](https://nodejs.org/en)
 -    **Frontend:** [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), [JavaScript](https://www.javascript.com/), [Figma](https://www.figma.com/community)
--    **Database:** [MySQL](https://www.mysql.com/)
+-    **Database:** [MySQL](https://www.mysql.com/), [PostgreSQL](https://www.postgresql.org/)
 
 ## THÀNH VIÊN NHÓM
 
