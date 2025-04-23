@@ -38,3 +38,7 @@
 | 4   | 23520403 | Cao Nguyễn Kỳ Dỹ     | https://github.com/DWY4X            | 23520403@gm.uit.edu.vn  |
 | 5   | 23520534 | Nguyễn Triệu Hoàng   | https://github.com/hoangdeptrai1010 | 23520534@gm.uit.edu.vn  |
 | 6   | 23520660 | Lưu Lê Ngọc Huyền    | https://github.com/llnhuyen         | 23520660@gm.uit.edu.vn  |
+
+
+## GIAO DIỆN
+-   **Link:** [Figma](https://www.figma.com/design/incT5SSdbOWXhxuuGioBsx/Untitled?node-id=0-1&p=f&t=wQqMVH9YtCWGE9EN-0)
