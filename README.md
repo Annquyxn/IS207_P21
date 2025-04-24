@@ -24,8 +24,8 @@
 
 ## CÔNG NGHỆ SỬ DỤNG
 
--    **Backend:** [PHP](https://www.php.net/), [NodeJS](https://nodejs.org/en)
--    **Frontend:** [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), [JavaScript](https://www.javascript.com/), [Figma](https://www.figma.com/community)
+-    **Backend:** [PHP](https://www.php.net/), [NodeJS](https://nodejs.org/en), [Python](https://www.python.org/)(Optional)
+-    **Frontend:** [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), [JavaScript](https://www.javascript.com/), [Figma](https://www.figma.com/community), [Vite](https://vite.dev/)
 -    **Database:** [Supabase](https://supabase.com/)
 
 ## THÀNH VIÊN NHÓM
