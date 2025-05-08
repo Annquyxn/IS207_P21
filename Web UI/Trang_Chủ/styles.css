@@ -1,0 +1,768 @@
+
+.homepage {
+    background-color: rgba(255, 255, 255, 1);
+    display: flex;
+    padding-bottom: 530px;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: stretch;
+  }
+  
+  @media (max-width: 991px) {
+    .homepage {
+      padding-bottom: 100px;
+    }
+  }
+  
+  /* Header styles */
+  .header-red {
+    background-color: rgba(234, 26, 26, 1);
+    display: flex;
+    width: 100%;
+    padding: 21px 70px;
+    align-items: stretch;
+    gap: 40px 44px;
+    flex-wrap: wrap;
+  }
+  
+  @media (max-width: 991px) {
+    .header-red {
+      max-width: 100%;
+      padding: 21px 20px;
+    }
+  }
+  
+  .header-left {
+    align-self: start;
+    display: flex;
+    margin-top: 10px;
+    align-items: start;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+  }
+  
+  @media (max-width: 991px) {
+    .header-left {
+      max-width: 100%;
+    }
+  }
+  
+  .category-nav {
+    font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    text-align: right;
+  }
+  
+  .category-container {
+    background-color: rgba(234, 26, 26, 1);
+    display: flex;
+    padding: 5px 8px 12px 25px;
+    align-items: stretch;
+    gap: 4px;
+  }
+  
+  @media (max-width: 991px) {
+    .category-container {
+      padding-left: 20px;
+    }
+  }
+  
+  .category-text {
+    flex-grow: 1;
+  }
+  
+  .category-icon {
+    aspect-ratio: 1.83;
+    object-fit: contain;
+    object-position: center;
+    width: 11px;
+    margin-top: auto;
+    margin-bottom: auto;
+    flex-shrink: 0;
+  }
+  
+  .search-container {
+    display: flex;
+    padding: 1px 0;
+    flex-direction: column;
+    align-items: stretch;
+    font-family: "Kdam Thmor", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 17px;
+    color: rgba(140, 121, 121, 1);
+    font-weight: 400;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 0;
+    width: fit-content;
+  }
+  
+  @media (max-width: 991px) {
+    .search-container {
+      max-width: 100%;
+    }
+  }
+  
+  .search-input {
+    align-self: stretch;
+    width: 450px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 1);
+    min-height: 35px;
+    padding: 3px 10px 10px;
+    gap: 10px;
+  }
+  
+  @media (max-width: 991px) {
+    .search-input {
+      max-width: 100%;
+    }
+  }
+  
+  .search-icon {
+    aspect-ratio: 1.97;
+    object-fit: contain;
+    object-position: center;
+    width: 61px;
+    border-radius: 20px;
+    align-self: end;
+    z-index: 10;
+    margin-top: -33px;
+  }
+  
+  @media (max-width: 991px) {
+    .search-icon {
+      margin-right: 3px;
+    }
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 21px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+  }
+  
+  .phone-number {
+    background-color: rgba(234, 26, 26, 1);
+    align-self: start;
+    display: flex;
+    margin-top: 8px;
+    flex-direction: column;
+    align-items: stretch;
+    font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    white-space: nowrap;
+    justify-content: start;
+  }
+  
+  @media (max-width: 991px) {
+    .phone-number {
+      white-space: initial;
+    }
+  }
+  
+  .phone-icon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 22px;
+    align-self: center;
+  }
+  
+  .location-container {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    position: relative;
+    aspect-ratio: 1.026;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 40px;
+    padding-bottom: 13px;
+  }
+  
+  .location-icon {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .location-button {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    height: 26px;
+    gap: 10px;
+  }
+  
+  .notification-icon {
+    aspect-ratio: 1.18;
+    object-fit: contain;
+    object-position: center;
+    width: 46px;
+    align-self: stretch;
+    margin-top: auto;
+    margin-bottom: auto;
+    flex-shrink: 0;
+  }
+  
+  .cart-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-self: stretch;
+    aspect-ratio: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 39px;
+    padding-top: 26px;
+    font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+  }
+  
+  .cart-icon {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .login-section {
+    align-self: stretch;
+    font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+  }
+  
+  .login-button {
+    border-radius: 20px;
+    background-color: rgba(245, 103, 88, 1);
+    display: flex;
+    padding: 10px 9px;
+    align-items: stretch;
+    gap: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .login-icon {
+    aspect-ratio: 0.79;
+    object-fit: contain;
+    object-position: center;
+    width: 22px;
+    flex-shrink: 0;
+  }
+  
+  .login-text {
+    align-self: start;
+    color: rgba(255, 255, 255, 1);
+    font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  /* Main content styles */
+  .main-content {
+    align-self: center;
+    margin-top: 26px;
+    width: 100%;
+    max-width: 1382px;
+  }
+  
+  @media (max-width: 991px) {
+    .main-content {
+      max-width: 100%;
+    }
+  }
+  
+  .content-container {
+    gap: 20px;
+    display: flex;
+  }
+  
+  @media (max-width: 991px) {
+    .content-container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0px;
+    }
+  }
+  
+  /* Left column styles */
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 21%;
+    margin-left: 0px;
+  }
+  
+  @media (max-width: 991px) {
+    .left-column {
+      width: 100%;
+    }
+  }
+  
+  .product-section {
+    flex-grow: 1;
+    font-weight: 400;
+  }
+  
+  @media (max-width: 991px) {
+    .product-section {
+      margin-top: 31px;
+    }
+  }
+  
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    position: relative;
+    width: 100%;
+  }
+  
+  .mouse-card {
+    aspect-ratio: 1.556;
+    padding: 14px 56px 14px 17px;
+    align-items: start;
+    color: rgba(0, 0, 0, 1);
+  }
+  
+  @media (max-width: 991px) {
+    .mouse-card {
+      padding-right: 20px;
+    }
+  }
+  
+  .product-image {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .product-title {
+    position: relative;
+    font-size: 24px;
+    font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .league-spartan {
+    font-family: "League Spartan", -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  
+  .discount-text {
+    position: relative;
+    font-size: 22px;
+    font-family: Lalezar, -apple-system, Roboto, Helvetica, sans-serif;
+    margin-top: 6px;
+    margin: 6px 0 0 0;
+  }
+  
+  .discount-small {
+    font-size: 20px;
+  }
+  
+  .discount-large {
+    font-size: 26px;
+  }
+  
+  .add-to-cart-btn {
+    position: relative;
+    align-self: stretch;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 1);
+    border: 1px solid rgba(0, 0, 0, 1);
+    min-height: 20px;
+    padding: 1px 10px;
+    gap: 10px;
+    font-family: "League Gothic", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 1);
+    cursor: pointer;
+  }
+  
+  .mouse-card .add-to-cart-btn {
+    margin-top: 84px;
+  }
+  
+  @media (max-width: 991px) {
+    .mouse-card .add-to-cart-btn {
+      margin-top: 40px;
+    }
+  }
+  
+  .new-model-card {
+    aspect-ratio: 1.556;
+    margin-top: 18px;
+    padding: 43px 56px 14px 21px;
+    align-items: start;
+  }
+  
+  @media (max-width: 991px) {
+    .new-model-card {
+      padding: 43px 20px 14px 20px;
+    }
+  }
+  
+  .new-model-text {
+    position: relative;
+    color: rgba(0, 0, 0, 1);
+    font-size: 20px;
+    font-family: Lalezar, -apple-system, Roboto, Helvetica, sans-serif;
+    margin: 0;
+  }
+  
+  .new-model-card .add-to-cart-btn {
+    margin-top: 87px;
+  }
+  
+  @media (max-width: 991px) {
+    .new-model-card .add-to-cart-btn {
+      margin-top: 40px;
+    }
+  }
+  
+  /* Center column styles */
+  .center-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 58%;
+    margin-left: 20px;
+  }
+  
+  @media (max-width: 991px) {
+    .center-column {
+      width: 100%;
+    }
+  }
+  
+  .slider-section {
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 991px) {
+    .slider-section {
+      max-width: 100%;
+      margin-top: 31px;
+    }
+  }
+  
+  .banner-background {
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 1);
+    border: 2px solid rgba(0, 0, 0, 1);
+    display: flex;
+    width: 100%;
+    padding: 32px 18px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  @media (max-width: 991px) {
+    .banner-background {
+      max-width: 100%;
+    }
+  }
+  
+  .banner-title {
+    color: rgba(0, 0, 0, 1);
+    font-size: 60px;
+    font-family: "Kumar One", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 400;
+    align-self: center;
+    margin: 0;
+  }
+  
+  @media (max-width: 991px) {
+    .banner-title {
+      max-width: 100%;
+      font-size: 40px;
+    }
+  }
+  
+  .banner-description {
+    color: rgba(0, 0, 0, 1);
+    font-size: 40px;
+    font-family: Lato, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 400;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 1);
+    align-self: center;
+    margin: 21px 0 0 0;
+  }
+  
+  .arrow-container {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  @media (max-width: 991px) {
+    .arrow-container {
+      max-width: 100%;
+    }
+  }
+  
+  .arrow-left {
+    aspect-ratio: 0.62;
+    object-fit: contain;
+    object-position: center;
+    width: 13px;
+    flex-shrink: 0;
+  }
+  
+  .arrow-right {
+    aspect-ratio: 0.62;
+    object-fit: contain;
+    object-position: center;
+    width: 13px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  
+  .banner-button {
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 1);
+    align-self: end;
+    display: flex;
+    margin-top: 96px;
+    min-height: 40px;
+    padding: 5px 10px;
+    align-items: center;
+    gap: 10px;
+    font-family: "League Gothic", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 26px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 400;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 991px) {
+    .banner-button {
+      margin-right: 10px;
+      margin-top: 40px;
+    }
+  }
+  
+  .buy-text {
+    align-self: stretch;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  
+  .arrow-icon {
+    aspect-ratio: 0.8;
+    object-fit: contain;
+    object-position: center;
+    width: 12px;
+    align-self: stretch;
+    margin-top: auto;
+    margin-bottom: auto;
+    flex-shrink: 0;
+  }
+  
+  /* Right column styles */
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 21%;
+    margin-left: 20px;
+  }
+  
+  @media (max-width: 991px) {
+    .right-column {
+      width: 100%;
+    }
+  }
+  
+  .product-section-right {
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 991px) {
+    .product-section-right {
+      margin-top: 31px;
+    }
+  }
+  
+  .combo-card {
+    aspect-ratio: 1.556;
+    padding: 13px 0;
+    align-items: stretch;
+  }
+  
+  .product-details {
+    position: relative;
+    display: flex;
+    width: 100%;
+    padding: 0 17px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  @media (max-width: 991px) {
+    .product-details {
+      padding-right: 20px;
+    }
+  }
+  
+  .combo-title {
+    color: rgba(0, 0, 0, 1);
+    font-size: 23px;
+    font-family: "League Spartan", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .price-container {
+    align-self: start;
+    display: flex;
+    align-items: stretch;
+    gap: 31px;
+    margin: 0;
+  }
+  
+  @media (max-width: 991px) {
+    .price-container {
+      margin-left: 4px;
+    }
+  }
+  
+  .current-price {
+    color: rgba(0, 0, 0, 1);
+    font-size: 18px;
+    font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .underline {
+    text-decoration: underline;
+  }
+  
+  .original-price {
+    color: rgba(93, 90, 90, 1);
+    font-size: 15px;
+    font-family: "Sans Serif Collection", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 400;
+    text-decoration: line-through;
+    align-self: start;
+    margin: 0;
+  }
+  
+  .rating-icon {
+    aspect-ratio: 1.05;
+    object-fit: contain;
+    object-position: center;
+    width: 22px;
+    align-self: center;
+    margin-top: 26px;
+    margin-left: 10px;
+  }
+  
+  .combo-btn {
+    position: relative;
+    align-self: start;
+    margin-top: 39px;
+  }
+  
+  .keyboard-card {
+    aspect-ratio: 1.556;
+    margin-top: 18px;
+    padding: 15px 56px 15px 6px;
+    align-items: start;
+  }
+  
+  @media (max-width: 991px) {
+    .keyboard-card {
+      padding-right: 20px;
+    }
+  }
+  
+  .keyboard-details {
+    position: relative;
+    display: flex;
+    margin-left: 11px;
+    align-items: stretch;
+    gap: 13px;
+  }
+  
+  @media (max-width: 991px) {
+    .keyboard-details {
+      margin-left: 10px;
+    }
+  }
+  
+  .keyboard-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    color: rgba(0, 0, 0, 1);
+    font-weight: 700;
+  }
+  
+  .keyboard-title {
+    font-size: 26px;
+    font-family: "League Spartan", -apple-system, Roboto, Helvetica, sans-serif;
+    margin: 0;
+  }
+  
+  .keyboard-price {
+    font-size: 18px;
+    font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+    text-decoration: underline;
+    align-self: start;
+    margin: 0;
+  }
+  
+  .keyboard-original-price {
+    color: rgba(93, 90, 90, 1);
+    font-size: 15px;
+    font-family: "Sans Serif Collection", -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 400;
+    text-decoration: line-through;
+    margin: auto 0;
+  }
+  
+  .keyboard-btn {
+    position: relative;
+    margin-top: 89px;
+  }
+  
+  @media (max-width: 991px) {
+    .keyboard-btn {
+      margin-top: 40px;
+    }
+}

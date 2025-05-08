@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng</title>
+  <link rel="stylesheet" href="shopping-cart.css">
+</head>
+<body>
+  <div class="shopping-cart-container">
+    <header class="main-header">
+      <div class="category-button">
+        <span>Danh mục</span>
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/28b277d4b77e87150510d5ac6c46173d7bd6aa79?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Category icon" class="category-icon">
+      </div>
+      <div class="search-container">
+        <span class="search-text">Tìm kiếm</span>
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ff6162ba5aa565647ed7029c90399c925ea52880?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Search icon" class="search-icon">
+      </div>
+      <div class="header-actions">
+        <div class="contact-phone">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/64ae7751c39033a50e3c533639d4f70eec02c685?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Phone icon" class="phone-icon">
+          <span>0975.154.400</span>
+        </div>
+        <div class="location-button">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/cc9405ae3e3dd33e1e31d8e8ca57391a36885828?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Location icon" class="location-icon">
+          <div class="address-button"></div>
+        </div>
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5801d43496c7be41300733728d4ec8d31944e920?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Notification icon" class="notification-icon">
+        <div class="cart-button">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/799a07f8eb904ea5524c7d8a85f09d305edec287?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Cart icon" class="cart-icon">
+          Giỏ hàng
+        </div>
+        <div class="login-container">
+          <div class="login-button">
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/42b3f560f3bf214010f5bba92a478afe9e65d26c?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="User icon" class="user-icon">
+            <span class="login-text">
+              Đăng nhập
+              <br>
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="cart-header">
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4fa656dcfcececcbafad6da3abad740584facdb8?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Cart icon" class="cart-header-icon">
+        <h1 class="cart-title">Giỏ hàng của bạn</h1>
+        <span class="product-count">(1 sản phẩm)</span>
+      </section>
+
+      <section class="checkout-progress">
+        <div class="progress-container">
+          <div class="progress-column-left">
+            <div class="cart-step active">
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ab686859383ff28a3b29a543afda99e3fec898d?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Cart icon" class="step-icon">
+              <span>Giỏ hàng</span>
+            </div>
+          </div>
+          <div class="progress-column-right">
+            <div class="progress-steps">
+              <div class="progress-line"></div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1116706d7c9b4fa6a3ad64088872aa2aad9ae303?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Information icon" class="step-icon">
+              <div class="progress-line"></div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/21477d1d6922d49ad681b2ce9533ad04b4b15e53?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Payment icon" class="step-icon">
+              <div class="progress-line"></div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5412af594b903a41ac5c413f11b351f729163dd4?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Complete icon" class="step-icon">
+            </div>
+            <div class="progress-labels">
+              <span>Thông tin</span>
+              <span>Thanh toán</span>
+              <span>Hoàn tất</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cart-content">
+        <div class="cart-item">
+          <div class="select-checkbox"></div>
+          <div class="product-image-container">
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5254c38de38cdba0e9f66847cff3e84107196ee0?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Product image" class="product-image">
+            <div class="delete-button">
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/080375b0617d11f5d2d7f5c3323902179fc920cb?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Delete icon" class="delete-icon">
+              <span>Xóa</span>
+            </div>
+          </div>
+          <div class="product-details">
+            <div class="product-info">
+              <div class="product-info-column">
+                <h2 class="product-name">
+                  Laptop Acer Aspire 5 A515-58P-774R (NX.KHJSV.005) (i7-1355U/ Onboard/ 16GB/ 512GB/ Windows 11)
+                </h2>
+              </div>
+              <div class="price-column">
+                <div class="price-container">
+                  <p class="current-price">
+                    <span class="price-value">12.000.000</span>
+                    <span class="price-currency">đ</span>
+                  </p>
+                  <p class="original-price">15.000.000đ</p>
+                </div>
+              </div>
+            </div>
+            <div class="quantity-selector">
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4aa6b73eb1753c95cac67b65cf1717499a268235?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Decrease quantity" class="quantity-button">
+              <div class="quantity-display">
+                <span class="quantity-value">1</span>
+              </div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9b9f7c5b5100fc18cfe6c003f071145d4a6a9347?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Increase quantity" class="quantity-button">
+            </div>
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="summary-container">
+            <div class="summary-left">
+              <div class="summary-details">
+                <h3 class="total-label">Tổng tiền</h3>
+                <div class="voucher-container">
+                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ef001755c8048b2d95fd2d55b6512a813ea37410?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Voucher icon" class="voucher-icon">
+                  <span class="voucher-text">
+                    Voucher giảm giá
+                    <br>
+                  </span>
+                </div>
+                <button class="order-button">Đặt hàng</button>
+              </div>
+            </div>
+            <div class="summary-right">
+              <p class="total-price">
+                <span class="price-value">12.000.000</span>
+                <span class="price-currency">đ</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="featured-products">
+        <h2 class="featured-title">Sản phẩm nổi bật</h2>
+        <div class="featured-row-1">
+          <div class="featured-container">
+            <div class="featured-column">
+              <div class="featured-product"></div>
+            </div>
+            <div class="featured-column">
+              <div class="featured-product"></div>
+            </div>
+          </div>
+        </div>
+        <div class="featured-row-2">
+          <div class="featured-container">
+            <div class="featured-column">
+              <div class="featured-product"></div>
+            </div>
+            <div class="featured-column">
+              <div class="featured-product"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-links">
+          <div class="footer-column">
+            <h3 class="footer-heading">VỀ CHÚNG TÔI</h3>
+            <a href="#" class="footer-link">Giới thiệu</a>
+            <a href="#" class="footer-link">Tuyển dụng</a>
+            <a href="#" class="footer-link">Liên hệ</a>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-heading">CHÍNH SÁCH</h3>
+            <a href="#" class="footer-link">Chính sách bảo hành</a>
+            <a href="#" class="footer-link">Chính sách giao hàng</a>
+            <a href="#" class="footer-link">Chính sách bảo mật</a>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-heading">THÔNG TIN</h3>
+            <a href="#" class="footer-link">Hệ thống cửa hàng</a>
+            <a href="#" class="footer-link">Hướng dẫn mua hàng</a>
+            <a href="#" class="footer-link">Hướng dẫn thanh toán</a>
+            <a href="#" class="footer-link">Hướng dẫn trả góp</a>
+            <a href="#" class="footer-link">Tra cứu địa chỉ bảo hành</a>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-heading">TỔNG ĐÀI HỖ TRỢ (8:00 - 21:00)</h3>
+            <p class="footer-text">Mua hàng:</p>
+            <p class="footer-text">Bảo hành:</p>
+            <p class="footer-text">Khiếu nại:</p>
+            <p class="footer-text">Email:</p>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-heading">ĐƠN VỊ VẬN CHUYỂN</h3>
+            <h3 class="footer-heading payment-heading">CÁCH THỨC THANH TOÁN</h3>
+          </div>
+        </div>
+        <div class="social-links">
+          <h3 class="social-heading">KẾT NỐI VỚI CHÚNG TÔI</h3>
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d612a1152faa78d2d6f17f06f23dddb2968b08e6?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Facebook" class="social-icon">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/6923c7c9df177d3512c7250291bff9f710047697?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Instagram" class="social-icon">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bb1fe42fb7460eb311aa19a40e15f06778e7c63?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Youtube" class="social-icon">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8ab33d3644e6e95774d3aedae3fbce62de27d79?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Tiktok" class="social-icon">
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

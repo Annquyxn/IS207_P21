@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng</title>
+  <link rel="stylesheet" href="cart.css">
+</head>
+<body>
+  <main class="shopping-cart">
+    <header class="red-header">
+      <nav class="category-nav">
+        <button class="category-button">
+          <span>Danh mục</span>
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/28b277d4b77e87150510d5ac6c46173d7bd6aa79?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Category icon" class="category-icon" />
+        </button>
+      </nav>
+      <div class="search-container">
+        <div class="search-input">Tìm kiếm</div>
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ff6162ba5aa565647ed7029c90399c925ea52880?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Search icon" class="search-icon" />
+      </div>
+      <div class="header-actions">
+        <div class="phone-contact">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/64ae7751c39033a50e3c533639d4f70eec02c685?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Phone icon" class="phone-icon" />
+          <span>0975.154.400</span>
+        </div>
+        <div class="location-wrapper">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/cc9405ae3e3dd33e1e31d8e8ca57391a36885828?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Location icon" class="location-icon" />
+          <button class="location-button"></button>
+        </div>
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5801d43496c7be41300733728d4ec8d31944e920?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Notification icon" class="notification-icon" />
+        <div class="cart-icon-wrapper">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/799a07f8eb904ea5524c7d8a85f09d305edec287?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Cart icon" class="cart-icon" />
+          Giỏ hàng
+        </div>
+        <div class="login-section">
+          <button class="login-button">
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/42b3f560f3bf214010f5bba92a478afe9e65d26c?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="User icon" class="user-icon" />
+            <span class="login-text">
+              Đăng nhập
+              <br />
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="cart-content">
+      <header class="cart-header">
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4fa656dcfcececcbafad6da3abad740584facdb8?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Cart icon" class="cart-header-icon" />
+        <h1 class="cart-title">Giỏ hàng của bạn</h1>
+        <span class="product-count">(0 sản phẩm)</span>
+      </header>
+
+      <div class="checkout-progress">
+        <div class="progress-container">
+          <div class="progress-column">
+            <div class="progress-step active">
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ab686859383ff28a3b29a543afda99e3fec898d?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Cart icon" class="step-icon" />
+              <span>Giỏ hàng</span>
+            </div>
+          </div>
+          <div class="progress-steps-column">
+            <div class="progress-line-container">
+              <div class="progress-line"></div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1116706d7c9b4fa6a3ad64088872aa2aad9ae303?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Information icon" class="step-icon" />
+              <div class="progress-line"></div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/21477d1d6922d49ad681b2ce9533ad04b4b15e53?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Payment icon" class="step-icon" />
+              <div class="progress-line"></div>
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5412af594b903a41ac5c413f11b351f729163dd4?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Complete icon" class="step-icon" />
+            </div>
+            <div class="progress-labels">
+              <span>Thông tin</span>
+              <span>Thanh toán</span>
+              <span>Hoàn tất</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-cart-container">
+        <div class="empty-cart-content">
+          <p class="empty-cart-message">Giỏ hàng của bạn đang trống!</p>
+          <a href="#" class="shop-now-button">
+            <span class="shop-now-text">Mua hàng</span>
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/555689edaf8a57198f5a752624623d3a945e5882?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Arrow icon" class="arrow-icon" />
+          </a>
+        </div>
+      </div>
+
+      <h2 class="featured-products-title">Sản phẩm nổi bật</h2>
+
+      <section class="featured-products-row">
+        <div class="products-container">
+          <div class="product-column large">
+            <article class="product-card"></article>
+          </div>
+          <div class="product-column small">
+            <article class="product-card"></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="featured-products-row">
+        <div class="products-container equal">
+          <div class="product-column">
+            <article class="product-card"></article>
+          </div>
+          <div class="product-column">
+            <article class="product-card"></article>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-columns">
+          <section class="footer-column">
+            <h3 class="footer-heading">VỀ CHÚNG TÔI</h3>
+            <nav class="footer-links">
+              <a href="#" class="footer-link">Giới thiệu</a>
+              <a href="#" class="footer-link">Tuyển dụng</a>
+              <a href="#" class="footer-link">Liên hệ</a>
+            </nav>
+          </section>
+
+          <section class="footer-column">
+            <h3 class="footer-heading">CHÍNH SÁCH</h3>
+            <nav class="footer-links">
+              <a href="#" class="footer-link">Chính sách bảo hành</a>
+              <a href="#" class="footer-link">Chính sách giao hàng</a>
+              <a href="#" class="footer-link">Chính sách bảo mật</a>
+            </nav>
+          </section>
+
+          <section class="footer-column">
+            <h3 class="footer-heading">THÔNG TIN</h3>
+            <nav class="footer-links">
+              <a href="#" class="footer-link">Hệ thống cửa hàng</a>
+              <a href="#" class="footer-link">Hướng dẫn mua hàng</a>
+              <a href="#" class="footer-link">Hướng dẫn thanh toán</a>
+              <a href="#" class="footer-link">Hướng dẫn trả góp</a>
+              <a href="#" class="footer-link">Tra cứu địa chỉ bảo hành</a>
+            </nav>
+          </section>
+
+          <section class="footer-column">
+            <h3 class="footer-heading">TỔNG ĐÀI HỖ TRỢ (8:00 - 21:00)</h3>
+            <div class="footer-links">
+              <p class="footer-text">Mua hàng:</p>
+              <p class="footer-text">Bảo hành:</p>
+              <p class="footer-text">Khiếu nại:</p>
+              <p class="footer-text">Email:</p>
+            </div>
+          </section>
+
+          <section class="footer-column">
+            <h3 class="footer-heading">ĐƠN VỊ VẬN CHUYỂN</h3>
+            <h3 class="footer-heading payment-heading">CÁCH THỨC THANH TOÁN</h3>
+          </section>
+        </div>
+
+        <div class="social-connect">
+          <h3 class="social-heading">KẾT NỐI VỚI CHÚNG TÔI</h3>
+          <div class="social-icons">
+            <a href="#"><img src="https://cdn.builder.io/api/v1/image/assets/TEMP/75bfcbf0685d5164008fb1c27c217ced5ef22364?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Facebook" class="social-icon" /></a>
+            <a href="#"><img src="https://cdn.builder.io/api/v1/image/assets/TEMP/6923c7c9df177d3512c7250291bff9f710047697?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Twitter" class="social-icon" /></a>
+            <a href="#"><img src="https://cdn.builder.io/api/v1/image/assets/TEMP/73b5993fb29d875a25fd75a51c21a412c0101bf7?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="Instagram" class="social-icon" /></a>
+            <a href="#"><img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4ddfd39a93aa3dac1fd4d5fa85c383b192b42cc2?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" alt="YouTube" class="social-icon" /></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
