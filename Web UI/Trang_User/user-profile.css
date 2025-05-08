@@ -1,0 +1,775 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.user-profile {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+/* Phần tìm kiếm */
+.search-container {
+  flex: 1;
+  max-width: 450px;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 45px 10px 15px; /* Tạo khoảng trống cho icon */
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  height: 35px;
+  background: #fff;
+}
+
+.search-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Header styles */
+.red-header {
+  background-color: #ea1a1a;
+  display: flex;
+  justify-content: center; /* Thay space-between bằng center */
+  padding: 21px 70px;
+  width: 100%;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between; /* Giữ nguyên */
+  align-items: center;
+  width: 100%;
+  max-width: 1440px; /* Thêm max-width để giới hạn nội dung */
+  margin: 0 auto; /* Căn giữa khối nội dung */
+}
+
+.category-search {
+  display: flex;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: "Kdam Thmor", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 17px;
+  color: #8c7979;
+  font-weight: 400;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+  width: fit-content;
+}
+
+.category-dropdown {
+  background-color: #ea1a1a;
+  display: flex;
+  padding: 5px 8px 12px 25px;
+  align-items: stretch;
+  gap: 4px;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 700;
+  text-align: right;
+}
+
+.category-text {
+  flex-grow: 1;
+}
+
+.dropdown-icon {
+  aspect-ratio: 1.83;
+  object-fit: contain;
+  object-position: center;
+  width: 11px;
+  margin: auto 0;
+  flex-shrink: 0;
+}
+
+.search-input {
+  align-self: stretch;
+  width: 450px;
+  border-radius: 20px;
+  background-color: #fff;
+  min-height: 35px;
+  padding: 3px 10px 10px;
+  gap: 10px;
+  line-height: normal;
+}
+
+.search-icon {
+  aspect-ratio: 1.97;
+  object-fit: contain;
+  object-position: center;
+  width: 61px;
+  border-radius: 20px;
+  align-self: end;
+  z-index: 10;
+  margin-top: -33px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 21px;
+  align-items: center;
+  background-color: #ea1a1a; /* Thêm màu nền phòng trường hợp bị mất */
+}
+
+.phone-number {
+  background-color: #ea1a1a;
+  align-self: start;
+  display: flex;
+  margin-top: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 9px;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  justify-content: start;
+}
+
+.phone-icon {
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 22px;
+  align-self: center;
+}
+
+.location-button {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  position: relative;
+  aspect-ratio: 1.026;
+  margin: auto 0;
+  width: 40px;
+  padding-bottom: 13px;
+}
+
+.location-icon {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.address-button {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  height: 26px;
+  gap: 10px;
+}
+
+.notification-icon {
+  aspect-ratio: 1.18;
+  object-fit: contain;
+  object-position: center;
+  width: 46px;
+  align-self: stretch;
+  margin: auto 0;
+  flex-shrink: 0;
+}
+
+.cart-button {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-self: stretch;
+  aspect-ratio: 1;
+  margin: auto 0;
+  width: 39px;
+  padding-top: 26px;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 9px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.cart-icon {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.login-container {
+  align-self: stretch;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.login-button {
+  border-radius: 20px;
+  background-color: #f56758;
+  display: flex;
+  padding: 10px 9px;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.user-icon {
+  aspect-ratio: 0.79;
+  object-fit: contain;
+  object-position: center;
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.login-text {
+  align-self: start;
+}
+
+/* Main content styles */
+.main-content {
+  align-self: center;
+  margin-top: 61px;
+  width: 100%;
+  max-width: 1244px;
+}
+
+.content-container {
+  display: flex;
+  gap: 20px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+  width: 32%;
+  margin-left: 0;
+}
+
+.user-sidebar {
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid #000;
+  display: flex;
+  margin: 0 auto;
+  width: 100%;
+  padding: 12px 0 28px;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  color: #000;
+  font-weight: 700;
+}
+
+.user-name {
+  align-self: center;
+  margin-left: 14px;
+  min-height: 71px;
+  width: 266px;
+  max-width: 100%;
+  padding: 10px 10px 34px;
+  gap: 10px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.divider {
+  border: 1px solid #000;
+  margin-top: 18px;
+  flex-shrink: 0;
+  height: 1px;
+}
+
+.user-navigation {
+  display: flex;
+  margin-top: 16px;
+  margin-left: 24px;
+  width: 205px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: start;
+  font-size: 18px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  text-decoration: none;
+  color: #000;
+  margin-top: 40px;
+}
+
+.nav-item:first-child {
+  margin-top: 0;
+  color: #ea1a1a;
+}
+
+.nav-icon {
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+  width: 68%;
+  margin-left: 20px;
+}
+
+.profile-form {
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid #000;
+  flex-grow: 1;
+  padding: 24px 6px 45px 43px;
+  width: 100%;
+}
+
+.form-columns {
+  display: flex;
+  gap: 20px;
+}
+
+.form-labels {
+  display: flex;
+  margin-top: 9px;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  width: 16%;
+}
+
+.form-label {
+  color: #000;
+  font-size: 18px;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-weight: 700;
+  align-self: start;
+  margin-top: 28px;
+}
+
+.form-label:first-child {
+  margin-top: 0;
+}
+
+.form-label:nth-child(3) {
+  margin-top: 36px;
+}
+
+.form-label:nth-child(4) {
+  margin-top: 58px;
+}
+
+.gender-label {
+  color: #000;
+  font-size: 17px;
+  font-family: "Kdam Thmor", -apple-system, Roboto, Helvetica, sans-serif;
+  font-weight: 400;
+  align-self: end;
+  z-index: 10;
+  margin-top: 26px;
+}
+
+.radio-group {
+  display: flex;
+  width: 116px;
+  max-width: 100%;
+  padding-right: 23px;
+  align-items: stretch;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.radio-option {
+  align-self: start;
+  display: flex;
+  margin-top: -8px;
+  align-items: start;
+  gap: 2px;
+}
+
+.radio-button {
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 50%;
+  display: flex;
+  margin-top: 8px;
+  padding: 0 2px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+}
+
+.radio-dot {
+  background-color: #000;
+  border-radius: 50%;
+  display: flex;
+  width: 11px;
+  flex-shrink: 0;
+  height: 11px;
+}
+
+.radio-label {
+  color: #000;
+  font-size: 17px;
+  font-family: "Kdam Thmor", -apple-system, Roboto, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+.radio-button-empty {
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 50%;
+  display: flex;
+  width: 15px;
+  flex-shrink: 0;
+  height: 15px;
+}
+
+.form-values {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  font-weight: 400;
+  width: 84%;
+  margin-left: 20px;
+}
+
+.profile-value {
+  padding: 10px;
+  gap: 10px;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  color: #000;
+}
+
+.phone-value {
+  align-self: start;
+  margin-top: 48px;
+  white-space: nowrap;
+}
+
+.email-value {
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.date-container {
+  display: flex;
+  margin-top: 33px;
+  margin-left: 10px;
+  width: 300px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.date-inputs {
+  display: flex;
+  align-items: stretch;
+  gap: 7px;
+  font-family: "Kdam Thmor", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  color: #000;
+  white-space: nowrap;
+}
+
+.date-input {
+  border-radius: 6px;
+  background-color: #fff;
+  border: 1px solid #000;
+  padding: 0 16px;
+  flex: 1;
+}
+
+.date-value {
+  align-self: stretch;
+  height: 30px;
+  padding: 0 10px;
+  gap: 10px;
+}
+
+.update-button {
+  align-self: start;
+  border-radius: 15px;
+  background-color: #000;
+  margin-top: 70px;
+  padding: 10px;
+  gap: 10px;
+  font-family: "League Gothic", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 30px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Footer styles */
+.site-footer {
+  background-color: #fcfcfc;
+  display: flex;
+  margin-top: 60px;
+  width: 100%;
+  padding: 63px 80px;
+  flex-direction: column;
+  align-items: center;
+  font-family: SansSerif, -apple-system, Roboto, Helvetica, sans-serif;
+  justify-content: center;
+}
+
+.footer-container {
+  display: flex;
+  width: 100%;
+  max-width: 1179px;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.footer-links {
+  display: flex;
+  align-items: start;
+  gap: 20px;
+  font-size: 14px;
+  color: #000;
+  font-weight: 400;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.footer-heading {
+  color: #2f2f2f;
+  font-size: 16px;
+  font-weight: 700;
+  align-self: stretch;
+  margin-bottom: 20px;
+}
+
+.footer-link {
+  color: #000;
+  text-decoration: none;
+  margin-top: 12px;
+}
+
+.footer-link:first-of-type {
+  margin-top: 0;
+}
+
+.footer-text {
+  margin-top: 12px;
+}
+
+.payment-heading {
+  margin-top: 68px;
+}
+
+.social-connect {
+  align-self: start;
+  display: flex;
+  margin-top: 109px;
+  align-items: start;
+  gap: 12px;
+  font-size: 18px;
+  color: #2f2f2f;
+  font-weight: 700;
+}
+
+.social-heading {
+  align-self: end;
+  margin-top: 27px;
+  flex-grow: 1;
+}
+
+.social-icon {
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+/* Media queries */
+@media (max-width: 991px) {
+  .red-header {
+    max-width: 100%;
+    padding: 21px 20px;
+  }
+
+  .header-top {
+    max-width: 100%;
+  }
+
+  .category-dropdown {
+    padding-left: 20px;
+  }
+
+  .search-input {
+    padding: 6px 35px 6px 12px;
+    font-size: 14px;
+  }
+
+  .search-icon {
+    margin-right: 3px;
+  }
+
+  .phone-number {
+    white-space: initial;
+  }
+
+  .main-content {
+    max-width: 100%;
+    margin-top: 40px;
+  }
+
+  .content-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .user-sidebar {
+    margin-top: 30px;
+  }
+
+  .user-navigation {
+    margin-left: 10px;
+  }
+
+  .profile-details {
+    width: 100%;
+  }
+
+  .profile-form {
+    max-width: 100%;
+    margin-top: 30px;
+    padding-left: 20px;
+  }
+
+  .form-columns {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .form-labels {
+    margin-top: 40px;
+    width: 100%;
+  }
+
+  .form-values {
+    max-width: 100%;
+    margin-top: 40px;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .gender-label {
+    margin-right: 3px;
+  }
+
+  .radio-group {
+    padding-right: 20px;
+  }
+
+  .form-label:nth-child(4) {
+    margin-top: 40px;
+  }
+
+  .phone-value {
+    margin-top: 40px;
+    white-space: initial;
+  }
+
+  .email-value {
+    margin-right: 10px;
+    white-space: initial;
+  }
+
+  .date-inputs {
+    white-space: initial;
+  }
+
+  .date-input {
+    white-space: initial;
+  }
+
+  .date-value {
+    white-space: initial;
+  }
+
+  .update-button {
+    margin-top: 40px;
+  }
+
+  .site-footer {
+    max-width: 100%;
+    padding: 63px 20px;
+    margin-top: 40px;
+  }
+
+  .footer-container {
+    max-width: 100%;
+  }
+
+  .footer-links {
+    max-width: 100%;
+  }
+
+  .payment-heading {
+    margin-top: 40px;
+  }
+
+  .social-connect {
+    margin-top: 40px;
+  }
+}
