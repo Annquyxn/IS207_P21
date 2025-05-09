@@ -1,7 +1,7 @@
 // src/components/registration/RegistrationPage.jsx
 import React from 'react';
 import Title from './common/Title';
-import RegistrationForm from './form/RegistrationForm';
+import RegistrationForm from './forms/RegistrationForm';
 import LoginPrompt from './common/LoginPrompt';
 import Divider from './common/Divider';
 import SocialLogin from './social/SocialLogin';
