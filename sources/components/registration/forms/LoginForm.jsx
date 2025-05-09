@@ -1,4 +1,3 @@
-// src/components/auth/forms/LoginForm.jsx
 import TextInput from '../inputs/TextInput';
 import PasswordInput from '../inputs/PasswordInput';
 import PrimaryButton from '../buttons/PrimaryButton';
