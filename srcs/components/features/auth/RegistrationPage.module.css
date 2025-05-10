@@ -1,0 +1,41 @@
+.registrationPage {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  min-height: 100vh;
+}
+
+.registrationTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 30px;
+  font-family: 'Familjen Grotesk', sans-serif;
+}
+
+.loginPrompt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.loginLink {
+  margin-left: 5px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+  width: 100%;
+  max-width: 400px;
+  gap: 10px;
+}
