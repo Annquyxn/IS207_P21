@@ -1,6 +1,6 @@
-import styles from './Cart.module.css';
+import styles from "./Cart.module.css";
 
-export default function EmptyCart() {
+function EmptyCart() {
   return (
     <div className={styles.emptyCartContainer}>
       <div className={styles.emptyCartContent}>
@@ -12,3 +12,5 @@ export default function EmptyCart() {
     </div>
   );
 }
+
+export default EmptyCart;
