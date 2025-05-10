@@ -1,19 +1,21 @@
-import styles from './Cart.module.css';
+import styles from "./Cart.module.css";
 
 const steps = [
-  { icon: 'cart', label: 'Giỏ hàng' },
-  { icon: 'card', label: 'Thông tin' },
-  { icon: 'cash', label: 'Thanh toán' },
-  { icon: 'briefcase', label: 'Hoàn tất' },
+  { icon: "cart", label: "Giỏ hàng" },
+  { icon: "card", label: "Thông tin" },
+  { icon: "cash", label: "Thanh toán" },
+  { icon: "briefcase", label: "Hoàn tất" },
 ];
 
-export default function CheckoutProgress({ currentStep }) {
+function CheckoutProgress({ currentStep }) {
   return (
     <div className={styles.checkoutProgress}>
       <div className={styles.progressContainer}>
         {steps.map((step, index) => (
-          <div 
-            className={`${styles.step} ${index <= currentStep ? styles.active : ''}`}
+          <div
+            className={`${styles.step} ${
+              index <= currentStep ? styles.active : ""
+            }`}
             key={step.label}
           >
             <div className={styles.icon}>
@@ -27,3 +29,5 @@ export default function CheckoutProgress({ currentStep }) {
     </div>
   );
 }
+
+export default CheckoutProgress;

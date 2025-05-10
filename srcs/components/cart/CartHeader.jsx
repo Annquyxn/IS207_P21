@@ -1,6 +1,6 @@
-import styles from './Cart.module.css';
+import styles from "./Cart.module.css";
 
-export default function CartHeader({ count }) {
+function CartHeader({ count }) {
   return (
     <header className={styles.cartHeader}>
       <Icon name="cart-outline" className={styles.cartHeaderIcon} />
@@ -10,3 +10,5 @@ export default function CartHeader({ count }) {
     </header>
   );
 }
+
+export default CartHeader;
