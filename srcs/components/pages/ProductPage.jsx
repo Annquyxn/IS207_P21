@@ -1,4 +1,4 @@
-const ProductPage = () => {
+function ProductPage() {
   return <div></div>;
 };
 
