@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thông tin giao hàng</title>
+  <link rel="stylesheet" href="pay.css">
+</head>
+<body>
+  <main>
+    <article class="shipping-container">
+      <header class="shipping-title">Thông tin giao hàng</header>
+      <section class="customer-details">
+        <dl class="detail-row">
+          <dt class="detail-label">Khách hàng:</dt>
+          <dd class="detail-value">Nguyễn Văn A</dd>
+        </dl>
+        <dl class="detail-row">
+          <dt class="detail-label">Số điện thoại:</dt>
+          <dd class="detail-value phone">0000000000</dd>
+        </dl>
+        <dl class="detail-row">
+          <dt class="detail-label">Địa chỉ nhận hàng:</dt>
+          <dd class="detail-value">Số ..., Đường..., Phường..., Quận,..., Thành phố</dd>
+        </dl>
+        <dl class="detail-row">
+          <dt class="detail-label">Phí sản phẩm:</dt>
+          <dd class="detail-value price-red">
+            <span>12.000.000</span>
+            <span class="currency">đ</span>
+          </dd>
+        </dl>
+        <dl class="detail-row">
+          <dt class="detail-label">Phí vận chuyển:</dt>
+          <dd class="detail-value price-black">
+            <span>0</span>
+            <span class="currency">đ</span>
+          </dd>
+        </dl>
+        <dl class="detail-row">
+          <dt class="detail-label">Giảm giá:</dt>
+          <dd class="detail-value price-black">
+            <span>-500.000</span>
+            <span class="currency">đ</span>
+          </dd>
+          <dd class="discount-code">GIAMGIA500</dd>
+        </dl>
+        <dl class="detail-row">
+          <dt class="detail-label total-label">Tổng tiền</dt>
+          <dd class="detail-value total-price">
+            <span>11.500.000</span>
+            <span class="currency">đ</span>
+          </dd>
+        </dl>
+      </section>
+
+      <section class="payment-methods">
+        <header class="payment-title">Phương thức thanh toán</header>
+        <div class="payment-options">
+          <div class="payment-option">
+            <input type="radio" id="cod" name="payment-method" checked class="payment-radio visually-hidden">
+            <label for="cod" class="radio-label">
+              <span class="radio-button"></span>
+              <span class="radio-text">Thanh toán khi nhận hàng</span>
+            </label>
+          </div>
+          <div class="payment-option">
+            <input type="radio" id="bank" name="payment-method" class="payment-radio visually-hidden">
+            <label for="bank" class="radio-label">
+              <span class="radio-button"></span>
+              <span class="radio-text">Thanh toán qua ngân hàng</span>
+            </label>
+          </div>
+          <div class="payment-option">
+            <input type="radio" id="e-wallet" name="payment-method" class="payment-radio visually-hidden">
+            <label for="e-wallet" class="radio-label">
+              <span class="radio-button"></span>
+              <span class="radio-text">Thanh toán qua ví điện tử</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="payment-action">
+        <button class="payment-button">Thanh toán</button>
+      </section>
+    </article>
+  </main>
