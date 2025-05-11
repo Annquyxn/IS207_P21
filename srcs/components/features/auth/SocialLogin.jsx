@@ -1,35 +1,17 @@
-import Button from "../../../ui/Button/Button";
-import styles from "./SocialLogin.module.css";
-
-const SocialLogin = ({ actionType = "login" }) => {
-  const actionText = actionType === "login" ? "Đăng nhập" : "Đăng ký";
-
+function SocialLogin() {
   return (
-    <section className={styles.socialLogin}>
-      <Button variant="outline" className={styles.googleButton}>
-        <img
-          src="/google-icon.svg"
-          alt="Google"
-          className={styles.socialIcon}
-        />
-        <span className={styles.socialText}>{actionText} bằng Google</span>
-      </Button>
+    <div className="w-full max-w-[400px] space-y-3">
+      <button className="w-full flex items-center justify-center gap-3 py-2 px-4 border rounded-lg hover:bg-gray-50">
+        <img src="/google-icon.svg" className="w-6 h-6" alt="Google" />
+        <span>Đăng ký bằng Google</span>
+      </button>
 
-      <Button variant="primary" className={styles.facebookButton}>
-        <img
-          src="/facebook-icon.svg"
-          alt="Facebook"
-          className={styles.socialIcon}
-        />
-        <span className={styles.socialText}>{actionText} bằng Facebook</span>
-      </Button>
-
-      <Button variant="outline" className={styles.appleButton}>
-        <img src="/apple-icon.svg" alt="Apple" className={styles.socialIcon} />
-        <span className={styles.socialText}>{actionText} bằng Apple</span>
-      </Button>
-    </section>
+      <button className="w-full flex items-center justify-center gap-3 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <img src="/facebook-icon.svg" className="w-6 h-6" alt="Facebook" />
+        <span>Đăng ký bằng Facebook</span>
+      </button>
+    </div>
   );
-};
+}
 
 export default SocialLogin;

@@ -1,9 +1,11 @@
-import Header from '../header/Header';
-import Footer from '../footer/Footer';
-import CartHeader from '../cart/CartHeader/CartHeader';
-import CheckoutProgress from '../cart/CheckoutProgress/CheckoutProgress';
-import EmptyCart from '../cart/EmptyCart/EmptyCart';
-import styles from './ShoppingCartPage.module.css';
+import Footer from "@/components/footer/Footer";
+import CartHeader from "@/components/cart/CartHeader";
+import CheckoutProgress from "@/components/cart/CheckoutProgress";
+import EmptyCart from "@/components/cart/EmptyCart";
+import RegistrationForm from "@/features/auth/RegistrationForm/RegistrationForm";
+import SocialLogin from "@/features/auth/SocialLogin/SocialLogin";
+import styles from '@/ShoppingCartPage.module.css';
+
 
 const ShoppingCartPage = () => (
   <main className={styles.shoppingCart}>
