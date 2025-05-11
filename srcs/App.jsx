@@ -6,6 +6,7 @@ import Footer from "@/components/features/footer/Footer";
 import CheckoutPage from "@/components/pages/CheckoutPage";
 import CompleteOrderPage from "@/components/pages/CompleteOrderPage";
 import PaymentPage from "@/components/pages/PaymentPage";
+import ShippingInfoPage from "@/components/pages/ShippingInfoPage";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
               path="/hoan-tat-thanh-toan"
               element={<CompleteOrderPage />}
             />
-            <Route path="/phuong-thuc-tt" element={<PaymentPage  />} />
+            <Route path="/phuong-thuc-tt" element={<PaymentPage />} />
+            <Route path="/thong-tin-giao-hang" element={<ShippingInfoPage />} />
           </Routes>
         </main>
 
