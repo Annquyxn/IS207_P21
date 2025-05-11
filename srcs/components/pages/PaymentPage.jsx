@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import ShippingInfo from '../components/ShippingInfo';
-import PaymentMethods from '../components/PaymentMethods';
-import PaymentButton from '../components/PaymentButton';
+import ShippingInfo from "../shipping/ShippingInfo";
+import PaymentMethods from '@/components/payment/PaymentMethods';
+import PaymentButton from '@/components/payment/PaymentButton';
 
 export default function PaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState('cod');

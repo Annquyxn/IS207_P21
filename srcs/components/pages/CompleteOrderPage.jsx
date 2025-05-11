@@ -1,5 +1,5 @@
-import SuccessIcon from "../components/SuccessIcon";
-import VoucherBadge from "../components/VoucherBadge";
+import SuccessIcon from "../icons/SuccessIcon";
+import VoucherBadge from "@/components/voucher/VoucherBadge";
 
 function CompleteOrderPage() {
   const orderDetails = {
