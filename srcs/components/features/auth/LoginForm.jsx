@@ -1,15 +1,51 @@
-export default function LoginForm() {
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
+function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const loginMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post("/api/login", data); // đổi URL theo backend của bạn
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("Đăng nhập thành công:", data);
+      // TODO: chuyển hướng, lưu token, v.v.
+    },
+    onError: (error) => {
+      console.error("Lỗi đăng nhập:", error);
+    },
+  });
+
+  const onSubmit = (data) => {
+    loginMutation.mutate(data);
+  };
+
   return (
     <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md">
       <h1 className="text-3xl font-bold text-center mb-8">Đăng Nhập</h1>
-      
-      <form className="space-y-6">
+
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <input
             type="text"
             placeholder="Email hoặc Số điện thoại"
             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500"
+            {...register("username", {
+              required: "Vui lòng nhập email hoặc số điện thoại",
+            })}
           />
+          {errors.username && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.username.message}
+            </p>
+          )}
         </div>
 
         <div className="relative">
@@ -17,18 +53,34 @@ export default function LoginForm() {
             type="password"
             placeholder="Mật khẩu"
             className="w-full px-4 py-3 border rounded-lg pr-12"
+            {...register("password", { required: "Vui lòng nhập mật khẩu" })}
           />
-          <button className="absolute right-3 top-3 text-gray-500">
-            {/* Eye icon */}
+          <button
+            type="button"
+            className="absolute right-3 top-3 text-gray-500"
+          >
+            {/* icon ẩn/hiện mật khẩu */}
           </button>
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        <a href="#" className="block text-right text-sm text-red-600 hover:underline">
+        <a
+          href="#"
+          className="block text-right text-sm text-red-600 hover:underline"
+        >
           Quên mật khẩu?
         </a>
 
-        <button className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-          Đăng nhập
+        <button
+          type="submit"
+          className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          disabled={loginMutation.isLoading}
+        >
+          {loginMutation.isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
       </form>
 
@@ -43,12 +95,14 @@ export default function LoginForm() {
           <img src="/google-icon.svg" className="w-6 h-6" alt="Google" />
           <span>Google</span>
         </button>
-        
+
         <button className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
           <img src="/facebook-icon.svg" className="w-6 h-6" alt="Facebook" />
           <span>Facebook</span>
         </button>
       </div>
     </div>
-  )
+  );
 }
+
+export default LoginForm;
