@@ -1,12 +1,12 @@
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
-import RegistrationForm from "@/features/auth/RegistrationForm";
-import SocialLogin from "@/features/auth/SocialLogin";
+// import Header from "@/components/header/Header";
+// import Footer from "@/components/footer/Footer";
+// import RegistrationForm from "@/features/auth/RegistrationForm";
+// import SocialLogin from "@/features/auth/SocialLogin";
 
 function RegistrationPage() {
   return (
-    <main className="bg-white flex flex-col items-center py-16 min-h-screen">
-      <Header />
+    <main className='bg-white flex flex-col items-center py-16 min-h-screen'>
+      {/* <Header />
 
       <h1 className="text-[28px] font-bold text-[#333] mb-8 font-['Familjen_Grotesk']">
         Đăng ký tài khoản
@@ -29,7 +29,7 @@ function RegistrationPage() {
 
       <SocialLogin actionType="register" />
 
-      <Footer />
+      <Footer /> */}
     </main>
   );
 };

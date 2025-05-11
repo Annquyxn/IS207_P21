@@ -1,21 +1,21 @@
-import SuccessIcon from "../icons/SuccessIcon";
-import VoucherBadge from "@/components/voucher/VoucherBadge";
+// import SuccessIcon from "../icons/SuccessIcon";
+// import VoucherBadge from "@/components/voucher/VoucherBadge";
 
 function CompleteOrderPage() {
-  const orderDetails = {
-    customerName: "Nguyễn Văn A",
-    phone: "0000000000",
-    address: "Số ..., Đường..., Phường..., Quận,..., Thành phố",
-    productPrice: 12000000,
-    shippingFee: 0,
-    discount: 500000,
-    total: 11500000,
-    deliveryEstimate: "2 - 3 ngày",
-  };
+  //   const orderDetails = {
+  //     customerName: "Nguyễn Văn A",
+  //     phone: "0000000000",
+  //     address: "Số ..., Đường..., Phường..., Quận,..., Thành phố",
+  //     productPrice: 12000000,
+  //     shippingFee: 0,
+  //     discount: 500000,
+  //     total: 11500000,
+  //     deliveryEstimate: "2 - 3 ngày",
+  //   };
 
   return (
-    <main className="max-w-[978px] mx-auto px-4">
-      {/* Success Section */}
+    <main className='max-w-[978px] mx-auto px-4'>
+      {/* Success Section
       <section className="w-full bg-white border border-black shadow-md p-8 mt-8">
         <div className="flex flex-col items-center gap-4">
           <SuccessIcon />
@@ -35,7 +35,7 @@ function CompleteOrderPage() {
       </section>
 
       {/* Delivery Info Section */}
-      <section className="w-full bg-white border border-black shadow-md p-8 mt-8">
+      {/* <section className="w-full bg-white border border-black shadow-md p-8 mt-8">
         <h2 className="text-2xl font-bold mb-6">Thông tin giao hàng</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2 text-xl">
@@ -71,7 +71,7 @@ function CompleteOrderPage() {
             {orderDetails.total.toLocaleString()}đ
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
