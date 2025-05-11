@@ -3,7 +3,7 @@ import Footer from "@/components/footer/Footer";
 import RegistrationForm from "@/features/auth/RegistrationForm";
 import SocialLogin from "@/features/auth/SocialLogin";
 
-const RegistrationPage = () => {
+function RegistrationPage() {
   return (
     <main className="bg-white flex flex-col items-center py-16 min-h-screen">
       <Header />

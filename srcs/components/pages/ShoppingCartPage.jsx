@@ -4,13 +4,12 @@ import CheckoutProgress from "@/components/cart/CheckoutProgress";
 import EmptyCart from "@/components/cart/EmptyCart";
 import RegistrationForm from "@/features/auth/RegistrationForm/RegistrationForm";
 import SocialLogin from "@/features/auth/SocialLogin/SocialLogin";
-import styles from '@/ShoppingCartPage.module.css';
+import styles from "@/ShoppingCartPage.module.css";
 
-
-const ShoppingCartPage = () => (
+function ShoppingCartPage() {
   <main className={styles.shoppingCart}>
     <Header />
-    
+
     <section className={styles.cartContent}>
       <CartHeader count={0} />
       <CheckoutProgress currentStep={0} />
@@ -18,7 +17,7 @@ const ShoppingCartPage = () => (
     </section>
 
     <Footer />
-  </main>
-);
+  </main>;
+}
 
 export default ShoppingCartPage;

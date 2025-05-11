@@ -3,7 +3,7 @@ import AddressForm from '../components/checkout/AddressForm'
 import PaymentMethods from '../components/checkout/PaymentMethods'
 import OrderSummary from '../components/cart/OrderSummary'
 
-export default function CheckoutPage() {
+function CheckoutPage() {
   const [selectedMethod, setSelectedMethod] = useState('cod')
   
   return (
@@ -26,3 +26,5 @@ export default function CheckoutPage() {
     </div>
   )
 }
+
+export default CheckoutPage;
