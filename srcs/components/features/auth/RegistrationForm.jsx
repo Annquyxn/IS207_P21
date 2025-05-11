@@ -1,87 +1,39 @@
-import { useState } from 'react';
-import Button from '../../../ui/Button/Button';
-import Input from '../../../ui/Input/Input';
-import SocialLogin from '../SocialLogin/SocialLogin';
-import styles from './RegistrationForm.module.css';
+import { useState } from "react";
 
-const RegistrationForm = () => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-
+function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   return (
-    <form className={styles.registrationForm} onSubmit={handleSubmit}>
-      <Input
-        name="fullName"
+    <form className="w-full max-w-[400px] flex flex-col gap-4">
+      <input
+        type="text"
         placeholder="Họ và Tên"
-        value={formData.fullName}
-        onChange={handleChange}
-        className={styles.inputField}
+        className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
       />
       
-      <Input
-        name="email"
-        placeholder="Email hoặc Số điện thoại"
-        value={formData.email}
-        onChange={handleChange}
-        className={styles.inputField}
-      />
-
-      <div className={styles.passwordContainer}>
-        <Input
+      <div className="relative w-full">
+        <input
           type={showPassword ? "text" : "password"}
-          name="password"
           placeholder="Mật khẩu"
-          value={formData.password}
-          onChange={handleChange}
-          className={styles.passwordInput}
+          className="w-full px-4 py-3 border rounded-lg pr-12"
         />
-        <img 
-          src="/eye-icon.svg" 
+        <button
+          type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className={styles.passwordToggle}
-          alt="Toggle password"
-        />
+          className="absolute right-3 top-1/2 -translate-y-1/2"
+        >
+          <EyeIcon className="w-5 h-5 text-gray-500" />
+        </button>
       </div>
-
-      <div className={styles.passwordContainer}>
-        <Input
-          type={showPassword ? "text" : "password"}
-          name="confirmPassword"
-          placeholder="Nhập lại mật khẩu"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          className={styles.passwordInput}
-        />
-        <img 
-          src="/eye-icon.svg" 
-          onClick={() => setShowPassword(!showPassword)}
-          className={styles.passwordToggle}
-          alt="Toggle password"
-        />
-      </div>
-
-      <Button type="submit" variant="danger" className={styles.registerButton}>
+      
+      <button
+        type="submit"
+        className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+      >
         Đăng ký
-      </Button>
+      </button>
     </form>
-  );
-};
+  )
+}
 
 export default RegistrationForm;

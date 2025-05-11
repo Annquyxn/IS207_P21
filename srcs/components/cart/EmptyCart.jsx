@@ -1,14 +1,13 @@
-import styles from "./Cart.module.css";
-
 function EmptyCart() {
   return (
-    <div className={styles.emptyCartContainer}>
-      <div className={styles.emptyCartContent}>
-        <p>Giỏ hàng của bạn đang trống!</p>
-        <Button icon="bag" href="#">
-          Mua hàng
-        </Button>
+    <div className="max-w-4xl mx-auto text-center p-8 bg-white rounded-xl shadow-sm">
+      <div className="text-3xl font-bold mb-6">
+        Giỏ hàng của bạn đang trống!
       </div>
+      <button className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors">
+        <span>Mua hàng ngay</span>
+        <IonIcon name="arrow-forward" className="text-xl" />
+      </button>
     </div>
   );
 }
