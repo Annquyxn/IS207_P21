@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import CompleteOrderPage from "./pages/CompleteOrderPage";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               path="/hoan-tat-thanh-toan"
               element={<CompleteOrderPage />}
             />
+            <Route path="/phuong-thuc-tt" element={<PaymentPage  />} />
           </Routes>
         </main>
 
