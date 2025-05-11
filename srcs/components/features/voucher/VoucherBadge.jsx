@@ -3,7 +3,7 @@ function VoucherBadge() {
     <svg
       className="w-[150px] h-[40px]"
       viewBox="0 0 150 40"
-      fill="none"
+      fill="none" 
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect width="150" height="40" rx="5" fill="#FFC0D3" />
