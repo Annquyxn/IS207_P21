@@ -12,9 +12,12 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@ionic/react": "^8.5.7",
+    "@ionic/react-router": "^8.5.7",
     "@tailwindcss/vite": "^4.1.4",
     "@tanstack/react-query": "^5.75.7",
     "axios": "^1.9.0",
+    "ionicons": "^8.0.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
