@@ -17,7 +17,7 @@ function RegistrationForm() {
   };
 
   return (
-    <form 
+    <form
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-[400px] flex flex-col gap-4"
     >
@@ -27,7 +27,9 @@ function RegistrationForm() {
           type="text"
           placeholder="Họ và Tên"
           className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 ${
-            errors.fullName ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+            errors.fullName
+              ? "border-red-500 focus:ring-red-500"
+              : "focus:ring-blue-500"
           }`}
           {...register("fullName", { required: "Vui lòng nhập họ và tên" })}
         />
@@ -42,14 +44,16 @@ function RegistrationForm() {
           type="email"
           placeholder="Email"
           className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 ${
-            errors.email ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+            errors.email
+              ? "border-red-500 focus:ring-red-500"
+              : "focus:ring-blue-500"
           }`}
-          {...register("email", { 
+          {...register("email", {
             required: "Vui lòng nhập email",
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Email không hợp lệ"
-            }
+              message: "Email không hợp lệ",
+            },
           })}
         />
         {errors.email && (
@@ -63,14 +67,16 @@ function RegistrationForm() {
           type={showPassword ? "text" : "password"}
           placeholder="Mật khẩu"
           className={`w-full px-4 py-3 border rounded-lg pr-12 ${
-            errors.password ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+            errors.password
+              ? "border-red-500 focus:ring-red-500"
+              : "focus:ring-blue-500"
           }`}
-          {...register("password", { 
+          {...register("password", {
             required: "Vui lòng nhập mật khẩu",
             minLength: {
               value: 6,
-              message: "Mật khẩu phải có ít nhất 6 ký tự"
-            }
+              message: "Mật khẩu phải có ít nhất 6 ký tự",
+            },
           })}
         />
         <button
@@ -95,16 +101,20 @@ function RegistrationForm() {
           type={showPassword ? "text" : "password"}
           placeholder="Xác nhận mật khẩu"
           className={`w-full px-4 py-3 border rounded-lg pr-12 ${
-            errors.confirmPassword ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+            errors.confirmPassword
+              ? "border-red-500 focus:ring-red-500"
+              : "focus:ring-blue-500"
           }`}
-          {...register("confirmPassword", { 
+          {...register("confirmPassword", {
             required: "Vui lòng xác nhận mật khẩu",
-            validate: (value) => 
-              value === watch("password") || "Mật khẩu không khớp"
+            validate: (value) =>
+              value === watch("password") || "Mật khẩu không khớp",
           })}
         />
         {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
 

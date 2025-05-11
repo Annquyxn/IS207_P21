@@ -9,8 +9,6 @@
 }
 
 /* Header styles */
-
-/* Sửa trong .category-dropdown và .login-button */
 .category-dropdown,
 .login-button {
   font-family: "Roboto", sans-serif !important; /* Thay Istok Web */
@@ -168,7 +166,7 @@
 .login-icon,
 .dropdown-icon {
   font-size: 22px !important;
-  color: #ffffff
+  color: #ffffff;
 }
 
 .login-icon {
@@ -399,7 +397,7 @@
   padding: 50px 20px;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
 .empty-cart-message {
@@ -428,13 +426,12 @@
   font-size: 20px;
 }
 
-
 /* Phần tổng hợp đơn hàng */
 .order-summary {
   background: #fff;
   border-radius: 10px;
   padding: 25px;
-  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
 .summary-row {
@@ -720,7 +717,7 @@
   font-size: 18px;
   color: #2f2f2f;
   font-weight: 700;
-  padding-right: 15px
+  padding-right: 15px;
 }
 
 .social-heading {
