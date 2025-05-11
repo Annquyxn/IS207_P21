@@ -1,46 +1,117 @@
-import { useState } from "react";
+// import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 function AddressForm() {
-  const [gender, setGender] = useState("male");
-  const [shippingMethod, setShippingMethod] = useState("standard");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      fullName: "",
+      phone: "",
+      gender: "male",
+      city: "",
+      district: "",
+      ward: "",
+      street: "",
+      note: "",
+      shippingMethod: "standard",
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (formData) => {
+      return axios.post("/api/address", formData);
+    },
+    onSuccess: () => {
+      alert("Address saved successfully!");
+    },
+    onError: (error) => {
+      alert(`Error: ${error.message}`);
+    },
+  });
+
+  const onSubmit = (data) => {
+    mutation.mutate(data);
+  };
+
+  const selectedGender = watch("gender");
+  const selectedShippingMethod = watch("shippingMethod");
 
   return (
-    <div className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       {/* Họ tên và SĐT */}
       <div className="flex flex-col md:flex-row gap-5">
-        <input
-          type="text"
-          placeholder="Họ và Tên"
-          className="flex-1 min-h-[45px] border border-black bg-white px-3 py-2"
-        />
-        <input
-          type="tel"
-          placeholder="Số điện thoại liên lạc"
-          className="flex-1 min-h-[45px] border border-black bg-white px-3 py-2"
-        />
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="Họ và Tên"
+            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            {...register("fullName", { required: "Full name is required" })}
+          />
+          {errors.fullName && (
+            <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+          )}
+        </div>
+        <div className="flex-1">
+          <input
+            type="tel"
+            placeholder="Số điện thoại liên lạc"
+            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            {...register("phone", {
+              required: "Phone number is required",
+              pattern: {
+                value: /^\d+$/,
+                message: "Please enter a valid phone number",
+              },
+            })}
+          />
+          {errors.phone && (
+            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+          )}
+        </div>
       </div>
 
       {/* Giới tính */}
       <div className="flex gap-5">
         <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            className="hidden"
+            {...register("gender")}
+            value="male"
+          />
           <div
             className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-              gender === "male" ? "bg-black" : "bg-white"
+              selectedGender === "male" ? "bg-black" : "bg-white"
             }`}
+            onClick={() => setValue("gender", "male")}
           >
-            {gender === "male" && (
+            {selectedGender === "male" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
             )}
           </div>
           <span>Anh</span>
         </label>
         <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            className="hidden"
+            {...register("gender")}
+            value="female"
+          />
           <div
             className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-              gender === "female" ? "bg-black" : "bg-white"
+              selectedGender === "female" ? "bg-black" : "bg-white"
             }`}
+            onClick={() => setValue("gender", "female")}
           >
-            {gender === "female" && (
+            {selectedGender === "female" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
             )}
           </div>
@@ -53,51 +124,85 @@ function AddressForm() {
 
       <div className="flex flex-col md:flex-row gap-5">
         <div className="flex-1 min-w-[240px]">
-          <div className="flex justify-between items-center p-3 border border-black bg-white">
-            <span>Chọn tỉnh/thành phố</span>
-            <ChevronDownIcon className="w-5 h-5" />
-          </div>
+          <select
+            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            {...register("city", { required: "City is required" })}
+          >
+            <option value="">Chọn tỉnh/thành phố</option>
+            {/* Add your city options here */}
+          </select>
+          {errors.city && (
+            <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
+          )}
         </div>
         <div className="flex-1 min-w-[240px]">
-          <div className="flex justify-between items-center p-3 border border-black bg-white">
-            <span>Chọn quận/huyện</span>
-            <ChevronDownIcon className="w-5 h-5" />
-          </div>
+          <select
+            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            {...register("district", { required: "District is required" })}
+          >
+            <option value="">Chọn quận/huyện</option>
+            {/* Add your district options here */}
+          </select>
+          {errors.district && (
+            <p className="text-red-500 text-sm mt-1">{errors.district.message}</p>
+          )}
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-5">
         <div className="flex-1 min-w-[240px]">
-          <div className="flex justify-between items-center p-3 border border-black bg-white">
-            <span>Chọn xã/thị trấn</span>
-            <ChevronDownIcon className="w-5 h-5" />
-          </div>
+          <select
+            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            {...register("ward", { required: "Ward is required" })}
+          >
+            <option value="">Chọn xã/thị trấn</option>
+            {/* Add your ward options here */}
+          </select>
+          {errors.ward && (
+            <p className="text-red-500 text-sm mt-1">{errors.ward.message}</p>
+          )}
         </div>
-        <input
-          type="text"
-          placeholder="Số nhà, tên đường"
-          className="flex-1 min-h-[45px] border border-black bg-white px-3 py-2"
-        />
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="Số nhà, tên đường"
+            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            {...register("street", { required: "Street address is required" })}
+          />
+          {errors.street && (
+            <p className="text-red-500 text-sm mt-1">{errors.street.message}</p>
+          )}
+        </div>
       </div>
 
       {/* Ghi chú */}
-      <input
-        type="text"
-        placeholder="Ghi chú thêm"
-        className="min-h-[45px] border border-red-600 bg-white px-3 py-2 text-red-600"
-      />
+      <div>
+        <input
+          type="text"
+          placeholder="Ghi chú thêm"
+          className="w-full min-h-[45px] border border-red-600 bg-white px-3 py-2 text-red-600"
+          {...register("note")}
+        />
+      </div>
 
       {/* Dịch vụ giao hàng */}
       <h3 className="text-xl font-bold">Dịch vụ giao hàng</h3>
 
       <div className="flex flex-wrap items-center gap-5">
         <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            className="hidden"
+            {...register("shippingMethod")}
+            value="standard"
+          />
           <div
             className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-              shippingMethod === "standard" ? "bg-black" : "bg-white"
+              selectedShippingMethod === "standard" ? "bg-black" : "bg-white"
             }`}
+            onClick={() => setValue("shippingMethod", "standard")}
           >
-            {shippingMethod === "standard" && (
+            {selectedShippingMethod === "standard" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
             )}
           </div>
@@ -107,18 +212,34 @@ function AddressForm() {
       </div>
 
       <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          className="hidden"
+          {...register("shippingMethod")}
+          value="express"
+        />
         <div
           className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-            shippingMethod === "express" ? "bg-black" : "bg-white"
+            selectedShippingMethod === "express" ? "bg-black" : "bg-white"
           }`}
+          onClick={() => setValue("shippingMethod", "express")}
         >
-          {shippingMethod === "express" && (
+          {selectedShippingMethod === "express" && (
             <div className="w-3 h-3 rounded-full bg-white"></div>
           )}
         </div>
         <span>Giao hàng nhanh</span>
       </label>
-    </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="mt-4 px-6 py-3 bg-black text-white font-medium rounded hover:bg-gray-800 transition-colors"
+        disabled={mutation.isPending}
+      >
+        {mutation.isPending ? "Submitting..." : "Submit Address"}
+      </button>
+    </form>
   );
 }
 
