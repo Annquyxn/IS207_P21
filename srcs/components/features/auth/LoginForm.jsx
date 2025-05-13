@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { apiLogin } from "@/services/apiLogin";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const {
@@ -9,17 +11,18 @@ function LoginForm() {
     formState: { errors },
   } = useForm();
 
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
   const loginMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await axios.post("/api/login", data); // đổi URL theo backend của bạn
-      return response.data;
-    },
-    onSuccess: (data) => {
-      console.log("Đăng nhập thành công:", data);
-      // TODO: chuyển hướng, lưu token, v.v.
+    mutationFn: apiLogin,
+    onSuccess: (user) => {
+      console.log("Đăng nhập thành công:", user);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Lỗi đăng nhập:", error);
+      alert(error.message || "Đăng nhập thất bại");
     },
   });
 
@@ -50,16 +53,17 @@ function LoginForm() {
 
         <div className="relative">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Mật khẩu"
             className="w-full px-4 py-3 border rounded-lg pr-12"
             {...register("password", { required: "Vui lòng nhập mật khẩu" })}
           />
           <button
             type="button"
-            className="absolute right-3 top-3 text-gray-500"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-3 text-sm text-gray-600"
           >
-            {/* icon ẩn/hiện mật khẩu */}
+            {showPassword ? "Ẩn" : "Hiện"}
           </button>
           {errors.password && (
             <p className="text-red-500 text-sm mt-1">
