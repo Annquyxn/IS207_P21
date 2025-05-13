@@ -38,7 +38,7 @@ function App() {
             <Route path='san-pham' element={<ProductPage />} />
             <Route path='checkout' element={<CheckoutPage />} />
             <Route path='hoan-tat-thanh-toan' element={<CompleteOrderPage />} />
-            <Route path='phuong-thuc-tt' element={<PaymentPage />} />
+            <Route path='payment-page' element={<PaymentPage />} />
             <Route path='thong-tin-giao-hang' element={<ShippingInfoPage />} />
             <Route path='build-pc' element={<BuildPCPage />} />
             <Route path='chon-san-pham' element={<ProductSelectionPage />} />
