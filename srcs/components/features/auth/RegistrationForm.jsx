@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
+import { registerUser } from "../../services/apiRegister";
 
 function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,9 +12,21 @@ function RegistrationForm() {
     watch,
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data); // Xử lý dữ liệu khi form submit
-    // Gọi API đăng ký ở đây
+  const onSubmit = async (data) => {
+    try {
+      const { fullName, email, password } = data;
+      const result = await registerUser({
+        full_name: fullName,
+        email: email,
+        password,
+      });
+
+      console.log("Đăng ký thành công:", result);
+      alert("Đăng kí thành công, Chào mừng bạn đến với cửa hàng của chúng tôi");
+    } catch {
+      console.error("Lỗi đăng ký: ", errors.message);
+      alert("Đăng kí thất bại, vui lòng thử lại");
+    }
   };
 
   return (

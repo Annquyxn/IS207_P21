@@ -1,6 +1,5 @@
 import { supabase } from './supabase'
 
-// 🔁 Lấy sản phẩm từ Supabase
 export async function fetchProducts() {
   const { data, error } = await supabase.from('products').select('*')
   if (error) {
@@ -10,7 +9,6 @@ export async function fetchProducts() {
   return data
 }
 
-// 🔁 Gửi đơn hàng đến Supabase (ví dụ chèn vào bảng `orders`)
 export async function placeOrder(orderData) {
   const { data, error } = await supabase.from('orders').insert([orderData])
   if (error) {

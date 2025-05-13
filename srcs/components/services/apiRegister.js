@@ -1,10 +1,15 @@
+import { supabase } from "./supabase";
 
+export async function registerUser({ userData }) {
+  const { data, error } = await supabase
+    .from("Registration")
+    .insert([{ userData }])
+    .select();
 
+  if (error) {
+    console.error("Lỗi khi đăng ký:", error.message);
+    throw error;
+  }
 
-const { data, error } = await supabase
-  .from('Registration')
-  .insert([
-    { some_column: 'someValue' },
-    { some_column: 'otherValue' },
-  ])
-  .select()
+  return data;
+}
