@@ -1,5 +1,5 @@
-import Button from '@/srcs/components/ui/Button';
-import Icon from '@/src/components/ui/Icon';
+import Button from '@/components/ui/Button';
+import Icon from '@/components/ui/Icon';
 
 const ProductFilters = ({ selectedBrand, onBrandChange, sortBy, onSortChange }) => {
   const brands = ['Tất cả', 'AMD', 'Intel'];
