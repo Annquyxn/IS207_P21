@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import ProductFilters from "@/components/features/products/ProductFilters"; // nếu alias `@` trỏ tới `srcs`
-import ProductGrid from '@/components/features/products/ProductGrid';
+// import { useState } from "react";
+// import ProductFilters from "./components/ProductFilters";
+// import ProductGrid from "./components/ProductGrid";
 
-const ProductSelectionPage = () => {
-  const [selectedBrand, setSelectedBrand] = useState('all');
-  const [sortBy, setSortBy] = useState('default');
+function ProductSelectionPage() {
+  // const [selectedBrand, setSelectedBrand] = useState("all");
+  // const [sortBy, setSortBy] = useState("default");
 
   return (
-    <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-sm">
-      <ProductFilters 
+    <div className='max-w-6xl mx-auto bg-white rounded-lg shadow-md'>
+      {/* <ProductFilters
         selectedBrand={selectedBrand}
         onBrandChange={setSelectedBrand}
         sortBy={sortBy}
@@ -18,8 +18,10 @@ const ProductSelectionPage = () => {
         filter={selectedBrand}
         sort={sortBy}
       />
+
+      <ProductGrid filter={selectedBrand} sort={sortBy} /> */}
     </div>
   );
-};
+}
 
 export default ProductSelectionPage;
