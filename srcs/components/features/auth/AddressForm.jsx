@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { registerAddressForm } from "@/srcs/components/services/apiAddress";
+import { registerAddressForm } from "@/components/services/apiAddress";
 
 function AddressForm() {
   const {
@@ -233,7 +233,7 @@ function AddressForm() {
         className="mt-4 px-6 py-3 bg-black text-white font-medium rounded hover:bg-gray-800 transition-colors"
         disabled={mutation.isPending}
       >
-        {mutation.isPending ? "Submitting..." : "Submit Address"}
+        {mutation.isPending ? "Đang gửi" : "Gửi địa chỉ"}
       </button>
     </form>
   );
