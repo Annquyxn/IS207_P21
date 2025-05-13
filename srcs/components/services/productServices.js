@@ -1,5 +1,4 @@
-// api.js hoặc productService.js
-import { supabase } from './supabaseClient'
+import { supabase } from './supabase'
 
 // 🔁 Lấy sản phẩm từ Supabase
 export async function fetchProducts() {
