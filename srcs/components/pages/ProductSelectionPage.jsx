@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ProductFilters from "./components/ProductFilters";
-import ProductGrid from "./components/ProductGrid";
+import ProductFilters from "@/srcs/components/pages/ProductFilters";
+import ProductGrid from "@/srcs/components/pages/ProductGrid";
 
 function ProductSelectionPage() {
   const [selectedBrand, setSelectedBrand] = useState("all");
