@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { registerAddressForm } from "./apiAddress";
+import { registerAddressForm } from "@/srcs/components/services/apiAddress";
 
 function AddressForm() {
   const {

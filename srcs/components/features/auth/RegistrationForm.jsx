@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
-import { registerUser } from "../../services/apiRegister";
+import { registerUser } from "@srcs/components/services/apiRegister";
 
 function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
