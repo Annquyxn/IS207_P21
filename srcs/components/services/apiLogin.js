@@ -1,16 +1,23 @@
-import { supabase } from "./supabase";
+import { supabase } from './supabase';
+import bcrypt from 'bcryptjs';
 
 export async function apiLogin({ username, password }) {
   const { data, error } = await supabase
-    .from("LoginForm")
-    .select("*")
-    .eq("username", username)
-    .eq("password", password)
+    .from('LoginForm')
+    .select('*')
+    .eq('username', username)
     .single();
 
   if (error) {
-    console.error("Lỗi khi đăng nhập:", error.message);
-    throw new Error("Tài khoản hoặc mật khẩu không đúng");
+    console.error('Lỗi khi truy vấn dữ liệu:', error.message);
+    throw new Error('Tài khoản không tồn tại');
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, data.password);
+
+  if (!isPasswordValid) {
+    console.error('Mật khẩu không đúng');
+    throw new Error('Mật khẩu không đúng');
   }
 
   return data;

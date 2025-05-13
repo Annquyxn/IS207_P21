@@ -26,7 +26,6 @@ function App() {
             <Route index element={<Navigate replace to='home' />} />
             <Route path='home' element={<HomePage />} />
 
-            {/* 👉 Nhóm route USER vào đây */}
             <Route path='user' element={<User />}>
               <Route index element={<UserPage />} />
               <Route path='address' element={<UserAddress />} />
