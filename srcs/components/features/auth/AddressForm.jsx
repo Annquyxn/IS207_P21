@@ -1,7 +1,6 @@
-// import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { registerAddressForm } from "./apiAddress";
 
 function AddressForm() {
   const {
@@ -9,7 +8,6 @@ function AddressForm() {
     handleSubmit,
     formState: { errors },
     watch,
-    setValue,
   } = useForm({
     defaultValues: {
       fullName: "",
@@ -25,9 +23,7 @@ function AddressForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: (formData) => {
-      return axios.post("/api/address", formData);
-    },
+    mutationFn: (formData) => registerAddressForm({ addressData: formData }),
     onSuccess: () => {
       alert("Address saved successfully!");
     },
@@ -55,7 +51,9 @@ function AddressForm() {
             {...register("fullName", { required: "Full name is required" })}
           />
           {errors.fullName && (
-            <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.fullName.message}
+            </p>
           )}
         </div>
         <div className="flex-1">
@@ -90,7 +88,6 @@ function AddressForm() {
             className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
               selectedGender === "male" ? "bg-black" : "bg-white"
             }`}
-            onClick={() => setValue("gender", "male")}
           >
             {selectedGender === "male" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -109,7 +106,6 @@ function AddressForm() {
             className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
               selectedGender === "female" ? "bg-black" : "bg-white"
             }`}
-            onClick={() => setValue("gender", "female")}
           >
             {selectedGender === "female" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -144,7 +140,9 @@ function AddressForm() {
             {/* Add your district options here */}
           </select>
           {errors.district && (
-            <p className="text-red-500 text-sm mt-1">{errors.district.message}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.district.message}
+            </p>
           )}
         </div>
       </div>
@@ -200,7 +198,6 @@ function AddressForm() {
             className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
               selectedShippingMethod === "standard" ? "bg-black" : "bg-white"
             }`}
-            onClick={() => setValue("shippingMethod", "standard")}
           >
             {selectedShippingMethod === "standard" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -222,7 +219,6 @@ function AddressForm() {
           className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
             selectedShippingMethod === "express" ? "bg-black" : "bg-white"
           }`}
-          onClick={() => setValue("shippingMethod", "express")}
         >
           {selectedShippingMethod === "express" && (
             <div className="w-3 h-3 rounded-full bg-white"></div>
