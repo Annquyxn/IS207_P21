@@ -19,6 +19,7 @@ import UserOrders from "./components/features/user/UserOrders";
 import UserHistory from "./components/features/user/UserHistory";
 import AccountForm from "./components/features/user/FormAccount";
 import ShoppingCartPage from "./components/pages/ShoppingCartPage";
+import ProductDetailPage from "./components/pages/ProductDetailPage"
 
 function App() {
   return (
@@ -87,6 +88,19 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <CheckoutPage />
+                  </motion.div>
+                }
+              />
+
+               <Route
+                path="product-detail"
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <ProductDetailPage />
                   </motion.div>
                 }
               />
