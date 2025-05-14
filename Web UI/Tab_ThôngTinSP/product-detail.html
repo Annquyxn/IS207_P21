@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sản phẩm</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="product-detail.css" />
+</head>
+<body>
+  <main class="page-container">
+    <div class="content-wrapper">
+      <article class="product-layout">
+        <div class="product-content">
+          <section class="product-gallery">
+            <div class="gallery-container">
+              <div class="main-image"></div>
+              <div class="gallery-controls">
+                <button class="nav-button nav-prev">
+                  <i class="ti ti-chevron-left"></i>
+                </button>
+                <button class="nav-button nav-next">
+                  <i class="ti ti-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+            <div class="thumbnail-wrapper">
+              <button class="thumb-nav thumb-prev">
+                <i class="ti ti-chevron-left"></i>
+              </button>
+              <div class="thumbnail-strip">
+                <button class="thumbnail-item"></button>
+                <button class="thumbnail-item"></button>
+                <button class="thumbnail-item"></button>
+                <button class="thumbnail-item"></button>
+              </div>
+              <button class="thumb-nav thumb-next">
+                <i class="ti ti-chevron-right"></i>
+              </button>
+            </div>
+          </section>
+
+          <section class="product-info">
+            <h1 class="product-title">Tên sản phẩm: laptop Abc màn hình..., cấu hình...</h1>
+
+            <div class="rating-container">
+              <div class="star-rating">
+                <i class="ti ti-star"></i>
+                <i class="ti ti-star"></i>
+                <i class="ti ti-star"></i>
+                <i class="ti ti-star"></i>
+                <i class="ti ti-star"></i>
+              </div>
+              <a href="#reviews" class="review-link">Xem đánh giá</a>
+            </div>
+
+            <div class="price-container">
+              <p class="current-price">12.000.000đ</p>
+              <p class="original-price">15.000.000đ</p>
+              <span class="discount-badge">-20%</span>
+            </div>
+
+            <div class="action-buttons">
+              <button class="primary-button">Mua hàng</button>
+              <button class="secondary-button">Thêm vào giỏ hàng</button>
+            </div>
+
+            <div class="gift-section">
+              <p class="gift-heading">Quà tặng kèm:</p>
+              <ul class="gift-list">
+                <li>• Bàn phím A</li>
+                <li>• Chuột B</li>
+                <li>• Balo C</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <section class="product-details">
+          <h2 class="section-title">Thông tin sản phẩm</h2>
+          <h3 class="subsection-title">Đánh giá chi tiết màn hình GIGABYTE G25F2 25" IPS 200Hz chuyên game</h3>
+          <p class="product-description">
+            Màn hình GIGABYTE G25F2 là một trong những sản phẩm nổi bật trong dòng màn hình gaming, được thiết kế đặc biệt cho các game thủ yêu cầu cao về chất lượng hình ảnh, tốc độ phản hồi và tính năng hỗ trợ chơi game. Với kích thước 25 inch và tấm nền IPS, sản phẩm này hứa hẹn mang đến những trải nghiệm tuyệt vời trong mỗi trận đấu. Dưới đây là đánh giá chi tiết về sản phẩm này.
+          </p>
+
+          <figure class="product-image">
+            <img src="https://placehold.co/600x400/333333/333333" alt="GIGABYTE G25F2 Monitor">
+          </figure>
+
+          <h3 class="subsection-title">Đánh giá chi tiết sản phẩm</h3>
+          <p class="product-description">
+            Màn hình GIGABYTE G25F2 không chỉ ấn tượng về thiết kế mà còn vượt trội trong hiệu suất. Với tần số quét lên đến 200Hz và thời gian phản hồi 1ms, sản phẩm này đáp ứng nhu cầu của các game thủ chuyên nghiệp, mang lại hình ảnh mượt mà và chính xác. Nhờ vào công nghệ tấm nền IPS, màu sắc trên màn hình G25F2 luôn sống động và chân thực, giúp người dùng có thể trải nghiệm hình ảnh rõ nét trong từng khoảnh khắc.
+          </p>
+        </section>
+
+        <!-- XEM THÊM -->
+        <div class="expand-section">
+          <div class="fade-gradient"></div>
+          <button class="expand-button">
+            <i class="ti ti-chevron-down"></i> Xem thêm
+          </button>
+
+          <div class="hidden-content">
+            <h3 class="subsection-title">Thông số kỹ thuật bổ sung</h3>
+            <p class="product-description">
+              Đây là phần nội dung thêm. Bạn có thể ghi thông số kỹ thuật chi tiết hơn, các hình ảnh khác hoặc đánh giá từ chuyên gia tại đây. Khi người dùng nhấn “Xem thêm”, phần này sẽ hiện ra đầy đủ.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const expandSection = document.querySelector(".expand-section");
+      const expandButton = expandSection.querySelector(".expand-button");
+
+      expandButton.addEventListener("click", () => {
+        expandSection.classList.add("expanded");
+      });
+    });
+  </script>
+</body>
+</html>
