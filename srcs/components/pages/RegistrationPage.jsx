@@ -1,22 +1,21 @@
-// import Header from "@/components/header/Header";
-// import Footer from "@/components/footer/Footer";
-// import RegistrationForm from "@/features/auth/RegistrationForm";
-// import SocialLogin from "@/features/auth/SocialLogin";
+import RegistrationForm from "@/components/features/auth/RegistrationForm";
+import SocialLogin from "@/components/features/auth/SocialLogin";
 
 function RegistrationPage() {
   return (
-    <main className='bg-white flex flex-col items-center py-16 min-h-screen'>
-      {/* <Header />
-
-      <h1 className="text-[28px] font-bold text-[#333] mb-8 font-['Familjen_Grotesk']">
+    <main className="bg-white flex flex-col items-center py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 tracking-tight">
         Đăng ký tài khoản
       </h1>
 
       <RegistrationForm />
 
       <div className="flex items-center justify-center mt-6 text-sm">
-        <p className="text-gray-700 text-base font-medium">Bạn đã có tài khoản?</p>
-        <a href="/login" className="ml-2 text-blue-600 font-semibold text-lg hover:underline">
+        <p className="text-gray-600">Bạn đã có tài khoản?</p>
+        <a
+          href="/login"
+          className="ml-2 text-blue-600 hover:text-blue-800 hover:underline font-medium"
+        >
           Đăng nhập
         </a>
       </div>
@@ -28,10 +27,8 @@ function RegistrationPage() {
       </div>
 
       <SocialLogin actionType="register" />
-
-      <Footer /> */}
     </main>
   );
-};
+}
 
 export default RegistrationPage;

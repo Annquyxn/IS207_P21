@@ -1,7 +1,7 @@
-// import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { registerAddressForm } from "@/components/services/apiAddress";
+import Spinner from "@/components/ui/Spinner";
 
 function AddressForm() {
   const {
@@ -9,7 +9,6 @@ function AddressForm() {
     handleSubmit,
     formState: { errors },
     watch,
-    setValue,
   } = useForm({
     defaultValues: {
       fullName: "",
@@ -25,9 +24,7 @@ function AddressForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: (formData) => {
-      return axios.post("/api/address", formData);
-    },
+    mutationFn: (formData) => registerAddressForm({ addressData: formData }),
     onSuccess: () => {
       alert("Address saved successfully!");
     },
@@ -44,25 +41,27 @@ function AddressForm() {
   const selectedShippingMethod = watch("shippingMethod");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       {/* Họ tên và SĐT */}
-      <div className="flex flex-col md:flex-row gap-5">
+      <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1">
           <input
             type="text"
             placeholder="Họ và Tên"
-            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("fullName", { required: "Full name is required" })}
           />
           {errors.fullName && (
-            <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+            <p className="text-red-500 text-sm mt-2">
+              {errors.fullName.message}
+            </p>
           )}
         </div>
         <div className="flex-1">
           <input
             type="tel"
             placeholder="Số điện thoại liên lạc"
-            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("phone", {
               required: "Phone number is required",
               pattern: {
@@ -72,14 +71,13 @@ function AddressForm() {
             })}
           />
           {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+            <p className="text-red-500 text-sm mt-2">{errors.phone.message}</p>
           )}
         </div>
       </div>
-
       {/* Giới tính */}
-      <div className="flex gap-5">
-        <label className="flex items-center gap-2 cursor-pointer">
+      <div className="flex gap-6">
+        <label className="flex items-center gap-2 cursor-pointer text-lg">
           <input
             type="radio"
             className="hidden"
@@ -87,10 +85,9 @@ function AddressForm() {
             value="male"
           />
           <div
-            className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-              selectedGender === "male" ? "bg-black" : "bg-white"
+            className={`w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center ${
+              selectedGender === "male" ? "bg-blue-500" : "bg-white"
             }`}
-            onClick={() => setValue("gender", "male")}
           >
             {selectedGender === "male" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -98,7 +95,7 @@ function AddressForm() {
           </div>
           <span>Anh</span>
         </label>
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex items-center gap-2 cursor-pointer text-lg">
           <input
             type="radio"
             className="hidden"
@@ -106,10 +103,9 @@ function AddressForm() {
             value="female"
           />
           <div
-            className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-              selectedGender === "female" ? "bg-black" : "bg-white"
+            className={`w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center ${
+              selectedGender === "female" ? "bg-pink-500" : "bg-white"
             }`}
-            onClick={() => setValue("gender", "female")}
           >
             {selectedGender === "female" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -118,78 +114,78 @@ function AddressForm() {
           <span>Chị</span>
         </label>
       </div>
-
       {/* Địa chỉ giao hàng */}
-      <h3 className="text-xl font-bold">Địa chỉ giao hàng</h3>
-
-      <div className="flex flex-col md:flex-row gap-5">
+      <h3 className="text-2xl font-semibold text-gray-700 mt-6">
+        Địa chỉ giao hàng
+      </h3>
+      <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 min-w-[240px]">
           <select
-            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("city", { required: "City is required" })}
           >
             <option value="">Chọn tỉnh/thành phố</option>
             {/* Add your city options here */}
           </select>
           {errors.city && (
-            <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
+            <p className="text-red-500 text-sm mt-2">{errors.city.message}</p>
           )}
         </div>
         <div className="flex-1 min-w-[240px]">
           <select
-            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("district", { required: "District is required" })}
           >
             <option value="">Chọn quận/huyện</option>
             {/* Add your district options here */}
           </select>
           {errors.district && (
-            <p className="text-red-500 text-sm mt-1">{errors.district.message}</p>
+            <p className="text-red-500 text-sm mt-2">
+              {errors.district.message}
+            </p>
           )}
         </div>
       </div>
-
-      <div className="flex flex-col md:flex-row gap-5">
+      <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 min-w-[240px]">
           <select
-            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("ward", { required: "Ward is required" })}
           >
             <option value="">Chọn xã/thị trấn</option>
             {/* Add your ward options here */}
           </select>
           {errors.ward && (
-            <p className="text-red-500 text-sm mt-1">{errors.ward.message}</p>
+            <p className="text-red-500 text-sm mt-2">{errors.ward.message}</p>
           )}
         </div>
         <div className="flex-1">
           <input
             type="text"
             placeholder="Số nhà, tên đường"
-            className="w-full min-h-[45px] border border-black bg-white px-3 py-2"
+            className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("street", { required: "Street address is required" })}
           />
           {errors.street && (
-            <p className="text-red-500 text-sm mt-1">{errors.street.message}</p>
+            <p className="text-red-500 text-sm mt-2">{errors.street.message}</p>
           )}
         </div>
       </div>
-
       {/* Ghi chú */}
       <div>
         <input
           type="text"
           placeholder="Ghi chú thêm"
-          className="w-full min-h-[45px] border border-red-600 bg-white px-3 py-2 text-red-600"
+          className="w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           {...register("note")}
         />
       </div>
-
       {/* Dịch vụ giao hàng */}
-      <h3 className="text-xl font-bold">Dịch vụ giao hàng</h3>
-
-      <div className="flex flex-wrap items-center gap-5">
-        <label className="flex items-center gap-2 cursor-pointer">
+      <h3 className="text-2xl font-semibold text-gray-700 mt-6">
+        Dịch vụ giao hàng
+      </h3>
+      <div className="flex flex-wrap items-center gap-6">
+        <label className="flex items-center gap-2 cursor-pointer text-lg">
           <input
             type="radio"
             className="hidden"
@@ -197,10 +193,9 @@ function AddressForm() {
             value="standard"
           />
           <div
-            className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-              selectedShippingMethod === "standard" ? "bg-black" : "bg-white"
+            className={`w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center ${
+              selectedShippingMethod === "standard" ? "bg-blue-500" : "bg-white"
             }`}
-            onClick={() => setValue("shippingMethod", "standard")}
           >
             {selectedShippingMethod === "standard" && (
               <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -208,10 +203,11 @@ function AddressForm() {
           </div>
           <span>Giao hàng tiết kiệm</span>
         </label>
-        <span className="text-red-600">Dự kiến nhận hàng trong 2-3 ngày</span>
+        <span className="text-red-600 text-sm">
+          Dự kiến nhận hàng trong 2-3 ngày
+        </span>
       </div>
-
-      <label className="flex items-center gap-2 cursor-pointer">
+      <label className="flex items-center gap-2 cursor-pointer text-lg">
         <input
           type="radio"
           className="hidden"
@@ -219,10 +215,9 @@ function AddressForm() {
           value="express"
         />
         <div
-          className={`w-4 h-4 rounded-full border border-black flex items-center justify-center ${
-            selectedShippingMethod === "express" ? "bg-black" : "bg-white"
+          className={`w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center ${
+            selectedShippingMethod === "express" ? "bg-blue-500" : "bg-white"
           }`}
-          onClick={() => setValue("shippingMethod", "express")}
         >
           {selectedShippingMethod === "express" && (
             <div className="w-3 h-3 rounded-full bg-white"></div>
@@ -230,14 +225,36 @@ function AddressForm() {
         </div>
         <span>Giao hàng nhanh</span>
       </label>
-
       {/* Submit Button */}
       <button
         type="submit"
-        className="mt-4 px-6 py-3 bg-black text-white font-medium rounded hover:bg-gray-800 transition-colors"
-        disabled={mutation.isPending}
+        disabled={mutation.isLoading}
+        className={`
+    mt-6 px-6 py-3 font-semibold rounded-lg flex items-center justify-center gap-2
+    transition-all duration-300 ease-in-out transform
+    ${
+      mutation.isSuccess
+        ? "bg-green-600 hover:bg-green-700"
+        : "bg-blue-600 hover:bg-blue-700"
+    }
+    text-white
+    ${
+      mutation.isLoading
+        ? "opacity-80 cursor-not-allowed"
+        : "hover:-translate-y-1"
+    }
+  `}
       >
-        {mutation.isPending ? "Submitting..." : "Submit Address"}
+        {mutation.isLoading ? (
+          <>
+            <Spinner size={18} color="white" />
+            Đang gửi...
+          </>
+        ) : mutation.isSuccess ? (
+          "Gửi thành công"
+        ) : (
+          "Gửi địa chỉ"
+        )}
       </button>
     </form>
   );

@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
+import { registerUser } from "@/components/services/apiRegister";
+import Spinner from "@/components/ui/Spinner";
 
 function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -11,23 +14,40 @@ function RegistrationForm() {
     watch,
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data); // Xử lý dữ liệu khi form submit
-    // Gọi API đăng ký ở đây
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const { fullName, email, password } = data;
+      const result = await registerUser({
+        full_name: fullName,
+        email: email,
+        password,
+      });
+
+      console.log("Đăng ký thành công:", result);
+      alert("Đăng kí thành công, Chào mừng bạn đến với cửa hàng của chúng tôi");
+    } catch (error) {
+      console.error("Lỗi đăng ký: ", error);
+      alert("Đăng kí thất bại, vui lòng thử lại");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form 
+    <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-[400px] flex flex-col gap-4"
+      className="w-full max-w-[420px] mx-auto flex flex-col gap-6 bg-white p-8 rounded-2xl shadow-xl"
     >
-      {/* Trường Họ và Tên */}
+      {/* Họ và Tên */}
       <div>
         <input
           type="text"
           placeholder="Họ và Tên"
-          className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 ${
-            errors.fullName ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+          className={`w-full px-4 py-3 border text-lg rounded-lg shadow-sm transition-all duration-200 focus:outline-none hover:shadow-md transform hover:scale-[1.01] ${
+            errors.fullName
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
           }`}
           {...register("fullName", { required: "Vui lòng nhập họ và tên" })}
         />
@@ -36,20 +56,22 @@ function RegistrationForm() {
         )}
       </div>
 
-      {/* Trường Email */}
+      {/* Email */}
       <div>
         <input
           type="email"
           placeholder="Email"
-          className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 ${
-            errors.email ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+          className={`w-full px-4 py-3 border text-lg rounded-lg shadow-sm transition-all duration-200 focus:outline-none hover:shadow-md transform hover:scale-[1.01] ${
+            errors.email
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
           }`}
-          {...register("email", { 
+          {...register("email", {
             required: "Vui lòng nhập email",
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Email không hợp lệ"
-            }
+              message: "Email không hợp lệ",
+            },
           })}
         />
         {errors.email && (
@@ -57,20 +79,22 @@ function RegistrationForm() {
         )}
       </div>
 
-      {/* Trường Mật khẩu */}
+      {/* Mật khẩu */}
       <div className="relative">
         <input
           type={showPassword ? "text" : "password"}
           placeholder="Mật khẩu"
-          className={`w-full px-4 py-3 border rounded-lg pr-12 ${
-            errors.password ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+          className={`w-full px-4 py-3 border text-lg rounded-lg pr-12 shadow-sm transition-all duration-200 focus:outline-none hover:shadow-md transform hover:scale-[1.01] ${
+            errors.password
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
           }`}
-          {...register("password", { 
+          {...register("password", {
             required: "Vui lòng nhập mật khẩu",
             minLength: {
               value: 6,
-              message: "Mật khẩu phải có ít nhất 6 ký tự"
-            }
+              message: "Mật khẩu phải có ít nhất 6 ký tự",
+            },
           })}
         />
         <button
@@ -89,30 +113,46 @@ function RegistrationForm() {
         )}
       </div>
 
-      {/* Trường Xác nhận mật khẩu */}
+      {/* Xác nhận mật khẩu */}
       <div className="relative">
         <input
           type={showPassword ? "text" : "password"}
           placeholder="Xác nhận mật khẩu"
-          className={`w-full px-4 py-3 border rounded-lg pr-12 ${
-            errors.confirmPassword ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"
+          className={`w-full px-4 py-3 border text-lg rounded-lg pr-12 shadow-sm transition-all duration-200 focus:outline-none hover:shadow-md transform hover:scale-[1.01] ${
+            errors.confirmPassword
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
           }`}
-          {...register("confirmPassword", { 
+          {...register("confirmPassword", {
             required: "Vui lòng xác nhận mật khẩu",
-            validate: (value) => 
-              value === watch("password") || "Mật khẩu không khớp"
+            validate: (value) =>
+              value === watch("password") || "Mật khẩu không khớp",
           })}
         />
         {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
 
+      {/* Nút đăng ký */}
       <button
         type="submit"
-        className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+        disabled={loading}
+        className={`w-full py-3 font-bold text-lg bg-red-600 text-white rounded-lg transition-all duration-200 transform ${
+          loading
+            ? "opacity-70 cursor-not-allowed"
+            : "hover:bg-red-700 hover:scale-105"
+        }`}
       >
-        Đăng ký
+        {loading ? (
+          <div className="flex items-center justify-center gap-2">
+            <Spinner className="w-5 h-5" /> Đang đăng ký...
+          </div>
+        ) : (
+          "Đăng ký"
+        )}
       </button>
     </form>
   );
