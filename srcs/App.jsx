@@ -42,7 +42,7 @@ function App() {
             <Route path="checkout" element={<CheckoutPage />} />
             <Route path="complete" element={<CompleteOrderPage />} />
             <Route path="payment-page" element={<PaymentPage />} />
-            <Route path="thong-tin-giao-hang" element={<ShippingInfoPage />} />
+            <Route path="ship-info" element={<ShippingInfoPage />} />
             <Route path="build-pc" element={<BuildPCPage />} />
             <Route path="select" element={<ProductSelectionPage />} />
           </Route>
