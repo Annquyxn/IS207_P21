@@ -1,0 +1,95 @@
+.laptop-menu {
+  position: relative;
+  width: 100%;
+}
+
+.laptop-menu__container {
+  display: flex;
+}
+
+.laptop-menu__header {
+  position: relative;
+  width: 242px;
+}
+
+.laptop-menu__title-wrapper {
+  position: relative;
+}
+
+.laptop-menu__title-bg {
+  width: 243px;
+  height: 37px;
+}
+
+.laptop-menu__title {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: "Istok Web";
+  font-weight: 700;
+  font-size: 18px;
+  color: #000;
+  margin: 0;
+}
+
+.laptop-menu__arrow {
+  position: absolute;
+  left: 200px;
+  top: 11px;
+}
+
+.laptop-menu__content {
+  flex: 1;
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.laptop-menu__categories {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.category-group,
+.brand-group {
+  grid-column: span 1;
+}
+
+.category-group__title,
+.brand-group__title {
+  color: #e40000;
+  font-family: "Istok Web";
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+}
+
+.category-group__list,
+.brand-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.category-group__item,
+.brand-group__item {
+  color: #000;
+  font-family: Inter;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.laptop-menu__brands {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Istok+Web:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
