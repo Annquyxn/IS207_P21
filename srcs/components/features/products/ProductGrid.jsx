@@ -6,15 +6,13 @@ const ProductGrid = ({ filter, sort }) => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
 
-  // Hàm tải dữ liệu sản phẩm
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true);
       try {
         // const data = await fetchProducts(filter, sort);
         // setProducts(data);
-        // Dữ liệu giả lập:
-        setProducts([]);
+        setProducts([]); // Giả lập không có sản phẩm
       } catch (error) {
         console.error("Error loading products:", error);
       } finally {
@@ -43,7 +41,6 @@ const ProductGrid = ({ filter, sort }) => {
             Chưa có dữ liệu sản phẩm để hiển thị
           </h2>
         </div>
-
         <div className="mt-8">
           <ProductPage />
         </div>
@@ -76,7 +73,7 @@ const ProductGrid = ({ filter, sort }) => {
       ))}
 
       <div className="mt-8">
-        <ProductPage /> {/* Hiển thị thêm sản phẩm từ ProductPage */}
+        <ProductPage />
       </div>
     </div>
   );
