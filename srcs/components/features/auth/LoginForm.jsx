@@ -39,7 +39,7 @@ function LoginForm() {
           <input
             type="text"
             placeholder="Email hoặc Số điện thoại"
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 transition transform duration-300 ease-in-out hover:scale-105"
             {...register("username", {
               required: "Vui lòng nhập email hoặc số điện thoại",
             })}
@@ -55,7 +55,7 @@ function LoginForm() {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Mật khẩu"
-            className="w-full px-4 py-3 border rounded-lg pr-12"
+            className="w-full px-4 py-3 border rounded-lg pr-12 focus:ring-2 focus:ring-red-500 transition transform duration-300 ease-in-out hover:scale-105"
             {...register("password", { required: "Vui lòng nhập mật khẩu" })}
           />
           <button
@@ -81,10 +81,16 @@ function LoginForm() {
 
         <button
           type="submit"
-          className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition relative transform duration-300 ease-in-out hover:scale-105"
           disabled={loginMutation.isLoading}
         >
-          {loginMutation.isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+          {loginMutation.isLoading ? (
+            <div className="absolute inset-0 flex justify-center items-center">
+              <div className="w-6 h-6 border-4 border-t-4 border-white rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            "Đăng nhập"
+          )}
         </button>
       </form>
 
@@ -95,14 +101,14 @@ function LoginForm() {
       </div>
 
       <div className="space-y-4">
-        <button className="w-full flex items-center justify-center gap-2 py-2 border rounded-lg hover:bg-gray-50">
+        <button className="w-full flex items-center justify-center gap-2 py-2 border rounded-lg hover:bg-gray-50 transition transform duration-300 ease-in-out hover:scale-105">
           <img src="/google-icon.svg" className="w-6 h-6" alt="Google" />
-          <span>Google</span>
+          <span className="text-lg">Google</span>
         </button>
 
-        <button className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <button className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform duration-300 ease-in-out hover:scale-105">
           <img src="/facebook-icon.svg" className="w-6 h-6" alt="Facebook" />
-          <span>Facebook</span>
+          <span className="text-lg">Facebook</span>
         </button>
       </div>
     </div>
