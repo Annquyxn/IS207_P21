@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiLogin } from "@/components/services/apiLogin";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function LoginForm() {
   const {
@@ -31,15 +32,31 @@ function LoginForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md">
-      <h1 className="text-3xl font-bold text-center mb-8">Đăng Nhập</h1>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md"
+    >
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="text-3xl font-bold text-center mb-8"
+      >
+        Đăng Nhập
+      </motion.h1>
 
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <input
             type="text"
             placeholder="Email hoặc Số điện thoại"
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 transition transform duration-300 ease-in-out hover:scale-105"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 transition"
             {...register("username", {
               required: "Vui lòng nhập email hoặc số điện thoại",
             })}
@@ -49,13 +66,18 @@ function LoginForm() {
               {errors.username.message}
             </p>
           )}
-        </div>
+        </motion.div>
 
-        <div className="relative">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="relative"
+        >
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Mật khẩu"
-            className="w-full px-4 py-3 border rounded-lg pr-12 focus:ring-2 focus:ring-red-500 transition transform duration-300 ease-in-out hover:scale-105"
+            className="w-full px-4 py-3 border rounded-lg pr-12 focus:ring-2 focus:ring-red-500 transition"
             {...register("password", { required: "Vui lòng nhập mật khẩu" })}
           />
           <button
@@ -70,7 +92,7 @@ function LoginForm() {
               {errors.password.message}
             </p>
           )}
-        </div>
+        </motion.div>
 
         <a
           href="#"
@@ -79,10 +101,13 @@ function LoginForm() {
           Quên mật khẩu?
         </a>
 
-        <button
+        <motion.button
           type="submit"
-          className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition relative transform duration-300 ease-in-out hover:scale-105"
+          className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition relative"
           disabled={loginMutation.isLoading}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           {loginMutation.isLoading ? (
             <div className="absolute inset-0 flex justify-center items-center">
@@ -91,7 +116,7 @@ function LoginForm() {
           ) : (
             "Đăng nhập"
           )}
-        </button>
+        </motion.button>
       </form>
 
       <div className="my-6 flex items-center gap-4">
@@ -100,18 +125,31 @@ function LoginForm() {
         <hr className="flex-grow border-gray-300" />
       </div>
 
-      <div className="space-y-4">
-        <button className="w-full flex items-center justify-center gap-2 py-2 border rounded-lg hover:bg-gray-50 transition transform duration-300 ease-in-out hover:scale-105">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="space-y-4"
+      >
+        <motion.button
+          className="w-full flex items-center justify-center gap-2 py-2 border rounded-lg hover:bg-gray-50 transition"
+          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+        >
           <img src="/google-icon.svg" className="w-6 h-6" alt="Google" />
-          <span className="text-lg">Google</span>
-        </button>
+          <span>Google</span>
+        </motion.button>
 
-        <button className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform duration-300 ease-in-out hover:scale-105">
+        <motion.button
+          className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+        >
           <img src="/facebook-icon.svg" className="w-6 h-6" alt="Facebook" />
-          <span className="text-lg">Facebook</span>
-        </button>
-      </div>
-    </div>
+          <span>Facebook</span>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 }
 
