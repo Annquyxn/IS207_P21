@@ -18,6 +18,7 @@ import UserAddress from "./components/features/user/UserAddress";
 import UserOrders from "./components/features/user/UserOrders";
 import UserHistory from "./components/features/user/UserHistory";
 import AccountForm from "./components/features/user/FormAccount";
+import ShoppingCartPage from "./components/pages/ShoppingCartPage";
 
 function App() {
   return (
@@ -89,6 +90,20 @@ function App() {
                   </motion.div>
                 }
               />
+
+              <Route
+                path="shopping-cart"
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <ShoppingCartPage />
+                  </motion.div>
+                }
+              />
+
               <Route
                 path="complete"
                 element={
