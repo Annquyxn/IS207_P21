@@ -44,7 +44,7 @@ function App() {
             <Route path="payment-page" element={<PaymentPage />} />
             <Route path="thong-tin-giao-hang" element={<ShippingInfoPage />} />
             <Route path="build-pc" element={<BuildPCPage />} />
-            <Route path="chon-san-pham" element={<ProductSelectionPage />} />
+            <Route path="select" element={<ProductSelectionPage />} />
           </Route>
         </Routes>
       </main>
