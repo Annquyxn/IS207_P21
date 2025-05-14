@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
+import { useState, useEffect, useRef } from "react";
 
 const ProductFilters = ({
   selectedBrand,
@@ -13,6 +14,37 @@ const ProductFilters = ({
     { value: "price-asc", label: "Giá tăng dần" },
     { value: "price-desc", label: "Giá giảm dần" },
   ];
+
+  const [activeFilter, setActiveFilter] = useState(null); 
+  const filterRef = useRef(null);
+
+  const filterOptions = {
+    Giá: ["Dưới 1 triệu", "1-3 triệu", "3-5 triệu", "Trên 5 triệu"],
+    "Dòng CPU": ["AMD Ryzen", "Intel Core i7", "Intel Core i9"],
+    Socket: ["LGA 1200", "AM4", "LGA 1700"],
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setActiveFilter(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleFilterClick = (label) => {
+    setActiveFilter(activeFilter === label ? null : label); 
+  }
+
+  const handleOptionSelect = () => {
+    setActiveFilter(null); 
+  };
 
   return (
     <div className="p-6 border-b border-gray-200 space-y-6 bg-gray-50 rounded-xl">
@@ -37,14 +69,32 @@ const ProductFilters = ({
       <div className="flex flex-wrap items-center gap-4">
         <h3 className="text-lg font-semibold">Bộ lọc nâng cao:</h3>
         {["Giá", "Dòng CPU", "Socket"].map((label) => (
-          <Button
-            variant="outline"
-            key={label}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full"
-          >
-            <span>{label}</span>
-            <Icon name="chevron-down" className="w-4 h-4 text-gray-500" />
-          </Button>
+          <div key={label} className="relative" ref={filterRef}>
+            <Button
+              variant="outline"
+              onClick={() => handleFilterClick(label)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+            >
+              <span>{label}</span>
+              <Icon name="chevron-down" className="w-4 h-4 text-gray-500" />
+            </Button>
+
+            {activeFilter === label && (
+              <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <ul>
+                  {filterOptions[label].map((option) => (
+                    <li
+                      key={option}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={handleOptionSelect}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         ))}
       </div>
 

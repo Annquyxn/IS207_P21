@@ -9,9 +9,7 @@ import CompleteOrderPage from "./components/pages/CompleteOrderPage";
 import PaymentPage from "./components/pages/PaymentPage";
 import ShippingInfoPage from "./components/pages/ShippingInfoPage";
 import LoginPage from "./components/pages/LoginPage";
-import RegistrationPage from "./components/pages/RegistrationPage";
 import BuildPCPage from "./components/pages/BuildPCPage";
-import ProductSelectionPage from "./components/pages/ProductSelectionPage";
 import User from "./components/pages/User";
 import UserPage from "./components/features/user/UserPage";
 import UserAddress from "./components/features/user/UserAddress";
@@ -20,6 +18,7 @@ import UserHistory from "./components/features/user/UserHistory";
 import AccountForm from "./components/features/user/FormAccount";
 import ShoppingCartPage from "./components/pages/ShoppingCartPage";
 import ProductDetailPage from "./components/pages/ProductDetailPage"
+import RegistrationPage from "./components/pages/RegistrationPage"
 
 function App() {
   return (
@@ -163,18 +162,6 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <BuildPCPage />
-                  </motion.div>
-                }
-              />
-              <Route
-                path="select"
-                element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <ProductSelectionPage />
                   </motion.div>
                 }
               />
