@@ -8,6 +8,7 @@ export default {
         primary: "#ea1a1a",
         secondary: "#2f2f2f",
         accent: "#f56758",
+        skeleton: "#e2e8f0",
       },
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],

@@ -1,37 +1,36 @@
 function ProductCard({ product }) {
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-      <div className="relative pb-[100%]">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100">
+      <div className="relative pb-[100%] bg-gray-100">
         <img
           src={product.image}
           alt={product.name}
-          className="absolute h-full w-full object-cover"
+          className="absolute h-full w-full object-contain p-2"
         />
         {product.discount && (
-          <span className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+          <span className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
             -{product.discount}%
           </span>
         )}
       </div>
 
-      <div className="p-4">
-        <h3 className="font-medium text-gray-900 line-clamp-2 h-12">
+      <div className="p-4 space-y-2">
+        <h3 className="font-semibold text-gray-900 line-clamp-2 min-h-[48px]">
           {product.name}
         </h3>
 
-        <div className="mt-3 flex items-center justify-between">
-          <div className="space-y-1">
+        <div className="flex items-center justify-between mt-2">
+          <div>
             {product.originalPrice && (
-              <span className="text-gray-400 line-through text-sm">
+              <div className="text-gray-400 line-through text-sm">
                 {product.originalPrice.toLocaleString()}đ
-              </span>
+              </div>
             )}
-            <p className="text-red-600 font-bold">
+            <p className="text-red-600 font-bold text-lg">
               {product.price.toLocaleString()}đ
             </p>
           </div>
-
-          <button className="p-2 bg-red-100 rounded-full hover:bg-red-200">
+          <button className="p-2 bg-red-100 rounded-full hover:bg-red-200 transition">
             <svg
               className="w-5 h-5 text-red-600"
               fill="none"
