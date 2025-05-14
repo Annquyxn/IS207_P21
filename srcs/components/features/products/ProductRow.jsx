@@ -36,9 +36,14 @@ function ProductRow({ products }) {
             </div>
           </div>
 
-          <button className="w-full py-2 bg-blue-600 text-white rounded-xl font-semibold text-base transition-transform transform hover:scale-105 hover:bg-blue-700 hover:shadow-md">
-            Mua ngay
-          </button>
+          <div className="flex flex-col gap-3">
+            <button className="w-full py-2 bg-blue-600 text-white rounded-xl font-semibold text-base transition-transform transform hover:scale-105 hover:bg-blue-700 hover:shadow-md">
+              Mua ngay
+            </button>
+            <button className="w-full py-2 bg-gray-300 text-black rounded-xl font-semibold text-base transition-transform transform hover:scale-105 hover:bg-gray-400 hover:shadow-md">
+              Thêm vào giỏ hàng
+            </button>
+          </div>
         </div>
       ))}
     </div>

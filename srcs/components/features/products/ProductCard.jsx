@@ -10,7 +10,7 @@ const ProductCard = ({
 }) => {
   return (
     <article
-      className="bg-white rounded border border-gray-300 p-4 flex flex-col items-start w-full max-w-[236px] 
+      className="bg-white rounded border border-gray-300 p-4 flex flex-col items-start w-full max-w-[236px]
       transform transition-transform duration-500 hover:scale-105 hover:shadow-xl cursor-pointer"
     >
       <div className="w-full h-[236px] overflow-hidden rounded mb-2">
@@ -21,11 +21,11 @@ const ProductCard = ({
         />
       </div>
 
-      <h2 className="text-black text-base font-bold mb-3 leading-snug line-clamp-2">
+      <h2 className="text-black text-sm font-bold mb-2 leading-snug line-clamp-2">
         {title}
       </h2>
 
-      <div className="bg-gray-100 rounded w-full p-3 flex justify-center items-center overflow-hidden">
+      <div className="bg-gray-100 rounded w-full p-2 flex justify-center items-center overflow-hidden">
         <img
           src={image}
           alt={title}
@@ -33,19 +33,19 @@ const ProductCard = ({
         />
       </div>
 
-      <p className="text-gray-600 text-sm font-bold mt-4 mb-2">
+      <p className="text-gray-600 text-xs font-bold mt-4 mb-1">
         {originalPrice}
       </p>
 
-      <div className="flex items-start gap-3">
-        <p className="text-red-600 text-lg font-bold">{salePrice}</p>
-        <span className="text-red-500 border border-red-600 px-2 py-1 rounded-full text-sm font-semibold transition-transform duration-300 hover:scale-110">
+      <div className="flex items-start gap-2">
+        <p className="text-red-600 text-base font-bold">{salePrice}</p>
+        <span className="text-red-500 border border-red-600 px-2 py-0.5 rounded-full text-xs font-semibold transition-transform duration-300 hover:scale-110">
           {discount}
         </span>
       </div>
 
-      <div className="flex mt-2 items-center gap-2">
-        <div className="flex items-center gap-1 text-yellow-400 text-sm">
+      <div className="flex mt-1.5 items-center gap-2">
+        <div className="flex items-center gap-1 text-yellow-400 text-xs">
           <span>{rating}</span>
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/1f2be4e0174f28cccf3c9f67429bb3524ef34cf9"

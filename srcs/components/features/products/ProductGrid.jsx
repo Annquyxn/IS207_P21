@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Button from "@/components/ui/Button";
 import ProductSkeleton from "@/components/features/products/ProductSkeleton";
+import ProductPage from "@/components/pages/ProductPage";
 
 const ProductGrid = ({ filter, sort }) => {
   const [loading, setLoading] = useState(true);
@@ -44,17 +44,8 @@ const ProductGrid = ({ filter, sort }) => {
           </h2>
         </div>
 
-        {/* Footer Placeholder */}
-        <div className="flex justify-center gap-6 mt-8">
-          <Button
-            variant="outline"
-            className="flex-1 py-4 px-8 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 hover:shadow-md transition-all duration-300 text-lg"
-          >
-            Chi tiết
-          </Button>
-          <Button className="flex-1 py-4 px-8 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-md transition-all duration-300 text-lg">
-            Chọn
-          </Button>
+        <div className="mt-8">
+          <ProductPage />
         </div>
       </div>
     );
@@ -77,18 +68,16 @@ const ProductGrid = ({ filter, sort }) => {
           </h3>
           <p className="text-red-600 font-bold mb-4">{product.price} VNĐ</p>
           <div className="flex gap-6">
-            <Button
-              variant="outline"
-              className="flex-1 py-4 px-8 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 hover:shadow-md transition-all duration-300 text-lg"
-            >
-              Chi tiết
-            </Button>
-            <Button className="flex-1 py-4 px-8 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-md transition-all duration-300 text-lg">
-              Chọn
-            </Button>
+            <button className="flex-1 py-4 px-8 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 hover:shadow-md transition-all duration-300 text-lg">
+              Xem thêm
+            </button>
           </div>
         </div>
       ))}
+
+      <div className="mt-8">
+        <ProductPage /> {/* Hiển thị thêm sản phẩm từ ProductPage */}
+      </div>
     </div>
   );
 };

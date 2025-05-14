@@ -8,30 +8,16 @@ function Footer() {
         <section>
           <h3 className="font-semibold text-gray-900 mb-4">VỀ CHÚNG TÔI</h3>
           <ul className="space-y-2">
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Giới thiệu
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Tuyển dụng
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Liên hệ
-              </a>
-            </li>
+            {["Giới thiệu", "Tuyển dụng", "Liên hệ"].map((item, index) => (
+              <li key={index}>
+                <a
+                  href="#"
+                  className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
         </section>
 
@@ -39,30 +25,20 @@ function Footer() {
         <section>
           <h3 className="font-semibold text-gray-900 mb-4">CHÍNH SÁCH</h3>
           <ul className="space-y-2">
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Chính sách bảo hành
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Chính sách giao hàng
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Chính sách bảo mật
-              </a>
-            </li>
+            {[
+              "Chính sách bảo hành",
+              "Chính sách giao hàng",
+              "Chính sách bảo mật",
+            ].map((item, index) => (
+              <li key={index}>
+                <a
+                  href="#"
+                  className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
         </section>
 
@@ -70,46 +46,22 @@ function Footer() {
         <section>
           <h3 className="font-semibold text-gray-900 mb-4">THÔNG TIN</h3>
           <ul className="space-y-2">
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Hệ thống cửa hàng
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Hướng dẫn mua hàng
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Hướng dẫn thanh toán
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Hướng dẫn trả góp
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-3 py-1 rounded-md hover:bg-red-600 hover:text-white transition"
-              >
-                Tra cứu địa chỉ bảo hành
-              </a>
-            </li>
+            {[
+              "Hệ thống cửa hàng",
+              "Hướng dẫn mua hàng",
+              "Hướng dẫn thanh toán",
+              "Hướng dẫn trả góp",
+              "Tra cứu địa chỉ bảo hành",
+            ].map((item, index) => (
+              <li key={index}>
+                <a
+                  href="#"
+                  className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
         </section>
 
@@ -157,31 +109,26 @@ function Footer() {
           KẾT NỐI VỚI CHÚNG TÔI
         </h3>
         <div className="flex justify-center gap-4 text-lg">
-          <a
-            href="#"
-            className="bg-gray-200 hover:bg-blue-600 hover:text-white p-2 rounded-full transition"
-          >
-            <FaFacebookF />
-          </a>
-          <a
-            href="#"
-            className="bg-gray-200 hover:bg-sky-400 hover:text-white p-2 rounded-full transition"
-          >
-            <FaTwitter />
-          </a>
-          <a
-            href="#"
-            className="bg-gray-200 hover:bg-pink-500 hover:text-white p-2 rounded-full transition"
-          >
-            <FaInstagram />
-          </a>
-          <a
-            href="#"
-            className="bg-gray-200 hover:bg-red-600 hover:text-white p-2 rounded-full transition"
-          >
-            <FaYoutube />
-          </a>
+          {[
+            { icon: FaFacebookF, color: "hover:bg-[#1877F2]" },
+            { icon: FaTwitter, color: "hover:bg-[#1DA1F2]" },
+            {
+              icon: FaInstagram,
+              color:
+                "hover:bg-gradient-to-br hover:from-pink-500 hover:to-yellow-500",
+            },
+            { icon: FaYoutube, color: "hover:bg-[#FF0000]" },
+          ].map((item, index) => (
+            <a
+              key={index}
+              href="#"
+              className={`bg-gray-200 p-2 rounded-full transform transition duration-300 hover:scale-110 hover:text-white ${item.color}`}
+            >
+              <item.icon />
+            </a>
+          ))}
         </div>
+
         <p className="text-xs text-gray-500 mt-4">
           © {new Date().getFullYear()} GearVN - All rights reserved
         </p>
