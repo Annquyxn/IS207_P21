@@ -1,6 +1,7 @@
 import LeftColumn from "@/components/features/columns/LeftColumn";
 import CenterColumn from "@/components/features/columns/CenterColumn";
 import RightColumn from "@/components/features/columns/RightColumn";
+import ProductPage from "@/components/pages/ProductPage";
 
 function HomePage() {
   return (
@@ -9,6 +10,10 @@ function HomePage() {
         <LeftColumn />
         <CenterColumn />
         <RightColumn />
+      </div>
+      {/* Đưa ProductPage vào vị trí phía dưới của các cột */}
+      <div className="mt-6">
+        <ProductPage />
       </div>
     </main>
   );
