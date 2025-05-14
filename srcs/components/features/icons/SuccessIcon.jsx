@@ -1,8 +1,8 @@
 function SuccessIcon() {
   return (
-    <div className="relative">
+    <div className="relative w-[110px] h-[110px]">
       <svg
-        className="w-[110px] h-[110px]"
+        className="w-full h-full"
         viewBox="0 0 110 110"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +17,7 @@ function SuccessIcon() {
         />
       </svg>
       <svg
-        className="absolute w-[70px] h-[65px] top-[22px] left-1/2 transform -translate-x-1/2"
+        className="absolute w-[70px] h-[65px] top-[22px] left-1/2 -translate-x-1/2 transform"
         viewBox="0 0 78 73"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
