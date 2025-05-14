@@ -1,14 +1,17 @@
+import defaultTheme from "tailwindcss/defaultTheme";
+
 export default {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         primary: "#ea1a1a",
         secondary: "#2f2f2f",
         accent: "#f56758",
+        skeleton: "#e2e8f0",
       },
       fontFamily: {
-        sans: ["Roboto", "sans-serif"],
+        sans: ["Inter", ...defaultTheme.fontFamily.sans],
         heading: ["Familjen Grotesk", "sans-serif"],
       },
     },

@@ -1,15 +1,19 @@
+import { supabase } from './supabaseClient'
+
 export async function fetchProducts() {
-  const response = await fetch('https://api.example.com/products')
-  return await response.json()
+  const { data, error } = await supabase.from('products').select('*')
+  if (error) {
+    console.error('Error fetching products:', error.message)
+    return []
+  }
+  return data
 }
 
 export async function placeOrder(orderData) {
-  const response = await fetch('https://api.example.com/orders', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(orderData)
-  })
-  return await response.json()
+  const { data, error } = await supabase.from('orders').insert([orderData])
+  if (error) {
+    console.error('Error placing order:', error.message)
+    return null
+  }
+  return data
 }
