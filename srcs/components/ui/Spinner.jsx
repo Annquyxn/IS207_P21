@@ -1,22 +1,28 @@
-import styled, { keyframes } from "styled-components";
+import React from "react";
 
-const rotate = keyframes`
-  to {
-    transform: rotate(1turn)
-  }
-`;
-
-const Spinner = styled.div`
-  margin: 4.8rem auto;
-
-  width: 6.4rem;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(farthest-side, var(--color-brand-600) 94%, #0000)
-      top/10px 10px no-repeat,
-    conic-gradient(#0000 30%, var(--color-brand-600));
-  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 10px), #000 0);
-  animation: ${rotate} 1.5s infinite linear;
-`;
-
-export default Spinner;
+export default function Spinner({ size = 20, color = "white" }) {
+  return (
+    <svg
+      className="animate-spin mr-2"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill={color}
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      />
+    </svg>
+  );
+}
