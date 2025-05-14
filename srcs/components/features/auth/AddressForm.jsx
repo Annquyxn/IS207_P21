@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { registerAddressForm } from "@/components/services/apiAddress";
+import Spinner from "@/components/ui/Spinner";
 
 function AddressForm() {
   const {
@@ -74,7 +75,6 @@ function AddressForm() {
           )}
         </div>
       </div>
-
       {/* Giới tính */}
       <div className="flex gap-6">
         <label className="flex items-center gap-2 cursor-pointer text-lg">
@@ -114,12 +114,10 @@ function AddressForm() {
           <span>Chị</span>
         </label>
       </div>
-
       {/* Địa chỉ giao hàng */}
       <h3 className="text-2xl font-semibold text-gray-700 mt-6">
         Địa chỉ giao hàng
       </h3>
-
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 min-w-[240px]">
           <select
@@ -148,7 +146,6 @@ function AddressForm() {
           )}
         </div>
       </div>
-
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 min-w-[240px]">
           <select
@@ -174,7 +171,6 @@ function AddressForm() {
           )}
         </div>
       </div>
-
       {/* Ghi chú */}
       <div>
         <input
@@ -184,12 +180,10 @@ function AddressForm() {
           {...register("note")}
         />
       </div>
-
       {/* Dịch vụ giao hàng */}
       <h3 className="text-2xl font-semibold text-gray-700 mt-6">
         Dịch vụ giao hàng
       </h3>
-
       <div className="flex flex-wrap items-center gap-6">
         <label className="flex items-center gap-2 cursor-pointer text-lg">
           <input
@@ -213,7 +207,6 @@ function AddressForm() {
           Dự kiến nhận hàng trong 2-3 ngày
         </span>
       </div>
-
       <label className="flex items-center gap-2 cursor-pointer text-lg">
         <input
           type="radio"
@@ -232,18 +225,36 @@ function AddressForm() {
         </div>
         <span>Giao hàng nhanh</span>
       </label>
-
       {/* Submit Button */}
       <button
         type="submit"
-        className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-        disabled={mutation.isLoading} // Disable button khi đang gửi
+        disabled={mutation.isLoading}
+        className={`
+    mt-6 px-6 py-3 font-semibold rounded-lg flex items-center justify-center gap-2
+    transition-all duration-300 ease-in-out transform
+    ${
+      mutation.isSuccess
+        ? "bg-green-600 hover:bg-green-700"
+        : "bg-blue-600 hover:bg-blue-700"
+    }
+    text-white
+    ${
+      mutation.isLoading
+        ? "opacity-80 cursor-not-allowed"
+        : "hover:-translate-y-1"
+    }
+  `}
       >
-        {mutation.isLoading
-          ? "Đang gửi..."
-          : mutation.isSuccess
-          ? "Gửi thành công"
-          : "Gửi địa chỉ"}{" "}
+        {mutation.isLoading ? (
+          <>
+            <Spinner size={18} color="white" />
+            Đang gửi...
+          </>
+        ) : mutation.isSuccess ? (
+          "Gửi thành công"
+        ) : (
+          "Gửi địa chỉ"
+        )}
       </button>
     </form>
   );
