@@ -2,7 +2,7 @@ import LeftColumn from "@/components/features/columns/LeftColumn";
 import CenterColumn from "@/components/features/columns/CenterColumn";
 import RightColumn from "@/components/features/columns/RightColumn";
 import ProductPage from "@/components/pages/ProductPage";
-import ChatButton from "@/components/features/chatBot/ChatButton";
+import ChatBotContainer from "@/components/features/chatBot/ChatBotContainer";
 
 function HomePage() {
   return (
@@ -27,7 +27,7 @@ function HomePage() {
       </div>
 
       <div className="mt-auto">
-        <ChatButton />
+        <ChatBotContainer />
       </div>
     </main>
   );
