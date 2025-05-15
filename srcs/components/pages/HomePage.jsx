@@ -3,6 +3,7 @@ import CenterColumn from "@/components/features/columns/CenterColumn";
 import RightColumn from "@/components/features/columns/RightColumn";
 import ProductPage from "@/components/pages/ProductPage";
 import ShockDeal from "@/components/features/voucher/ShockDeal";
+import ChatButton from "@/components/features/chatBot/ChatButton";
 
 function HomePage() {
   return (
@@ -18,6 +19,10 @@ function HomePage() {
 
       <div className="mt-6">
         <ProductPage />
+      </div>
+
+      <div className="mt-auto">
+        <ChatButton />
       </div>
     </main>
   );
