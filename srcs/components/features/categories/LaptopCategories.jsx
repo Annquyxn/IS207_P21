@@ -142,7 +142,7 @@ const LaptopCategories = ({ onClose }) => {
   return (
     <div
       ref={containerRef}
-      className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-xl p-6 w-[1200px] max-h-[600px] overflow-auto z-50 text-gray-900 text-lg flex"
+      className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-xl p-6 w-[1100px] max-h-[450px] overflow-auto z-50 text-gray-900 text-lg flex"
     >
       {/* Sidebar Categories */}
       <ul className="w-1/3 space-y-3 border-r border-gray-300 pr-6">
