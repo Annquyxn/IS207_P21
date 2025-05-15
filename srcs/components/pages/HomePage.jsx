@@ -1,7 +1,8 @@
-import LeftColumn from '@/components/features/columns/LeftColumn';
-import CenterColumn from '@/components/features/columns/CenterColumn';
-import RightColumn from '@/components/features/columns/RightColumn';
-import ProductPage from '@/components/pages/ProductPage';
+import LeftColumn from "@/components/features/columns/LeftColumn";
+import CenterColumn from "@/components/features/columns/CenterColumn";
+import RightColumn from "@/components/features/columns/RightColumn";
+import ProductPage from "@/components/pages/ProductPage";
+import ChatBotContainer from "@/components/features/chatBot/ChatBotContainer";
 
 function HomePage() {
   return (
@@ -23,6 +24,10 @@ function HomePage() {
 
       <div className='mt-8'>
         <ProductPage />
+      </div>
+
+      <div className="mt-auto">
+        <ChatBotContainer />
       </div>
     </main>
   );
