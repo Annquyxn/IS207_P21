@@ -6,8 +6,8 @@ import {
   IoCartOutline,
   IoPersonOutline,
 } from "react-icons/io5";
-
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LaptopCategories from "../features/categories/LaptopCategories";
 import NotificationList from "../features/notify/NotificationList";
 
@@ -15,10 +15,10 @@ function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleCloseCategories = () => setShowCategories(false);
 
-  // Đóng dropdown thông báo khi click ra ngoài
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -32,6 +32,11 @@ function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // ✅ Hàm chuyển sang trang đăng nhập
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
 
   return (
     <header className="bg-red-600 text-white py-3 px-6 shadow-lg sticky top-0 z-50 font-sans">
@@ -104,7 +109,10 @@ function Header() {
           </div>
 
           {/* Đăng nhập */}
-          <div className="flex items-center gap-2 bg-orange-500 px-4 py-2 rounded-full cursor-pointer hover:bg-orange-600 hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out">
+          <div
+            className="flex items-center gap-2 bg-orange-500 px-4 py-2 rounded-full cursor-pointer hover:bg-orange-600 hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out"
+            onClick={handleLoginClick} // ✅ Xử lý khi nhấn
+          >
             <IoPersonOutline className="text-xl" />
             <span className="text-base font-semibold">Đăng nhập</span>
           </div>

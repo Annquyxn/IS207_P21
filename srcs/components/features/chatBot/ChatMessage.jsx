@@ -10,7 +10,7 @@ export function BotMessage() {
       <div className="bg-pink-100 rounded-2xl px-4 py-2 text-base font-sans leading-relaxed shadow-md max-w-[75%]">
         <p>
           Xin kính chào quý khách, TechBot xin hân hạnh phục vụ và giải đáp các
-          thắc mắc của quý khách{" "}
+          thắc mắc của quý khách.{" "}
         </p>
       </div>
     </article>
