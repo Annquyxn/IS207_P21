@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
+
+.chat-bot-button {
+  max-width: 360px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  width: 100%;
+}
+
+.chat-bot-content {
+  border-radius: 15px 0 0 0;
+  background-color: rgba(234, 26, 26, 1);
+  display: flex;
+  padding: 14px 22px;
+  align-items: center;
+  gap: 21px;
+}
+
+.chat-bot-icon {
+  aspect-ratio: 1.16;
+  object-fit: contain;
+  object-position: center;
+  width: 73px;
+  flex-shrink: 0;
+}
+
+.chat-bot-text {
+  font-family: Lalezar, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 30px;
+  color: rgba(255, 255, 255, 1);
+  font-weight: 400;
+  margin: auto 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  width: 207px;
+}

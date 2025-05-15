@@ -37,6 +37,7 @@
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
+  align-items: flex-start;
 }
 
 .notification-item:last-child {
