@@ -7,23 +7,38 @@ import {
   IoPersonOutline,
 } from "react-icons/io5";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LaptopCategories from "../features/categories/LaptopCategories";
+import NotificationList from "../features/notify/NotificationList";
 
 function Header() {
   const [showCategories, setShowCategories] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef(null);
 
-  // Ẩn dropdown khi chọn category
-  const handleCloseCategories = () => {
-    setShowCategories(false);
-  };
+  const handleCloseCategories = () => setShowCategories(false);
+
+  // Đóng dropdown thông báo khi click ra ngoài
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-red-600 text-white py-3 px-6 shadow-lg sticky top-0 z-50 font-sans">
       <div className="flex flex-wrap items-center justify-between gap-4">
         {/* Left Section */}
         <div className="flex items-center gap-4 flex-grow relative">
-          {/* Danh mục + Menu */}
+          {/* Danh mục */}
           <div
             className="group relative"
             onMouseEnter={() => setShowCategories(true)}
@@ -35,14 +50,18 @@ function Header() {
                 transition-all duration-300 ease-in-out"
               onClick={() => setShowCategories(!showCategories)}
             >
-              <span className="text-base font-semibold tracking-wide">Danh mục</span>
+              <span className="text-base font-semibold tracking-wide">
+                Danh mục
+              </span>
               <IoChevronDownOutline
-                className={`text-xl transition-transform ${showCategories ? "rotate-180" : ""}`}
+                className={`text-xl transition-transform ${
+                  showCategories ? "rotate-180" : ""
+                }`}
               />
             </div>
-
-            {/* Categories Dropdown */}
-            {showCategories && <LaptopCategories onClose={handleCloseCategories} />}
+            {showCategories && (
+              <LaptopCategories onClose={handleCloseCategories} />
+            )}
           </div>
 
           {/* Search */}
@@ -67,9 +86,15 @@ function Header() {
           </div>
 
           {/* Thông báo */}
-          <div className="flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out">
-            <IoNotificationsOutline className="text-xl" />
-            <span className="text-base font-medium">Thông báo</span>
+          <div className="relative" ref={notificationRef}>
+            <div
+              className="flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              <IoNotificationsOutline className="text-xl" />
+              <span className="text-base font-medium">Thông báo</span>
+            </div>
+            {showNotifications && <NotificationList />}
           </div>
 
           {/* Giỏ hàng */}
