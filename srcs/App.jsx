@@ -1,230 +1,167 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion"; // import các thành phần cần thiết từ framer-motion
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import Layout from "./components/ui/Layout";
-import HomePage from "./components/pages/HomePage";
-import ProductPage from "./components/pages/ProductPage";
-import CheckoutPage from "./components/pages/CheckoutPage";
-import CompleteOrderPage from "./components/pages/CompleteOrderPage";
-import PaymentPage from "./components/pages/PaymentPage";
-import ShippingInfoPage from "./components/pages/ShippingInfoPage";
-import LoginPage from "./components/pages/LoginPage";
-import BuildPCPage from "./components/pages/BuildPCPage";
-import User from "./components/pages/User";
-import UserPage from "./components/features/user/UserPage";
-import UserAddress from "./components/features/user/UserAddress";
-import UserOrders from "./components/features/user/UserOrders";
-import UserHistory from "./components/features/user/UserHistory";
-import AccountForm from "./components/features/user/FormAccount";
-import ShoppingCartPage from "./components/pages/ShoppingCartPage";
-import ProductDetailPage from "./components/pages/ProductDetailPage"
-import RegistrationPage from "./components/pages/RegistrationPage"
+// import các thành phần cần thiết từ framer-motion
+import Layout from './components/ui/Layout';
+import HomePage from './components/pages/HomePage';
+import ProductPage from './components/pages/ProductPage';
+import CheckoutPage from './components/pages/CheckoutPage';
+import CompleteOrderPage from './components/pages/CompleteOrderPage';
+import PaymentPage from './components/pages/PaymentPage';
+import ShippingInfoPage from './components/pages/ShippingInfoPage';
+import LoginPage from './components/pages/LoginPage';
+import BuildPCPage from './components/pages/BuildPCPage';
+import User from './components/pages/User';
+import UserPage from './components/features/user/UserPage';
+import UserAddress from './components/features/user/UserAddress';
+import UserOrders from './components/features/user/UserOrders';
+import UserHistory from './components/features/user/UserHistory';
+import AccountForm from './components/features/user/FormAccount';
+import ShoppingCartPage from './components/pages/ShoppingCartPage';
+import ProductDetailPage from './components/pages/ProductDetailPage';
+import RegistrationPage from './components/pages/RegistrationPage';
+import AnimatedPage from './components/ui/AnimatedPage';
 
 function App() {
   return (
     <BrowserRouter>
-      {" "}
-      <main className="flex-1">
-        <AnimatePresence mode="wait">
+      <main className='flex-1'>
+        <AnimatePresence mode='wait'>
           <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Navigate replace to="home" />} />
+            <Route path='/' element={<Layout />}>
+              <Route index element={<Navigate replace to='home' />} />
               <Route
-                path="home"
+                path='home'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <HomePage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
               <Route
-                path="login"
+                path='login'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <LoginPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
               <Route
-                path="register"
+                path='register'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <RegistrationPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
 
               <Route
-                path="san-pham"
+                path='san-pham'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <ProductPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
               <Route
-                path="checkout"
+                path='checkout'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <CheckoutPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
 
-               <Route
-                path="product-detail"
+              <Route
+                path='product-detail'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <ProductDetailPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
 
               <Route
-                path="shopping-cart"
+                path='shopping-cart'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <ShoppingCartPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
 
               <Route
-                path="complete"
+                path='complete'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <CompleteOrderPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
               <Route
-                path="payment-page"
+                path='payment-page'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <PaymentPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
               <Route
-                path="ship-info"
+                path='ship-info'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <ShippingInfoPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
               <Route
-                path="build-pc"
+                path='build-pc'
                 element={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <AnimatedPage>
                     <BuildPCPage />
-                  </motion.div>
+                  </AnimatedPage>
                 }
               />
 
-              <Route path="user" element={<User />}>
+              <Route path='user' element={<User />}>
                 <Route
                   index
                   element={
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
+                    <AnimatedPage>
                       <UserPage />
-                    </motion.div>
+                    </AnimatedPage>
                   }
                 />
                 <Route
-                  path="address"
+                  path='address'
                   element={
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
+                    <AnimatedPage>
                       <UserAddress />
-                    </motion.div>
+                    </AnimatedPage>
                   }
                 />
                 <Route
-                  path="orders"
+                  path='orders'
                   element={
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
+                    <AnimatedPage>
                       <UserOrders />
-                    </motion.div>
+                    </AnimatedPage>
                   }
                 />
                 <Route
-                  path="history"
+                  path='history'
                   element={
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
+                    <AnimatedPage>
                       <UserHistory />
-                    </motion.div>
+                    </AnimatedPage>
                   }
                 />
                 <Route
-                  path="update"
+                  path='update'
                   element={
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
+                    <AnimatedPage>
                       <AccountForm />
-                    </motion.div>
+                    </AnimatedPage>
                   }
                 />
               </Route>
