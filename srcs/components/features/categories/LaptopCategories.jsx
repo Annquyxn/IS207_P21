@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/solid";
 
 const LaptopCategories = ({ onClose }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -67,8 +68,7 @@ const LaptopCategories = ({ onClose }) => {
   };
 
   const toggleCategory = (category) => {
-    if (expandedCategory === category) setExpandedCategory(null);
-    else setExpandedCategory(category);
+    setExpandedCategory((prev) => (prev === category ? null : category));
   };
 
   useEffect(() => {
@@ -90,9 +90,9 @@ const LaptopCategories = ({ onClose }) => {
   return (
     <div
       ref={containerRef}
-      className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md p-5 w-[720px] max-h-[440px] overflow-auto z-50 text-gray-900 font-normal text-base flex"
+      className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-xl p-6 w-[1200px] max-h-[600px] overflow-auto z-50 text-gray-900 font-normal text-lg flex"
     >
-      <ul className="w-1/3 space-y-3 border-r border-gray-300 pr-5">
+      <ul className="w-1/3 space-y-3 border-r border-gray-300 pr-6">
         {Object.entries(categories).map(([category, data]) => {
           const hasSub = data.subcategories || data.items?.length > 0;
           const isExpanded = expandedCategory === category;
@@ -100,18 +100,23 @@ const LaptopCategories = ({ onClose }) => {
           return (
             <li key={category}>
               <button
-                onClick={() => {
-                  if (hasSub) toggleCategory(category);
-                  else handleClickCategory(category);
-                }}
-                className="w-full flex items-center justify-between px-4 py-3 rounded hover:bg-gray-100 transition transform duration-200 ease-in-out hover:scale-105 font-semibold"
+                onClick={() =>
+                  hasSub
+                    ? toggleCategory(category)
+                    : handleClickCategory(category)
+                }
+                className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 transition-transform duration-200 ease-in-out hover:scale-105 font-semibold text-lg"
                 type="button"
               >
                 <span>{category}</span>
                 {hasSub && (
-                  <span className="ml-2 text-base select-none">
-                    {isExpanded ? "▼" : "▶"}
-                  </span>
+                  <>
+                    {isExpanded ? (
+                      <ChevronDownIcon className="w-4 h-4 ml-2 text-gray-600" />
+                    ) : (
+                      <ChevronRightIcon className="w-4 h-4 ml-2 text-gray-600" />
+                    )}
+                  </>
                 )}
               </button>
             </li>
@@ -119,11 +124,11 @@ const LaptopCategories = ({ onClose }) => {
         })}
       </ul>
 
-      <div className="w-2/3 pl-6 overflow-auto max-h-[400px]">
+      <div className="w-2/3 pl-6 overflow-auto max-h-[440px]">
         {expandedCategory && (
           <>
             {categories[expandedCategory].subcategories && (
-              <div className="grid grid-cols-5 gap-8">
+              <div className="grid grid-cols-4 gap-8">
                 {Object.entries(categories[expandedCategory].subcategories).map(
                   ([subCat, items]) => (
                     <div key={subCat}>
@@ -134,7 +139,7 @@ const LaptopCategories = ({ onClose }) => {
                             <li key={item}>
                               <button
                                 onClick={() => handleClickCategory(item)}
-                                className="text-left w-full hover:text-red-600 transition transform duration-200 ease-in-out hover:scale-105 text-base"
+                                className="text-left w-full hover:text-red-600 transition-transform duration-200 ease-in-out hover:scale-105 text-base"
                                 type="button"
                               >
                                 {item}
@@ -142,7 +147,7 @@ const LaptopCategories = ({ onClose }) => {
                             </li>
                           ))
                         ) : (
-                          <li className="italic text-gray-400 text-sm">
+                          <li className="italic text-gray-400 text-base">
                             Chưa có mục nào
                           </li>
                         )}
@@ -160,7 +165,7 @@ const LaptopCategories = ({ onClose }) => {
                     <li key={item}>
                       <button
                         onClick={() => handleClickCategory(item)}
-                        className="text-left w-full hover:text-red-600 transition transform duration-200 ease-in-out hover:scale-105 text-base"
+                        className="text-left w-full hover:text-red-600 transition-transform duration-200 ease-in-out hover:scale-105 text-base"
                         type="button"
                       >
                         {item}
