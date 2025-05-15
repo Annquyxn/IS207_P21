@@ -1,34 +1,54 @@
+import Slider from 'react-slick';
+import ShockDeal from '../voucher/ShockDeal';
+
 function CenterColumn() {
-  return (
-    <section className="min-w-[320px] bg-white border p-5 rounded-2xl shadow-md text-center flex flex-col items-center justify-center transition transform hover:scale-[1.02] hover:shadow-lg duration-300 font-sans">
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-        SIÊU SALE HÈ
-      </h1>
-      <p className="text-xl border border-black px-6 py-4 inline-block font-medium text-gray-800">
-        Giảm giá 20%
-        <br />
-        Tất cả đơn từ 300K
-      </p>
-      <div className="flex justify-between items-center w-full max-w-xs my-6 px-4">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/c00b73b05b853208dae43026f9ae07b9827b33eb"
-          alt="Left"
-          className="w-6 cursor-pointer hover:scale-110 transition"
-        />
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/953912f37c5c719087ac89e5040df12874d93648"
-          alt="Right"
-          className="w-6 cursor-pointer hover:scale-110 transition"
-        />
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 400,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    adaptiveHeight: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    appendDots: (dots) => (
+      <div
+        style={{
+          backgroundColor: 'transparent',
+          padding: '2px 0',
+          bottom: '2px',
+          position: 'absolute',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          zIndex: 10,
+        }}
+      >
+        <ul style={{ margin: 0, padding: 0, display: 'flex', gap: '6px' }}>
+          {dots}
+        </ul>
       </div>
-      <button className="flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full hover:bg-gray-800 hover:scale-105 transition duration-200">
-        Mua hàng
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/e1d5adfb4dc21c8788e1e448dac023227e8a84b4"
-          alt="Arrow"
-          className="w-4"
-        />
-      </button>
+    ),
+    customPaging: (i) => (
+      <div
+        style={{
+          width: '14px',
+          height: '2px',
+          borderRadius: '1px',
+          backgroundColor: '#2563eb',
+          opacity: 0.5,
+          cursor: 'pointer',
+          margin: '0 auto',
+        }}
+      />
+    ),
+  };
+
+  return (
+    <section className='relative w-full max-w-full overflow-hidden rounded-lg'>
+      <Slider {...settings}>
+        <ShockDeal />
+      </Slider>
     </section>
   );
 }
