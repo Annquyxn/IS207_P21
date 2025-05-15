@@ -26,36 +26,93 @@ const LaptopCategories = ({ onClose }) => {
     },
     "Thương hiệu": {
       subcategories: {
-        ASUS: ["ASUS OLED Series", "Vivobook Series", "Zenbook Series"],
-        ACER: ["Aspire Series", "Swift Series"],
-        MSI: ["Modern Series", "Prestige Series"],
+        ASUS: [
+          "ASUS ROG Zephyrus",
+          "ASUS ROG Strix",
+          "ASUS TUF Gaming",
+          "ASUS OLED Series",
+          "Vivobook Series",
+          "Zenbook Series",
+        ],
+        ACER: [
+          "Acer Nitro 5",
+          "Acer Predator Helios",
+          "Aspire Series",
+          "Swift Series",
+        ],
+        MSI: [
+          "MSI Katana Series",
+          "MSI Cyborg Series",
+          "Modern Series",
+          "Prestige Series",
+          "MSI Raider Series",
+        ],
         LENOVO: [
+          "Legion Series",
           "Thinkbook Series",
           "Ideapad Series",
           "Thinkpad Series",
           "Yoga Series",
         ],
         DELL: [
+          "Alienware Series",
+          "G15 Series",
           "Inspiron Series",
           "Vostro Series",
           "Latitude Series",
           "XPS Series",
         ],
-        "HP - Pavilion": [],
-        "LG - Gram": [],
+        "HP - Pavilion": [
+          "HP Victus",
+          "HP Omen",
+          "HP Pavilion Gaming",
+          "HP Spectre",
+        ],
+        "LG - Gram": ["LG Gram 14", "LG Gram 16", "LG Gram 17"],
       },
     },
     "Laptop AI": {
-      items: ["Dưới 15 triệu", "Từ 15 đến 20 triệu", "Trên 20 triệu"],
+      items: [
+        "Dưới 15 triệu",
+        "Từ 15 đến 20 triệu",
+        "Trên 20 triệu",
+        "Tích hợp AI Copilot",
+        "Chạy tốt mô hình AI",
+        "Laptop cho AI Engineer",
+      ],
     },
     "CPU Intel - AMD": {
-      items: ["Intel Core i3", "Intel Core i5", "Intel Core i7", "AMD Ryzen"],
+      items: [
+        "Intel Core i3",
+        "Intel Core i5",
+        "Intel Core i7",
+        "Intel Core i9",
+        "AMD Ryzen 3",
+        "AMD Ryzen 5",
+        "AMD Ryzen 7",
+        "AMD Ryzen 9",
+      ],
     },
     "Nhu cầu sử dụng": {
-      items: ["Đồ họa - Studio", "Học sinh - Sinh viên", "Mỏng nhẹ cao cấp"],
+      items: [
+        "Đồ họa - Studio",
+        "Học sinh - Sinh viên",
+        "Mỏng nhẹ cao cấp",
+        "Lập trình viên",
+        "Văn phòng - Hành chính",
+        "Gaming chuyên nghiệp",
+      ],
     },
     "Linh phụ kiện Laptop": {
-      items: ["Ram laptop", "SSD laptop", "Ổ cứng di động"],
+      items: [
+        "Ram laptop",
+        "SSD laptop",
+        "Ổ cứng di động",
+        "Đế tản nhiệt",
+        "Túi chống sốc",
+        "Dock sạc",
+        "Hub mở rộng",
+      ],
     },
   };
 
@@ -64,7 +121,7 @@ const LaptopCategories = ({ onClose }) => {
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    if (onClose) onClose();
+    onClose?.();
   };
 
   const toggleCategory = (category) => {
@@ -73,81 +130,76 @@ const LaptopCategories = ({ onClose }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
+      if (!containerRef.current?.contains(event.target)) {
         setExpandedCategory(null);
-        if (onClose) onClose();
+        onClose?.();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
   return (
     <div
       ref={containerRef}
-      className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-xl p-6 w-[1200px] max-h-[600px] overflow-auto z-50 text-gray-900 font-normal text-lg flex"
+      className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-xl p-6 w-[1200px] max-h-[600px] overflow-auto z-50 text-gray-900 text-lg flex"
     >
+      {/* Sidebar Categories */}
       <ul className="w-1/3 space-y-3 border-r border-gray-300 pr-6">
         {Object.entries(categories).map(([category, data]) => {
-          const hasSub = data.subcategories || data.items?.length > 0;
+          const hasSub = !!data.subcategories;
+          const hasItems = data.items?.length > 0;
+          const isExpandable = hasSub || hasItems;
           const isExpanded = expandedCategory === category;
 
           return (
             <li key={category}>
               <button
                 onClick={() =>
-                  hasSub
+                  isExpandable
                     ? toggleCategory(category)
                     : handleClickCategory(category)
                 }
-                className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 transition-transform duration-200 ease-in-out hover:scale-105 font-semibold text-lg"
-                type="button"
+                className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 transition duration-200 hover:scale-105 font-semibold"
               >
                 <span>{category}</span>
-                {hasSub && (
-                  <>
-                    {isExpanded ? (
-                      <ChevronDownIcon className="w-4 h-4 ml-2 text-gray-600" />
-                    ) : (
-                      <ChevronRightIcon className="w-4 h-4 ml-2 text-gray-600" />
-                    )}
-                  </>
-                )}
+                {isExpandable &&
+                  (isExpanded ? (
+                    <ChevronDownIcon className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <ChevronRightIcon className="w-4 h-4 text-gray-600" />
+                  ))}
               </button>
             </li>
           );
         })}
       </ul>
 
+      {/* Right Panel */}
       <div className="w-2/3 pl-6 overflow-auto max-h-[440px]">
         {expandedCategory && (
           <>
+            {/* Subcategories (multi-column) */}
             {categories[expandedCategory].subcategories && (
               <div className="grid grid-cols-4 gap-8">
                 {Object.entries(categories[expandedCategory].subcategories).map(
-                  ([subCat, items]) => (
-                    <div key={subCat}>
-                      <h4 className="font-semibold mb-3 text-lg">{subCat}</h4>
+                  ([subCategory, items]) => (
+                    <div key={subCategory}>
+                      <h4 className="font-semibold mb-3">{subCategory}</h4>
                       <ul className="space-y-2">
                         {items.length > 0 ? (
                           items.map((item) => (
                             <li key={item}>
                               <button
                                 onClick={() => handleClickCategory(item)}
-                                className="text-left w-full hover:text-red-600 transition-transform duration-200 ease-in-out hover:scale-105 text-base"
-                                type="button"
+                                className="w-full text-left text-base hover:text-red-600 transition duration-200 hover:scale-105"
                               >
                                 {item}
                               </button>
                             </li>
                           ))
                         ) : (
-                          <li className="italic text-gray-400 text-base">
+                          <li className="italic text-gray-400 text-sm">
                             Chưa có mục nào
                           </li>
                         )}
@@ -158,15 +210,15 @@ const LaptopCategories = ({ onClose }) => {
               </div>
             )}
 
-            {categories[expandedCategory].items &&
-              !categories[expandedCategory].subcategories && (
+            {/* Flat list of items */}
+            {!categories[expandedCategory].subcategories &&
+              categories[expandedCategory].items && (
                 <ul className="space-y-2">
                   {categories[expandedCategory].items.map((item) => (
                     <li key={item}>
                       <button
                         onClick={() => handleClickCategory(item)}
-                        className="text-left w-full hover:text-red-600 transition-transform duration-200 ease-in-out hover:scale-105 text-base"
-                        type="button"
+                        className="w-full text-left text-base hover:text-red-600 transition duration-200 hover:scale-105"
                       >
                         {item}
                       </button>
