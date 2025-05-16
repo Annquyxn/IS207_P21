@@ -29,7 +29,7 @@ function CenterColumn() {
         </ul>
       </div>
     ),
-    customPaging: (i) => (
+    customPaging: () => (
       <div
         style={{
           width: '14px',
