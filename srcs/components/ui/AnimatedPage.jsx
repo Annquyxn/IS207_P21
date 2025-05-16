@@ -4,7 +4,7 @@ const animationProps = {
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -30 },
-  transition: { duration: 0.3, ease: 'easeInOut' },
+  transition: { duration: 0.6, ease: 'easeInOut' },
 };
 
 const AnimatedPage = ({ children }) => {

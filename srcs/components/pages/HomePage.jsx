@@ -6,7 +6,7 @@ import ChatBotContainer from "@/components/features/chatBot/ChatBotContainer";
 
 function HomePage() {
   return (
-    <main className='bg-white max-w-[1200px] mx-auto px-4 py-8'>
+    <main className='bg-white max-w-[1200px] mx-auto px-4 py-12'>
       <div className='grid grid-cols-12 gap-5' style={{ height: 'auto' }}>
         <div className='md:col-span-9 h-full mt-7'>
           <CenterColumn />

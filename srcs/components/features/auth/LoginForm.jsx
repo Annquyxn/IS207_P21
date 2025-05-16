@@ -34,7 +34,7 @@ function LoginForm() {
 
   return (
     <AnimatedDiv
-      className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg transform transition-transform duration-300 hover:scale-105 font-sans"
+      className="max-w-md mx-auto bg-white px-6 py-10 rounded-2xl shadow-lg transform transition-transform duration-300 hover:scale-105 font-sans mt-10"
       delay={0}
     >
       <AnimatedDiv
