@@ -4,7 +4,7 @@ import SocialLogin from "@/components/features/auth/SocialLogin";
 function RegistrationPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+      <div className="bg-white p-5 rounded-xl shadow-md w-full max-w-md m-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 text-center">
           Đăng ký tài khoản
         </h1>
