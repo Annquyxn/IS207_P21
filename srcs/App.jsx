@@ -22,6 +22,8 @@ import ProductDetailPage from "./components/pages/ProductDetailPage";
 import RegistrationPage from "./components/pages/RegistrationPage";
 import AnimatedPage from "./components/ui/AnimatedPage";
 import ForgotPasswordPage from "./components/pages/ForgotPasswordPage";
+import AboutGearVN from "./components/features/footer-components/AboutGearVN";
+import JobPage from "./components/features/footer-components/JobPage";
 
 function App() {
   return (
@@ -175,6 +177,26 @@ function App() {
                 />
               </Route>
             </Route>
+
+            <Route
+              path="about"
+              element={
+                <AnimatedPage>
+                  <AboutGearVN />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="recruitment"
+              element={
+                <AnimatedPage>
+                  <JobPage />
+                </AnimatedPage>
+              }
+            />
+
+
           </Routes>
         </AnimatePresence>
       </main>

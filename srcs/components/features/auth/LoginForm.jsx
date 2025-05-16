@@ -3,8 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { apiLogin } from "@/components/services/apiLogin";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import AnimatedDiv from "../../ui/AnimatedDiv";
-import AnimatedButton from "../../ui/AnimatedButton";
+import AnimatedDiv from "@/components/ui/AnimatedDiv";
+import AnimatedButton from "@/components/ui/AnimatedButton";
 
 function LoginForm() {
   const {
@@ -34,7 +34,7 @@ function LoginForm() {
 
   return (
     <AnimatedDiv
-      className="max-w-md mx-auto bg-white px-6 py-10 rounded-2xl shadow-lg transform transition-transform duration-300 hover:scale-105 font-sans mt-10"
+      className="max-w-md mx-auto bg-white px-6 py-10 rounded-2xl shadow-lg transform transition-transform duration-300 hover:scale-101 font-sans mt-10"
       delay={0}
     >
       <AnimatedDiv
