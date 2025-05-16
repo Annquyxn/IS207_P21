@@ -1,0 +1,254 @@
+.order-management {
+  border-radius: 0;
+  width: 100%;
+}
+
+.order-card {
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 39px 20px 61px 20px; 
+  margin-bottom: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-height: 320px;
+  justify-content: space-between;
+}
+
+.order-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 21px;
+  flex-wrap: nowrap;
+  margin-right: 20px;
+  min-height: 140px;
+}
+
+.product-image {
+  background-color: #fff;
+  border: 1px solid #000;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+
+.order-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.order-header {
+  display: flex;
+  align-items: center;
+  gap: 40px 77px;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  flex-wrap: nowrap;
+}
+
+.product-title {
+  color: #000;
+  font-size: 30px;
+  font-weight: 400;
+  text-align: left;
+  flex: 1;
+  margin: 0;
+}
+
+.status-badge {
+  border-radius: 10px;
+  border: 1px solid #EA1A1A;
+  padding: 5px 19px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #EA1A1A;
+  align-self: flex-start;
+}
+
+.order-details {
+  display: flex;
+  margin-top: 23px;
+  width: 100%;
+  align-items: stretch;
+  gap: 40px 100px;
+  flex-wrap: wrap;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 26px;
+  color: #5D5A5A;
+  flex: 1;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.quantity-text {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.category-text {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.price-info {
+  display: flex;
+  align-items: center;     /* Căn giữa theo chiều dọc */
+  gap: 6px;                 /* Khoảng cách nhỏ giữa 2 giá */
+  flex-wrap: nowrap;       /* Ngăn xuống dòng */
+  font-size: 22px;
+}
+
+.original-price {
+  color: #5D5A5A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+
+.discounted-price {
+  font-family: Arial, -apple-system, Roboto, Helvetica, sans-serif;
+  color: #E40000;
+  font-weight: 700; 
+  white-space: nowrap;
+}
+
+.discounted-price::after {
+  content: "đ";
+  text-decoration: underline;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #C2C2C2;
+  margin: 26px 0;
+  width: 100%;
+}
+
+.order-footer {
+  display: flex;
+  margin: 25px 20px 0;
+  width: 384px;
+  max-width: 100%;
+  flex-direction: column;
+}
+
+.total-section {
+  align-self: flex-end;
+  display: flex;
+  align-items: stretch;
+  gap: 23px;
+}
+
+.total-label {
+  color: #000;
+  font-size: 22px;
+  font-family: "Istok Web", -apple-system, Roboto, Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+.total-amount {
+  color: #E40000;
+  font-size: 26px;
+  font-family: Arial, -apple-system, Roboto, Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+.total-amount::after {
+  content: "đ";
+  text-decoration: underline;
+}
+
+.action-buttons {
+  display: flex;
+  margin-top: 51px;
+  width: 100%;
+  align-items: stretch;
+  gap: 20px;
+  font-family: "League Gothic", -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  border-radius: 15px;
+  background-color: #000;
+  color: #fff;
+  min-height: 55px;
+  padding: 9px 10px;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-secondary {
+  border-radius: 15px;
+  background-color: #E40000;
+  color: #fff;
+  min-height: 55px;
+  padding: 9px 10px;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-outline {
+  border-radius: 15px;
+  background-color: #fff;
+  border: 1px solid #000;
+  color: #000;
+  min-height: 55px;
+  padding: 9px 10px;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+@media (max-width: 991px) {
+  .order-card {
+    max-width: 100%;
+  }
+
+  .order-layout {
+    margin-right: 10px;
+  }
+
+  .order-content {
+    max-width: 100%;
+  }
+
+  .product-title {
+    max-width: 100%;
+  }
+
+  .order-details {
+    max-width: 100%;
+    margin-right: 10px;
+  }
+
+  .order-footer {
+    margin-right: 10px;
+  }
+
+  .action-buttons {
+    margin-top: 40px;
+  }
+}

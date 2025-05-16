@@ -24,6 +24,16 @@ import AnimatedPage from "./components/ui/AnimatedPage";
 import ForgotPasswordPage from "./components/pages/ForgotPasswordPage";
 import AboutGearVN from "./components/features/footer-components/AboutGearVN";
 import JobPage from "./components/features/footer-components/JobPage";
+import CustomerSupportForm from "./components/features/footer-components/CustomerSupportForm";
+import InstallmentPlan from "./components/features/footer-components/InstallmentPlan";
+import PaymentGuide from "./components/features/footer-components/PaymentGuide";
+import PcBuilder from "./components/features/footer-components/PcBuilder";
+import PrivacyPolicy from "./components/features/footer-components/PrivacyPolicy";
+import ShippingPolicy from "./components/features/footer-components/ShippingPolicy";
+import ShoppingGuide from "./components/features/footer-components/ShoppingGuide";
+import ShowroomSystem from "./components/features/footer-components/ShowroomSystem";
+import WarrantyLookup from "./components/features/footer-components/WarrantyLookup";
+import WarrantyPolicy from "./components/features/footer-components/WarrantyPolicy";
 
 function App() {
   return (
@@ -188,7 +198,7 @@ function App() {
             />
 
             <Route
-              path="recruitment"
+              path="jobs"
               element={
                 <AnimatedPage>
                   <JobPage />
@@ -196,7 +206,86 @@ function App() {
               }
             />
 
+            <Route
+              path="contact"
+              element={
+                <AnimatedPage>
+                  <CustomerSupportForm />
+                </AnimatedPage>
+              }
+            />
 
+            <Route
+              path="warranty-policy"
+              element={
+                <AnimatedPage>
+                  <WarrantyPolicy />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="shipping-policy"
+              element={
+                <AnimatedPage>
+                  <ShippingPolicy />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="privacy-policy"
+              element={
+                <AnimatedPage>
+                  <PrivacyPolicy />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="showrooms"
+              element={
+                <AnimatedPage>
+                  <ShowroomSystem />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="shopping-guide"
+              element={
+                <AnimatedPage>
+                  <ShoppingGuide />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="payment-guide"
+              element={
+                <AnimatedPage>
+                  <PaymentGuide />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="installment"
+              element={
+                <AnimatedPage>
+                  <InstallmentPlan />
+                </AnimatedPage>
+              }
+            />
+
+            <Route
+              path="warranty-lookup"
+              element={
+                <AnimatedPage>
+                  <WarrantyLookup />
+                </AnimatedPage>
+              }
+            />
           </Routes>
         </AnimatePresence>
       </main>
