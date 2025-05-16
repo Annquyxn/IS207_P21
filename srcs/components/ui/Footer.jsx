@@ -17,31 +17,22 @@ function Footer() {
                 Giới thiệu
               </Link>
             </li>
-            {["Tuyển dụng", "Liên hệ"].map((item, index) => (
-              <li key={index}>
-                {item === "Tuyển dụng" ? (
-                  <Link
-                    to="/recruitment"
-                    className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
-                  >
-                    {item}
-                  </Link>
-                ) : (
-                  <a
-                    href="#"
-                    className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
-                  >
-                    {item}
-                  </a>
-                )}
-                <a
-                  href="#"
-                  className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
+            <li>
+              <Link
+                to="/jobs"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Tuyển dụng
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Liên hệ
+              </Link>
+            </li>
           </ul>
         </section>
 
@@ -49,20 +40,30 @@ function Footer() {
         <section>
           <h3 className="font-semibold text-gray-900 mb-4">CHÍNH SÁCH</h3>
           <ul className="space-y-2">
-            {[
-              "Chính sách bảo hành",
-              "Chính sách giao hàng",
-              "Chính sách bảo mật",
-            ].map((item, index) => (
-              <li key={index}>
-                <a
-                  href="#"
-                  className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
+            <li>
+              <Link
+                to="/warranty-policy"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Chính sách bảo hành
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/shipping-policy"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Chính sách giao hàng
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/privacy-policy"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Chính sách bảo mật
+              </Link>
+            </li>
           </ul>
         </section>
 
@@ -70,22 +71,46 @@ function Footer() {
         <section>
           <h3 className="font-semibold text-gray-900 mb-4">THÔNG TIN</h3>
           <ul className="space-y-2">
-            {[
-              "Hệ thống cửa hàng",
-              "Hướng dẫn mua hàng",
-              "Hướng dẫn thanh toán",
-              "Hướng dẫn trả góp",
-              "Tra cứu địa chỉ bảo hành",
-            ].map((item, index) => (
-              <li key={index}>
-                <a
-                  href="#"
-                  className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
+            <li>
+              <Link
+                to="/showrooms"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Hệ thống cửa hàng
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/shopping-guide"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Hướng dẫn mua hàng
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/payment-guide"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Hướng dẫn thanh toán
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/installment"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Hướng dẫn trả góp
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/warranty-lookup"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Tra cứu địa chỉ bảo hành
+              </Link>
+            </li>
           </ul>
         </section>
 
