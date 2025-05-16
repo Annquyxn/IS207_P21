@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Đăng Nhập</title>
-  <link rel="stylesheet" href="login-page.css">
+  <link rel="stylesheet" href="../css/login_page.css">
   <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@700&family=Kdam+Thmor&family=Istok+Web:wght@400;700&family=Lato:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <main class="login-page">
     <h1 class="login-title">Đăng Nhập</h1>
 
-    <form class="login-form">
-      <input type="text" class="email-input" placeholder="Email hoặc Số điện thoại">
+    <form class="login-form" action="../IS207_P21/PHP/login.php" method="POST">
+      <input type="text" name="login_id" class="email-input" placeholder="Email hoặc Số điện thoại">
 
       <div class="password-container">
-        <input type="password" class="password-input" placeholder="Mật khẩu">
+        <input type="password" name = "password" class="password-input" placeholder="Mật khẩu">
         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0fbcc5f65f79e05ddcbca865c823c24f2a1fc835?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" class="password-toggle" alt="Toggle password visibility">
       </div>
 
@@ -31,12 +31,12 @@
     </div>
 
     <section class="social-login">
-      <button class="google-login">
+      <button  class="google-login" href="../IS207_P21/PHP/login_gg.php">
         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/cc71ae39efc0a2a653ee97beaf64867d6699ab7c?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" class="social-icon" alt="Google logo">
         <span class="social-text">Đăng nhập bằng Google</span>
       </button>
 
-      <button class="facebook-login">
+      <button class="facebook-login" href="../IS207_P21/PHP/login_fb.php">
         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/7f4bd242068993177cc5fbb861b49723667084b3?placeholderIfAbsent=true&apiKey=a16e8eb3709343e59b0b1c1997d522b7" class="social-icon" alt="Facebook logo">
         <span class="social-text">Đăng nhập bằng Facebook</span>
       </button>
