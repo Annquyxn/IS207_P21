@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 function Footer() {
@@ -8,8 +9,31 @@ function Footer() {
         <section>
           <h3 className="font-semibold text-gray-900 mb-4">VỀ CHÚNG TÔI</h3>
           <ul className="space-y-2">
-            {["Giới thiệu", "Tuyển dụng", "Liên hệ"].map((item, index) => (
+            <li>
+              <Link
+                to="/about"
+                className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+              >
+                Giới thiệu
+              </Link>
+            </li>
+            {["Tuyển dụng", "Liên hệ"].map((item, index) => (
               <li key={index}>
+                {item === "Tuyển dụng" ? (
+                  <Link
+                    to="/recruitment"
+                    className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+                  >
+                    {item}
+                  </Link>
+                ) : (
+                  <a
+                    href="#"
+                    className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
+                  >
+                    {item}
+                  </a>
+                )}
                 <a
                   href="#"
                   className="block px-3 py-1 rounded-md transform transition duration-300 hover:scale-105 hover:bg-red-600 hover:text-white"
