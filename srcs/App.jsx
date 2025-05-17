@@ -30,12 +30,14 @@ import ShoppingGuide from './components/features/footer-components/ShoppingGuide
 import ShowroomSystem from './components/features/footer-components/ShowroomSystem';
 import WarrantyLookup from './components/features/footer-components/WarrantyLookup';
 import WarrantyPolicy from './components/features/footer-components/WarrantyPolicy';
+import ScrollToTop from './components/ui/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
       <main className='flex-1'>
         <AnimatePresence mode='wait'>
+          <ScrollToTop />
           <Routes>
             <Route path='/' element={<Layout />}>
               <Route index element={<Navigate replace to='home' />} />

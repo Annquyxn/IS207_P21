@@ -16,7 +16,7 @@ const ProductCard = ({
   return (
     <div
       onClick={() => navigate(`/product/${id}`)}
-      className='bg-white p-4 shadow-md rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg cursor-pointer'
+      className='bg-white p-4  rounded-2xl flex flex-col justify-between transition-transform duration-300 cursor-pointer'
     >
       <img
         src={image}

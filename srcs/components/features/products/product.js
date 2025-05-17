@@ -1,15 +1,31 @@
 const products = [
   {
-    title: 'Laptop ASUS Vivobook S14 S5406SA PP059WS',
-    id: 'asus-vivobook-059ws',
-    brand: 'asus',
+    title: 'Laptop Lenovo ThinkPad X9-14 Gen 1 21QA006GVN',
+    id: 'lenovo-thinkpad-gvn',
+    brand: 'lenovo',
+    category: 'laptop',
     image:
-      'https://cdn.builder.io/api/v1/image/assets/TEMP/14d7674475caa6ad9b0bf8c51046aa7cfeb8e859',
-    originalPrice: '35.990.000₫',
-    salePrice: '34.490.000₫',
-    discount: '-4%',
+      'https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct1_06_555f339751314b21836221e78f062056_grande.png',
+    originalPrice: '50.390.000₫',
+    salePrice: '47.990.000₫',
+    discount: '-5%',
     rating: '0.0',
     reviewCount: 0,
+    thumbnails: [
+      'https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct1_01_ef47b6b725b24a94904aeedddb7301dc_grande.png',
+      'https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct1_05_bb30f46fd809465da36baf9d8a2865fb_grande.png',
+      'https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct2_03_c10ffc80896d4e099f390efa0bd7ad5c_grande.png',
+      'https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct1_03_d6652b5a03b14ea096193e6f35be2f24_grande.png',
+      '//product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct2_03_c10ffc80896d4e099f390efa0bd7ad5c_grande.png',
+    ],
+    description:
+      'ThinkPad X9-14 Gen 1 có thiết kế nhỏ gọn với trọng lượng chỉ khoảng 1.4 kg, giúp dễ dàng mang theo bất cứ đâu. Chất liệu vỏ máy được làm từ sợi carbon và hợp kim nhôm, không chỉ tạo cảm giác chắc chắn mà còn giúp cắt giảm trọng lượng. Bên cạnh đó, với tiêu chuẩn MIL-STD 810H, máy có khả năng chịu được va đập và các điều kiện khắc nghiệt.',
+    detailImage:
+      'https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct1_06_555f339751314b21836221e78f062056_1024x1024.png',
+    performance:
+      'Lenovo ThinkPad X9-14 Gen 1 đi kèm với pin có thời gian sử dụng lên tới 15 giờ, đảm bảo khả năng làm việc liên tục trong một ngày dài mà không cần phải sạc lại. Công nghệ Rapid Charge cũng cho phép sạc nhanh, chỉ cần 80% pin trong khoảng 1 giờ.',
+    extends:
+      'Với những đặc điểm và tính năng nổi bật, Lenovo ThinkPad X9-14 Gen 1 21QA006GVN là một lựa chọn tuyệt vời cho những ai đang tìm kiếm một chiếc laptop mạnh mẽ, bền bỉ và dễ dàng di chuyển. Sản phẩm không chỉ đáp ứng nhu cầu công việc mà còn mang lại nhiều trải nghiệm thú vị cho người dùng. Nếu bạn đang tìm kiếm một người bạn đồng hành đáng tin cậy trong công việc, ThinkPad X9-14 Gen 1 chắc chắn là một trong những lựa chọn hàng đầu, liên hệ GEARVN ngay để nhận tư vấn!',
   },
   {
     title: 'Laptop ASUS Vivobook S14 S5406SA PP060WS',
@@ -22,6 +38,11 @@ const products = [
     discount: '-9%',
     rating: '0.0',
     reviewCount: 0,
+    thumbnails: [
+      'https://cdn.builder.io/api/v1/image/assets/TEMP/0e034c96f04da867a3f45f69c37c86c4ba26caf7',
+      'https://cdn.builder.io/api/v1/image/assets/TEMP/0e034c96f04da867a3f45f69c37c86c4ba26caf7',
+      'https://cdn.builder.io/api/v1/image/assets/TEMP/0e034c96f04da867a3f45f69c37c86c4ba26caf7',
+    ],
   },
   {
     title: 'Laptop ASUS ExpertBook P1 P1503CVA i5SE16 50W',

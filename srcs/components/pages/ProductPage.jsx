@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ProductFilters from '@/components/features/products/ProductFilters';
 import ProductRow from '@/components/features/products/ProductRow';
 import product from '@/components/features/products/product';
@@ -9,23 +9,21 @@ import Spinner from '../ui/Spinner';
 function ProductPage() {
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [sortBy, setSortBy] = useState('default');
-  const [visibleProducts, setVisibleProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     priceRange: null,
     cpu: null,
     socket: null,
   });
+  const [loading, setLoading] = useState(false);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
 
   const processedProducts = useMemo(() => {
     let filtered = product;
 
-    // Lọc theo thương hiệu
     if (selectedBrand !== 'all') {
       filtered = filtered.filter((p) => p.brand === selectedBrand);
     }
 
-    // Lọc theo khoảng giá
     if (filters.priceRange) {
       filtered = filtered.filter((p) => {
         const price = parsePrice(p.salePrice);
@@ -44,21 +42,18 @@ function ProductPage() {
       });
     }
 
-    // Lọc theo dòng CPU
     if (filters.cpu) {
       filtered = filtered.filter((p) =>
         p.title.toLowerCase().includes(filters.cpu.toLowerCase())
       );
     }
 
-    // Lọc theo socket (nếu có field socket riêng thì đổi lại cho chính xác)
     if (filters.socket) {
       filtered = filtered.filter((p) =>
         p.title.toLowerCase().includes(filters.socket.toLowerCase())
       );
     }
 
-    // Sắp xếp
     return [...filtered].sort((a, b) => {
       const priceA = parsePrice(a.salePrice);
       const priceB = parsePrice(b.salePrice);
@@ -69,20 +64,16 @@ function ProductPage() {
     });
   }, [selectedBrand, filters, sortBy]);
 
+  //
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      setVisibleProducts(processedProducts.slice(0, 15));
+    const timer = setTimeout(() => {
+      setDisplayedProducts(processedProducts);
       setLoading(false);
-    }, 600);
-  }, [processedProducts]);
+    }, 200);
 
-  const loadMore = () => {
-    setVisibleProducts((prev) => [
-      ...prev,
-      ...processedProducts.slice(prev.length, prev.length + 10),
-    ]);
-  };
+    return () => clearTimeout(timer);
+  }, [processedProducts]);
 
   return (
     <main className='bg-gray-200 w-full min-h-screen p-6 flex justify-center'>
@@ -99,6 +90,7 @@ function ProductPage() {
             }
           />
         </div>
+
         <ActiveFilters
           selectedBrand={selectedBrand}
           filters={filters}
@@ -121,17 +113,7 @@ function ProductPage() {
             <Spinner className='w-12 h-12 text-blue-500' />
           </div>
         ) : (
-          <>
-            <ProductRow products={visibleProducts} />
-            {visibleProducts.length < processedProducts.length && (
-              <button
-                className='mt-4 bg-red-500 text-white p-4 rounded-xl mx-auto block text-xl transition-all duration-300 hover:scale-110'
-                onClick={loadMore}
-              >
-                Xem thêm
-              </button>
-            )}
-          </>
+          <ProductRow products={displayedProducts} />
         )}
       </div>
     </main>

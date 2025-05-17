@@ -1,21 +1,73 @@
+import { useRef } from 'react';
 import ProductCard from '@/components/features/products/ProductCard';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+
+const CATEGORY_LABELS = {
+  laptop: 'Laptop',
+  keyboard: 'Bàn phím',
+  headset: 'Tai nghe',
+  ssd: 'Ổ cứng SSD',
+  other: 'Linh kiện khác',
+};
 
 function ProductRow({ products }) {
+  const scrollRefs = useRef({});
+
+  const grouped = products.reduce((acc, product) => {
+    const category = product.category || 'other';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(product);
+    return acc;
+  }, {});
+
+  const scroll = (category, direction) => {
+    const ref = scrollRefs.current[category];
+    if (ref) {
+      const scrollAmount = 1500;
+      ref.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6'>
-      {products.map((product, index) => (
-        <div key={index} className='h-full'>
-          <ProductCard
-            id={product.id}
-            title={product.title}
-            image={product.image}
-            originalPrice={product.originalPrice}
-            salePrice={product.salePrice}
-            discount={product.discount}
-            rating={product.rating}
-            reviewCount={product.reviewCount}
-          />
-        </div>
+    <div className='space-y-12'>
+      {Object.entries(grouped).map(([category, items]) => (
+        <section key={category} className='relative'>
+          <h2 className='text-xl font-bold mb-4'>
+            {CATEGORY_LABELS[category] || category}
+          </h2>
+
+          {/* Nút scroll */}
+          <button
+            onClick={() => scroll(category, 'left')}
+            className='absolute -left-9 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-300 p-2 rounded-full shadow-md hover:bg-gray-100 transition'
+          >
+            <AiOutlineLeft size={18} />
+          </button>
+          <button
+            onClick={() => scroll(category, 'right')}
+            className='absolute -right-9 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-300 p-2 rounded-full shadow-md hover:bg-gray-100 transition'
+          >
+            <AiOutlineRight size={18} />
+          </button>
+
+          {/* Dòng sản phẩm */}
+          <div
+            ref={(el) => (scrollRefs.current[category] = el)}
+            className='flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth scroll-hidden pr-6'
+          >
+            {items.map((product, index) => (
+              <div
+                key={index}
+                className='min-w-[250px] max-w-[250px] flex-shrink-0'
+              >
+                <ProductCard {...product} />
+              </div>
+            ))}
+          </div>
+        </section>
       ))}
     </div>
   );
