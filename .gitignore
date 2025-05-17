@@ -18,6 +18,9 @@ venv/
 ENV/
 env/
 .venv/
+.env
+.env.*
+
 
 # ====================
 # FastAPI / Uvicorn / Starlette

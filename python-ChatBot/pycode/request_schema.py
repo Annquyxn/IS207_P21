@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class TranslationRequest(BaseModel):
-    text: str
-    language: str
+class QueryRequest(BaseModel):
     model: str
+    json_path: str
+    query: str
