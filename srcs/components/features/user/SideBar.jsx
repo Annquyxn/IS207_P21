@@ -14,17 +14,11 @@ function Sidebar() {
     <div className='bg-white border rounded-xl w-full shadow p-4'>
       <div className='text-center mb-4'>
         <div className='w-20 h-20 rounded-full overflow-hidden mx-auto mb-2 border-2 border-gray-300'>
-          {userInfo?.avatar ? (
-            <img
-              src={userInfo.avatar}
-              alt='avatar'
-              className='w-full h-full object-cover'
-            />
-          ) : (
-            <div className='w-full h-full bg-gray-200 flex items-center justify-center text-xl text-gray-500'>
-              🤖
-            </div>
-          )}
+          <img
+            src='/public/default-user.jpg'
+            alt='avatar'
+            className='w-full h-full object-cover'
+          />
         </div>
 
         <h2 className='font-semibold text-lg'>
