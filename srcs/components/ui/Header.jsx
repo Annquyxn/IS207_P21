@@ -41,8 +41,21 @@ function Header() {
   return (
     <header className='bg-red-600 text-white py-3 px-6 shadow-lg sticky top-0 z-50 font-sans'>
       <div className='flex flex-wrap items-center justify-between gap-4'>
-        {/* Left Section */}
         <div className='flex items-center gap-4 flex-grow relative'>
+          <div
+            className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
+            onClick={() => navigate('/home')}
+          >
+            <img
+              src='/public/logo-1.png' // ← đường dẫn tới logo, bà có thể đổi
+              alt='GearVN Logo'
+              className='w-10 h-10 object-contain'
+            />
+            <span className='text-sm font-bold text-white hidden md:inline'>
+              CLONE
+            </span>
+          </div>
+
           {/* Danh mục */}
           <div
             className='group relative'

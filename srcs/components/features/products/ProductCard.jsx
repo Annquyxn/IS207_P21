@@ -1,5 +1,8 @@
+import { useNavigate } from 'react-router-dom';
+import { FiShoppingCart, FiZap, FiStar } from 'react-icons/fi';
+
 const ProductCard = ({
-  banner,
+  id,
   title,
   image,
   originalPrice,
@@ -8,56 +11,56 @@ const ProductCard = ({
   rating,
   reviewCount,
 }) => {
+  const navigate = useNavigate();
+
   return (
-    <article
-      className="bg-white rounded border border-gray-300 p-4 flex flex-col items-start w-full max-w-[236px]
-      transform transition-transform duration-500 hover:scale-105 hover:shadow-xl cursor-pointer"
+    <div
+      onClick={() => navigate(`/product/${id}`)}
+      className='bg-white p-4 shadow-md rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg cursor-pointer'
     >
-      <div className="w-full h-[236px] overflow-hidden rounded mb-2">
-        <img
-          src={banner}
-          alt="banner"
-          className="w-full h-full object-contain transform transition-transform duration-500 hover:scale-110"
-        />
-      </div>
+      <img
+        src={image}
+        alt={title}
+        className='w-full h-[180px] object-contain mb-3 rounded-lg'
+      />
 
-      <h2 className="text-black text-sm font-bold mb-2 leading-snug line-clamp-2">
+      <h3 className='text-base font-semibold h-[48px] line-clamp-2 mb-2'>
         {title}
-      </h2>
+      </h3>
 
-      <div className="bg-gray-100 rounded w-full p-2 flex justify-center items-center overflow-hidden">
-        <img
-          src={image}
-          alt={title}
-          className="w-[185px] h-auto transform transition-transform duration-500 hover:scale-110"
-        />
-      </div>
+      <div className='text-sm text-gray-500 line-through'>{originalPrice}</div>
+      <div className='text-lg font-bold text-red-600 mb-2'>{salePrice}</div>
 
-      <p className="text-gray-600 text-xs font-bold mt-4 mb-1">
-        {originalPrice}
-      </p>
-
-      <div className="flex items-start gap-2">
-        <p className="text-red-600 text-base font-bold">{salePrice}</p>
-        <span className="text-red-500 border border-red-600 px-2 py-0.5 rounded-full text-xs font-semibold transition-transform duration-300 hover:scale-110">
-          {discount}
+      <div className='flex justify-between items-center mb-3 text-sm'>
+        <span className='text-green-600 font-medium'>{discount}</span>
+        <span className='text-yellow-500 font-semibold flex items-center gap-1'>
+          <FiStar /> {rating}
         </span>
       </div>
 
-      <div className="flex mt-1.5 items-center gap-2">
-        <div className="flex items-center gap-1 text-yellow-400 text-xs">
-          <span>{rating}</span>
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/1f2be4e0174f28cccf3c9f67429bb3524ef34cf9"
-            alt="rating"
-            className="w-3 h-3"
-          />
-        </div>
-        <span className="text-gray-500 text-xs font-bold">
-          ({reviewCount} đánh giá)
-        </span>
+      <div className='text-gray-500 text-xs mb-4'>{reviewCount} đánh giá</div>
+
+      <div className='mt-auto flex flex-col gap-2'>
+        <button
+          className='w-full py-2 rounded-xl bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition duration-300'
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log('Mua ngay:', title);
+          }}
+        >
+          <FiZap className='inline mr-2' /> Mua ngay
+        </button>
+        <button
+          className='w-full py-2 rounded-xl bg-gray-100 text-gray-800 text-sm font-medium hover:bg-gray-200 transition duration-300'
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log('Thêm giỏ:', title);
+          }}
+        >
+          <FiShoppingCart className='inline mr-2' /> Thêm vào giỏ hàng
+        </button>
       </div>
-    </article>
+    </div>
   );
 };
 
