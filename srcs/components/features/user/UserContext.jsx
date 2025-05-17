@@ -16,7 +16,6 @@ export function UserProvider({ children }) {
         month: '01',
         year: '2000',
       },
-      avatar: 'https://i.pravatar.cc/150?img=32',
     };
 
     setUserInfo(mockData);

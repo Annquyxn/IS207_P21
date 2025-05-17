@@ -44,10 +44,28 @@ function CenterColumn() {
     ),
   };
 
+  const banners = [
+    'https://file.hstatic.net/200000722513/file/man_hinh_thang_04_banner_web_slider_800x400.jpg',
+    'https://file.hstatic.net/200000722513/file/thang_04_laptop_gaming_banner_web_slider_800x400.jpg',
+    'https://file.hstatic.net/200000722513/file/asus_zenbook_a14_800x400.png',
+  ];
+
   return (
     <section className='relative w-full max-w-full overflow-hidden rounded-lg'>
       <Slider {...settings}>
-        <ShockDeal />
+        <div className='w-full h-[408px] overflow-hidden bg-orange-50'>
+          <ShockDeal />
+        </div>
+
+        {banners.map((src, idx) => (
+          <div key={idx} className='w-full h-[408px] overflow-hidden'>
+            <img
+              src={src}
+              alt={`banner-${idx}`}
+              className='w-full h-full object-cover transition-transform duration-300 hover:scale-[1.02]'
+            />
+          </div>
+        ))}
       </Slider>
     </section>
   );

@@ -11,7 +11,7 @@ function Layout() {
     <div className='min-h-screen flex flex-col bg-gray-50'>
       {!hideHeaderFooter && <Header />}
       <main className='flex-1'>
-        <Outlet />
+        <Outlet key={location.key} />
       </main>
       {!hideHeaderFooter && <Footer />}
     </div>
