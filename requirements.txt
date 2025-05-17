@@ -17,3 +17,8 @@ langchain_groq
 langchain_core
 sse_starlette
 uvicorn[standard]
+beautifulsoup4
+openpyxl
+langchain_chroma
+
+
