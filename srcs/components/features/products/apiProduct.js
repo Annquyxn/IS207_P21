@@ -21,6 +21,8 @@ export async function fetchProducts(category = 'keyboard') {
     tableName = 'pccooling';
   } else if (category === 'mouse') {
     tableName = 'mouse';
+  } else if (category === 'pcgaming') {
+    tableName = 'pcgaming';
   }
   
   const { data, error } = await supabase.from(tableName).select('*')

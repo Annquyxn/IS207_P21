@@ -129,8 +129,9 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=pccooling");
     } else if (category === "Chuột + Lót chuột") {
       navigate("/san-pham?category=mouse");
-    }
-     else {
+    } else if (category === "PC GVN") {
+      navigate("/san-pham?category=pcgaming");
+    } else {
       // Default behavior for other categories
       const el = document.getElementById(category);
       if (el) {

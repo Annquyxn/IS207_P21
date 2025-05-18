@@ -173,6 +173,7 @@ function ProductPage() {
                 {categoryParam === 'headphone' && 'Tai Nghe'}
                 {categoryParam === 'pccooling' && 'Tản nhiệt PC'}
                 {categoryParam === 'mouse' && 'Chuột +  Lót chuột'}
+                {categoryParam === 'pcgaming' && 'PC GVN'}
               </h2>
             )}
             <ProductRow products={visibleProducts} />
