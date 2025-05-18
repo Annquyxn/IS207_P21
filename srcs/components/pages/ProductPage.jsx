@@ -185,6 +185,10 @@ function ProductPage() {
                 {categoryParam === 'laptop_tuf_gaming' && 'ASUS TUF Gaming'}
                 {categoryParam === 'laptop_rog_strix' && 'ASUS ROG Strix'}
                 {categoryParam === 'laptop_rog_zephyrus' && 'ASUS ROG Zephyrus'}
+                {categoryParam === 'laptop_acer_aspire' && 'Aspire Series'}
+                {categoryParam === 'laptop_acer_swift' && 'Swift Series'} 
+                {categoryParam === 'laptop_acer_predator_helios' && 'Acer Predator Helios'}
+                {categoryParam === 'laptop_acer_nitro' && 'Acer Nitro 5'}
               </h2>
             )}
             <ProductRow products={visibleProducts} />

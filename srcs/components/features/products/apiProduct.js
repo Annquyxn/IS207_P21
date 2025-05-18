@@ -44,6 +44,14 @@ export async function fetchProducts(category = 'laptop') {
     tableName = 'laptop_rog_strix';
   } else if (category === 'laptop-rog-zephyrus') {
     tableName = 'laptop_rog_zephyrus';
+  } else if (category === 'laptop-acer-aspire') {
+    tableName = 'laptop_acer_aspire';
+  } else if (category === 'laptop-acer-swift') {
+    tableName = 'laptop_acer_swift';
+  } else if (category === 'laptop-acer-predator-helios') {
+    tableName = 'laptop_acer_predator_helios';
+  } else if (category === 'laptop-acer-nitro') {
+    tableName = 'laptop_acer_nitro';
   }
   
   
