@@ -162,6 +162,14 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=laptop-rog-strix");
     } else if (category === "ASUS ROG Zephyrus") {
       navigate("/san-pham?category=laptop-rog-zephyrus");
+    } else if (category === "Aspire Series") {
+      navigate("/san-pham?category=laptop-acer-aspire");
+    } else if (category === "Swift Series") {
+      navigate("/san-pham?category=laptop-acer-swift");
+    } else if (category === "Acer Predator Helios") {
+      navigate("/san-pham?category=laptop-acer-predator-helios");
+    } else if (category === "Acer Nitro 5") {
+      navigate("/san-pham?category=laptop-acer-nitro");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);
