@@ -174,6 +174,17 @@ function ProductPage() {
                 {categoryParam === 'pccooling' && 'Tản nhiệt PC'}
                 {categoryParam === 'mouse' && 'Chuột +  Lót chuột'}
                 {categoryParam === 'pcgaming' && 'PC GVN'}
+                {categoryParam === 'laptop' && 'Laptop'}
+                {categoryParam === 'laptop_do_hoa' && 'Laptop Đồ họa'}
+                {categoryParam === 'laptop_doanh_nhan' && 'Laptop Doanh nhân'}
+                {categoryParam === 'laptop_gaming' && 'Laptop Gaming'}
+                {categoryParam === 'laptop_van_phong' && 'Laptop Văn Phòng'}
+                {categoryParam === 'laptop_asus_oled' && 'ASUS OLED Series'}
+                {categoryParam === 'laptop_asus_vivobook' && 'Vivobook Series'}
+                {categoryParam === 'laptop_asus_zenbook' && 'Zenbook Series'}
+                {categoryParam === 'laptop_tuf_gaming' && 'ASUS TUF Gaming'}
+                {categoryParam === 'laptop_rog_strix' && 'ASUS ROG Strix'}
+                {categoryParam === 'laptop_rog_zephyrus' && 'ASUS ROG Zephyrus'}
               </h2>
             )}
             <ProductRow products={visibleProducts} />

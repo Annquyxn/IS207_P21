@@ -8,6 +8,15 @@ const LaptopCategories = ({ onClose }) => {
   const navigate = useNavigate();
 
   const categories = {
+    Laptop: {
+      items: [
+        "Laptop Gaming",
+        "Laptop Văn phòng",
+        "Laptop Đồ họa",
+        "Ultrabook",
+        "Laptop Doanh nhân",
+      ],
+    },
     "Laptop Gaming": {
       items: [
         "PC GVN",
@@ -131,6 +140,28 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=mouse");
     } else if (category === "PC GVN") {
       navigate("/san-pham?category=pcgaming");
+    } else if (category === "Laptop") {
+      navigate("/san-pham?category=laptop");
+    } else if (category === "Laptop Đồ họa") {
+      navigate("/san-pham?category=laptop-do-hoa");
+    } else if (category === "Laptop Doanh nhân") {
+      navigate("/san-pham?category=laptop-doanh-nhan");
+    } else if (category === "Laptop Gaming") {
+      navigate("/san-pham?category=laptop-gaming");
+    } else if (category === "Laptop Văn phòng") {
+      navigate("/san-pham?category=laptop-van-phong");
+    } else if (category === "ASUS OLED Series") {
+      navigate("/san-pham?category=laptop-asus-oled");
+    } else if (category === "Vivobook Series") {
+      navigate("/san-pham?category=laptop-asus-vivobook");
+    } else if (category === "Zenbook Series") {
+      navigate("/san-pham?category=laptop-asus-zenbook");
+    } else if (category === "ASUS TUF Gaming") {
+      navigate("/san-pham?category=laptop-asus-tuf");
+    } else if (category === "ASUS ROG Strix") {
+      navigate("/san-pham?category=laptop-rog-strix");
+    } else if (category === "ASUS ROG Zephyrus") {
+      navigate("/san-pham?category=laptop-rog-zephyrus");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);
