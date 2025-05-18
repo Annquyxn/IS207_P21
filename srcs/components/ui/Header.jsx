@@ -38,6 +38,10 @@ function Header() {
     navigate('/home', { state: { modal: 'login' } });
   };
 
+  const handleShoppingClick = () => {
+    navigate('/shopping-cart');
+  };
+
   return (
     <header className='bg-red-600 text-white py-3 px-6 shadow-lg sticky top-0 z-50 font-sans'>
       <div className='flex flex-wrap items-center justify-between gap-4'>
@@ -116,7 +120,10 @@ function Header() {
           </div>
 
           {/* Giỏ hàng */}
-          <div className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'>
+          <div
+            className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
+            onClick={handleShoppingClick}
+          >
             <IoCartOutline className='text-xl' />
             <span className='text-base font-medium'>Giỏ hàng</span>
           </div>
