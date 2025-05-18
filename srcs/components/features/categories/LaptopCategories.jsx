@@ -190,6 +190,22 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=laptop-lenovo-thinkpad");
     } else if (category === "Yoga Series") {
       navigate("/san-pham?category=laptop-lenovo-yoga");
+    } else if (category === "Alienware Series") {
+      navigate("/san-pham?category=laptop-dell-alienware");
+    } else if (category === "G15 Series") {
+      navigate("/san-pham?category=laptop-dell-g15");
+    } else if (category === "Inspiron Series") {
+      navigate("/san-pham?category=laptop-dell-inspiron");
+    } else if (category === "XPS Series") {
+      navigate("/san-pham?category=laptop-dell-xps");
+    } else if (category === "Latitude Series") {
+      navigate("/san-pham?category=laptop-dell-latitude");
+    } else if (category === "Vostro Series") {
+      navigate("/san-pham?category=laptop-dell-vostro");
+    } else if (category === "HP Victus") {
+      navigate("/san-pham?category=laptop-hp-victus");
+    } else if (category === "HP Omen") {
+      navigate("/san-pham?category=laptop-hp-omen");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);
