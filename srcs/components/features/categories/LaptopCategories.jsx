@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import { useNavigate } from "react-router-dom";
 
 const LaptopCategories = ({ onClose }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const containerRef = useRef();
+  const navigate = useNavigate();
 
   const categories = {
     "Laptop Gaming": {
@@ -117,9 +119,14 @@ const LaptopCategories = ({ onClose }) => {
   };
 
   const handleClickCategory = (category) => {
-    const el = document.getElementById(category);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (category === "Bàn phím") {
+      navigate("/san-pham?category=keyboard");
+    } else {
+      // Default behavior for other categories
+      const el = document.getElementById(category);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
     onClose?.();
   };
