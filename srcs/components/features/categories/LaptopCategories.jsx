@@ -170,6 +170,16 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=laptop-acer-predator-helios");
     } else if (category === "Acer Nitro 5") {
       navigate("/san-pham?category=laptop-acer-nitro");
+    } else if (category === "MSI Cyborg Series") {
+      navigate("/san-pham?category=laptop-msi-cyborg");
+    } else if (category === "MSI Katana Series") {
+      navigate("/san-pham?category=laptop-msi-katana");
+    } else if (category === "Modern Series") {
+      navigate("/san-pham?category=laptop-msi-modern");
+    } else if (category === "Prestige Series") {
+      navigate("/san-pham?category=laptop-msi-prestige");
+    } else if (category === "MSI Raider Series") {
+      navigate("/san-pham?category=laptop-msi-raider");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);

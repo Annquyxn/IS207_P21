@@ -52,9 +52,17 @@ export async function fetchProducts(category = 'laptop') {
     tableName = 'laptop_acer_predator_helios';
   } else if (category === 'laptop-acer-nitro') {
     tableName = 'laptop_acer_nitro';
+  } else if (category === 'laptop-msi-cyborg') {
+    tableName = 'laptop_msi_cyborg';
+  } else if (category === 'laptop-msi-katana') {
+    tableName = 'laptop_msi_katana';
+  } else if (category === 'laptop-msi-modern') {
+    tableName = 'laptop_msi_modern';
+  } else if (category === 'laptop-msi-prestige') {
+    tableName = 'laptop_msi_prestige';
+  } else if (category === 'laptop-msi-raider') {
+    tableName = 'laptop_msi_raider';
   }
-  
-  
   
   const { data, error } = await supabase.from(tableName).select('*')
   
