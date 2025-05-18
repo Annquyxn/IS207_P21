@@ -2,34 +2,37 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 // import các thành phần cần thiết từ framer-motion
-import Layout from "./components/ui/Layout";
-import HomePage from "./components/pages/HomePage";
-import ProductPage from "./components/pages/ProductPage";
-import CheckoutPage from "./components/pages/CheckoutPage";
-import CompleteOrderPage from "./components/pages/CompleteOrderPage";
-import PaymentPage from "./components/pages/PaymentPage";
-import ShippingInfoPage from "./components/pages/ShippingInfoPage";
-import BuildPCPage from "./components/pages/BuildPCPage";
-import User from "./components/pages/User";
-import UserPage from "./components/features/user/UserPage";
-import UserAddress from "./components/features/user/UserAddress";
-import UserOrders from "./components/features/user/UserOrders";
-import AccountForm from "./components/features/user/FormAccount";
-import ShoppingCartPage from "./components/pages/ShoppingCartPage";
-import ProductDetailPage from "./components/pages/ProductDetailPage";
-import AnimatedPage from "./components/ui/AnimatedPage";
-import AboutGearVN from "./components/features/footer-components/AboutGearVN";
-import JobPage from "./components/features/footer-components/JobPage";
-import CustomerSupportForm from "./components/features/footer-components/CustomerSupportForm";
-import InstallmentPlan from "./components/features/footer-components/InstallmentPlan";
-import PaymentGuide from "./components/features/footer-components/PaymentGuide";
-import PcBuilder from "./components/features/footer-components/PcBuilder";
-import PrivacyPolicy from "./components/features/footer-components/PrivacyPolicy";
-import ShippingPolicy from "./components/features/footer-components/ShippingPolicy";
-import ShoppingGuide from "./components/features/footer-components/ShoppingGuide";
-import ShowroomSystem from "./components/features/footer-components/ShowroomSystem";
-import WarrantyLookup from "./components/features/footer-components/WarrantyLookup";
-import WarrantyPolicy from "./components/features/footer-components/WarrantyPolicy";
+import Layout from './components/ui/Layout';
+import HomePage from './components/pages/HomePage';
+import ProductPage from './components/pages/ProductPage';
+import CheckoutPage from './components/pages/CheckoutPage';
+import CompleteOrderPage from './components/pages/CompleteOrderPage';
+import PaymentPage from './components/pages/PaymentPage';
+import ShippingInfoPage from './components/pages/ShippingInfoPage';
+import BuildPCPage from './components/pages/BuildPCPage';
+import User from './components/pages/User';
+import UserPage from './components/features/user/UserPage';
+import UserAddress from './components/features/user/UserAddress';
+import UserOrders from './components/features/user/UserOrders';
+import AccountForm from './components/features/user/FormAccount';
+import ShoppingCartPage from './components/pages/ShoppingCartPage';
+import ProductDetailPage from './components/pages/ProductDetailPage';
+import AnimatedPage from './components/ui/AnimatedPage';
+import AboutGearVN from './components/features/footer-components/AboutGearVN';
+import JobPage from './components/features/footer-components/JobPage';
+import CustomerSupportForm from './components/features/footer-components/CustomerSupportForm';
+import InstallmentPlan from './components/features/footer-components/InstallmentPlan';
+import PaymentGuide from './components/features/footer-components/PaymentGuide';
+import PcBuilder from './components/features/footer-components/PcBuilder';
+import PrivacyPolicy from './components/features/footer-components/PrivacyPolicy';
+import ShippingPolicy from './components/features/footer-components/ShippingPolicy';
+import ShoppingGuide from './components/features/footer-components/ShoppingGuide';
+import ShowroomSystem from './components/features/footer-components/ShowroomSystem';
+import WarrantyLookup from './components/features/footer-components/WarrantyLookup';
+import WarrantyPolicy from './components/features/footer-components/WarrantyPolicy';
+import ScrollToTop from './components/ui/ScrollToTop';
+import adminRoute from './adminRoute';
+
 
 function App() {
   return (
@@ -37,8 +40,10 @@ function App() {
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Navigate replace to="home" />} />
+
+            <Route path='/' element={<Layout />}>
+              <Route index element={<Navigate replace to='home' />} />
+              {adminRoute}
               <Route
                 path="home"
                 element={
