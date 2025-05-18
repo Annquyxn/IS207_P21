@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import ProductFilters from '@/components/features/products/ProductFilters';
 import ProductRow from '@/components/features/products/ProductRow';
-import product from '@/components/features/products/product';
+import { fetchProducts } from '@/components/features/products/apiProduct';
 import { parsePrice } from '@/utils/parsePrice';
 import { ActiveFilters } from '../features/products/ProductFilters';
 import Spinner from '../ui/Spinner';
@@ -11,70 +11,91 @@ function ProductPage() {
   const [sortBy, setSortBy] = useState('default');
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     priceRange: null,
     cpu: null,
     socket: null,
   });
 
-  const processedProducts = useMemo(() => {
-    let filtered = product;
+  useEffect(() => {
+    const getProducts = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    getProducts();
+  }, []);
 
-    // Lọc theo thương hiệu
+  const processedProducts = useMemo(() => {
+    let filtered = products;
+
     if (selectedBrand !== 'all') {
       filtered = filtered.filter((p) => p.brand === selectedBrand);
     }
 
-    // Lọc theo khoảng giá
     if (filters.priceRange) {
       filtered = filtered.filter((p) => {
-        const price = parsePrice(p.salePrice);
-        switch (filters.priceRange) {
-          case 'Dưới 1 triệu':
-            return price < 1_000_000;
-          case '1-3 triệu':
-            return price >= 1_000_000 && price <= 3_000_000;
-          case '3-5 triệu':
-            return price >= 3_000_000 && price <= 5_000_000;
-          case 'Trên 5 triệu':
-            return price > 5_000_000;
-          default:
-            return true;
+        try {
+          const price = parsePrice(p.salePrice);
+          switch (filters.priceRange) {
+            case 'Dưới 1 triệu':
+              return price < 1_000_000;
+            case '1-3 triệu':
+              return price >= 1_000_000 && price <= 3_000_000;
+            case '3-5 triệu':
+              return price >= 3_000_000 && price <= 5_000_000;
+            case 'Trên 5 triệu':
+              return price > 5_000_000;
+            default:
+              return true;
+          }
+        } catch (e) {
+          console.error('Error parsing price:', e);
+          return false;
         }
       });
     }
 
-    // Lọc theo dòng CPU
     if (filters.cpu) {
       filtered = filtered.filter((p) =>
         p.title.toLowerCase().includes(filters.cpu.toLowerCase())
       );
     }
 
-    // Lọc theo socket (nếu có field socket riêng thì đổi lại cho chính xác)
     if (filters.socket) {
       filtered = filtered.filter((p) =>
         p.title.toLowerCase().includes(filters.socket.toLowerCase())
       );
     }
 
-    // Sắp xếp
     return [...filtered].sort((a, b) => {
-      const priceA = parsePrice(a.salePrice);
-      const priceB = parsePrice(b.salePrice);
-
-      if (sortBy === 'price-asc') return priceA - priceB;
-      if (sortBy === 'price-desc') return priceB - priceA;
+      if (sortBy === 'price-asc') {
+        const priceA = parsePrice(a.salePrice);
+        const priceB = parsePrice(b.salePrice);
+        return priceA - priceB;
+      }
+      if (sortBy === 'price-desc') {
+        const priceA = parsePrice(a.salePrice);
+        const priceB = parsePrice(b.salePrice);
+        return priceB - priceA;
+      }
       return 0;
     });
-  }, [selectedBrand, filters, sortBy]);
+  }, [products, selectedBrand, filters, sortBy]);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setVisibleProducts(processedProducts.slice(0, 15));
-      setLoading(false);
-    }, 600);
+    setVisibleProducts(processedProducts.slice(0, 15));
   }, [processedProducts]);
 
   const loadMore = () => {
@@ -119,6 +140,10 @@ function ProductPage() {
         {loading ? (
           <div className='flex justify-center py-12'>
             <Spinner className='w-12 h-12 text-blue-500' />
+          </div>
+        ) : error ? (
+          <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative'>
+            {error}
           </div>
         ) : (
           <>

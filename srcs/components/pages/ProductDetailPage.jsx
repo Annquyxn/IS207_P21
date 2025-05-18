@@ -1,18 +1,50 @@
 import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import ProductInfo from '@/components/features/detail/ProductInfo';
 import ProductGallery from '@/components/features/detail/ProductGallery';
 import ProductDetails from '@/components/features/detail/ProductDetails';
 import ExpandSection from '@/components/features/detail/ExpandSection';
-import products from '@/components/features/products/product'; // sửa path cho đúng nha
+import { fetchProducts } from '@/components/features/products/apiProduct';
+import Spinner from '@/components/ui/Spinner';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
-  const product = products.find((p) => p.id === id);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!product) {
+  useEffect(() => {
+    const getProduct = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProducts();
+        const foundProduct = data.find((p) => p.id === id);
+        setProduct(foundProduct || null);
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError('Failed to load product details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    getProduct();
+  }, [id]);
+
+  if (loading) {
     return (
       <main className='min-h-screen flex items-center justify-center'>
-        <p className='text-gray-500 text-lg'>Không tìm thấy sản phẩm.</p>
+        <Spinner className='w-12 h-12 text-blue-500' />
+      </main>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <main className='min-h-screen flex items-center justify-center'>
+        <p className='text-gray-500 text-lg'>
+          {error || 'Không tìm thấy sản phẩm.'}
+        </p>
       </main>
     );
   }
