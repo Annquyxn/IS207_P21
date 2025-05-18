@@ -195,6 +195,11 @@ function ProductPage() {
                 {categoryParam === "laptop_msi_modern" && "Modern Series"}
                 {categoryParam === "laptop_msi_prestige" && "Prestige Series"}
                 {categoryParam === "laptop_msi_raider" && "MSI Raider Series"}
+                {categoryParam === "laptop_lenovo_ideapad" && "Ideapad Series"}
+                {categoryParam === "laptop_lenovo_legion" && "Legion Series"}
+                {categoryParam === "laptop_lenovo_thinkbook" && "Thinkbook Series"}
+                {categoryParam === "laptop_lenovo_thinkpad" && "Thinkpad Series"}
+                {categoryParam === "laptop_lenovo_yoga" && "Yoga Series"}
               </h2>
             )}
             <ProductRow products={visibleProducts} />
