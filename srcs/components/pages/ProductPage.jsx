@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import ProductFilters from '@/components/features/products/ProductFilters';
 import ProductRow from '@/components/features/products/ProductRow';
 import { fetchProducts } from '@/components/features/products/apiProduct';
@@ -7,6 +8,10 @@ import { ActiveFilters } from '../features/products/ProductFilters';
 import Spinner from '../ui/Spinner';
 
 function ProductPage() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryParam = queryParams.get('category');
+
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [sortBy, setSortBy] = useState('default');
   const [visibleProducts, setVisibleProducts] = useState([]);
@@ -17,7 +22,16 @@ function ProductPage() {
     priceRange: null,
     cpu: null,
     socket: null,
+    category: categoryParam || null,
   });
+
+  // Update category filter when URL parameter changes
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      category: categoryParam || null
+    }));
+  }, [categoryParam]);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -79,6 +93,9 @@ function ProductPage() {
       );
     }
 
+    // If keyboard category is selected, it's already filtered by the API
+    // as the fetchProducts function is fetching from the keyboards table
+
     return [...filtered].sort((a, b) => {
       if (sortBy === 'price-asc') {
         const priceA = parsePrice(a.salePrice);
@@ -133,6 +150,7 @@ function ProductPage() {
               priceRange: null,
               cpu: null,
               socket: null,
+              category: null,
             });
           }}
         />
@@ -147,6 +165,9 @@ function ProductPage() {
           </div>
         ) : (
           <>
+            {categoryParam === 'keyboard' && (
+              <h2 className='text-2xl font-bold mb-4'>Bàn phím</h2>
+            )}
             <ProductRow products={visibleProducts} />
             {visibleProducts.length < processedProducts.length && (
               <button
