@@ -71,8 +71,24 @@ export async function fetchProducts(category = 'laptop') {
   } else if (category === 'laptop-lenovo-thinkpad') {
     tableName = 'laptop_lenovo_thinkpad';
   } else if (category === 'laptop-lenovo-yoga') {
-    tableName = 'laptop_lenovo_yoga';
-  } 
+    tableName = 'laptop_lenovo_yoga'; 
+  } else if (category === 'laptop-dell-alienware') {
+    tableName = 'laptop_dell_alienware';
+  } else if (category === 'laptop-dell-g15') {
+    tableName = 'laptop_dell_g15';
+  } else if (category === 'laptop-dell-inspiron') {
+    tableName = 'laptop_dell_inspiron';
+  } else if (category === 'laptop-dell-xps') {
+    tableName = 'laptop_dell_xps';
+  } else if (category === 'laptop-dell-latitude') {
+    tableName = 'laptop_dell_latitude';
+  } else if (category === 'laptop-dell-vostro') {
+    tableName = 'laptop_dell_vostro';
+  } else if (category === 'laptop-hp-omen') {
+    tableName = 'laptop_hp_omen';
+  } else if (category === 'laptop-hp-victus') {
+    tableName = 'laptop_hp_victus';
+  }
   
   const { data, error } = await supabase.from(tableName).select('*')
   

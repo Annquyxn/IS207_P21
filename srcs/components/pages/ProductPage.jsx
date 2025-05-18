@@ -1,19 +1,19 @@
-import { useState, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
-import ProductFilters from "@/components/features/products/ProductFilters";
-import ProductRow from "@/components/features/products/ProductRow";
-import { fetchProducts } from "@/components/features/products/apiProduct";
-import { parsePrice } from "@/utils/parsePrice";
-import { ActiveFilters } from "../features/products/ProductFilters";
-import Spinner from "../ui/Spinner";
+import { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import ProductFilters from '@/components/features/products/ProductFilters';
+import ProductRow from '@/components/features/products/ProductRow';
+import { fetchProducts } from '@/components/features/products/apiProduct';
+import { parsePrice } from '@/utils/parsePrice';
+import { ActiveFilters } from '../features/products/ProductFilters';
+import Spinner from '../ui/Spinner';
 
 function ProductPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const categoryParam = queryParams.get("category");
+  const categoryParam = queryParams.get('category');
 
-  const [selectedBrand, setSelectedBrand] = useState("all");
-  const [sortBy, setSortBy] = useState("default");
+  const [selectedBrand, setSelectedBrand] = useState('all');
+  const [sortBy, setSortBy] = useState('default');
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -27,9 +27,9 @@ function ProductPage() {
 
   // Update category filter when URL parameter changes
   useEffect(() => {
-    setFilters((prev) => ({
+    setFilters(prev => ({
       ...prev,
-      category: categoryParam || null,
+      category: categoryParam || null
     }));
   }, [categoryParam]);
 
@@ -42,20 +42,20 @@ function ProductPage() {
         setProducts(data);
         setError(null);
       } catch (err) {
-        console.error("Error fetching products:", err);
-        setError("Failed to load products. Please try again later.");
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
-
+    
     getProducts();
   }, [filters.category]);
 
   const processedProducts = useMemo(() => {
     let filtered = products;
 
-    if (selectedBrand !== "all") {
+    if (selectedBrand !== 'all') {
       filtered = filtered.filter((p) => p.brand === selectedBrand);
     }
 
@@ -64,19 +64,19 @@ function ProductPage() {
         try {
           const price = parsePrice(p.salePrice);
           switch (filters.priceRange) {
-            case "Dưới 1 triệu":
+            case 'Dưới 1 triệu':
               return price < 1_000_000;
-            case "1-3 triệu":
+            case '1-3 triệu':
               return price >= 1_000_000 && price <= 3_000_000;
-            case "3-5 triệu":
+            case '3-5 triệu':
               return price >= 3_000_000 && price <= 5_000_000;
-            case "Trên 5 triệu":
+            case 'Trên 5 triệu':
               return price > 5_000_000;
             default:
               return true;
           }
         } catch (e) {
-          console.error("Error parsing price:", e);
+          console.error('Error parsing price:', e);
           return false;
         }
       });
@@ -98,12 +98,12 @@ function ProductPage() {
     // as the fetchProducts function is fetching from the keyboards table
 
     return [...filtered].sort((a, b) => {
-      if (sortBy === "price-asc") {
+      if (sortBy === 'price-asc') {
         const priceA = parsePrice(a.salePrice);
         const priceB = parsePrice(b.salePrice);
         return priceA - priceB;
       }
-      if (sortBy === "price-desc") {
+      if (sortBy === 'price-desc') {
         const priceA = parsePrice(a.salePrice);
         const priceB = parsePrice(b.salePrice);
         return priceB - priceA;
@@ -124,9 +124,9 @@ function ProductPage() {
   };
 
   return (
-    <main className="bg-gray-200 w-full min-h-screen p-6 flex justify-center">
-      <div className="max-w-[1200px] w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+    <main className='bg-gray-200 w-full min-h-screen p-6 flex justify-center'>
+      <div className='max-w-[1200px] w-full'>
+        <div className='bg-white rounded-2xl shadow-xl p-6 mb-6'>
           <ProductFilters
             selectedBrand={selectedBrand}
             onBrandChange={setSelectedBrand}
@@ -141,12 +141,12 @@ function ProductPage() {
         <ActiveFilters
           selectedBrand={selectedBrand}
           filters={filters}
-          onClearBrand={() => setSelectedBrand("all")}
+          onClearBrand={() => setSelectedBrand('all')}
           onClearFilter={(key) =>
             setFilters((prev) => ({ ...prev, [key]: null }))
           }
           onClearAll={() => {
-            setSelectedBrand("all");
+            setSelectedBrand('all');
             setFilters({
               priceRange: null,
               cpu: null,
@@ -157,55 +157,20 @@ function ProductPage() {
         />
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <Spinner className="w-12 h-12 text-blue-500" />
+          <div className='flex justify-center py-12'>
+            <Spinner className='w-12 h-12 text-blue-500' />
           </div>
         ) : error ? (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative'>
             {error}
           </div>
         ) : (
           <>
-            {categoryParam && (
-              <h2 className="text-2xl font-bold mb-4">
-                {categoryParam === "keyboard" && "Bàn phím"}
-                {categoryParam === "ssd" && "SSD Laptop"}
-                {categoryParam === "headphone" && "Tai Nghe"}
-                {categoryParam === "pccooling" && "Tản nhiệt PC"}
-                {categoryParam === "mouse" && "Chuột +  Lót chuột"}
-                {categoryParam === "pcgaming" && "PC GVN"}
-                {categoryParam === "laptop" && "Laptop"}
-                {categoryParam === "laptop_do_hoa" && "Laptop Đồ họa"}
-                {categoryParam === "laptop_doanh_nhan" && "Laptop Doanh nhân"}
-                {categoryParam === "laptop_gaming" && "Laptop Gaming"}
-                {categoryParam === "laptop_van_phong" && "Laptop Văn Phòng"}
-                {categoryParam === "laptop_asus_oled" && "ASUS OLED Series"}
-                {categoryParam === "laptop_asus_vivobook" && "Vivobook Series"}
-                {categoryParam === "laptop_asus_zenbook" && "Zenbook Series"}
-                {categoryParam === "laptop_tuf_gaming" && "ASUS TUF Gaming"}
-                {categoryParam === "laptop_rog_strix" && "ASUS ROG Strix"}
-                {categoryParam === "laptop_rog_zephyrus" && "ASUS ROG Zephyrus"}
-                {categoryParam === "laptop_acer_aspire" && "Aspire Series"}
-                {categoryParam === "laptop_acer_swift" && "Swift Series"}
-                {categoryParam === "laptop_acer_predator_helios" &&
-                  "Acer Predator Helios"}
-                {categoryParam === "laptop_acer_nitro" && "Acer Nitro 5"}
-                {categoryParam === "laptop_msi_cyborg" && "MSI Cyborg Series"}
-                {categoryParam === "laptop_msi_katana" && "MSI Katana Series"}
-                {categoryParam === "laptop_msi_modern" && "Modern Series"}
-                {categoryParam === "laptop_msi_prestige" && "Prestige Series"}
-                {categoryParam === "laptop_msi_raider" && "MSI Raider Series"}
-                {categoryParam === "laptop_lenovo_ideapad" && "Ideapad Series"}
-                {categoryParam === "laptop_lenovo_legion" && "Legion Series"}
-                {categoryParam === "laptop_lenovo_thinkbook" && "Thinkbook Series"}
-                {categoryParam === "laptop_lenovo_thinkpad" && "Thinkpad Series"}
-                {categoryParam === "laptop_lenovo_yoga" && "Yoga Series"}
-              </h2>
-            )}
+                          {categoryParam && (                <h2 className='text-2xl font-bold mb-4'>                  {categoryParam === 'keyboard' && 'Bàn phím'}                  {categoryParam === 'ssd' && 'SSD Laptop'}                  {categoryParam === 'headphone' && 'Tai Nghe'}                  {categoryParam === 'pccoling' && 'Tản nhiệt PC'}                </h2>              )}
             <ProductRow products={visibleProducts} />
             {visibleProducts.length < processedProducts.length && (
               <button
-                className="mt-4 bg-red-500 text-white p-4 rounded-xl mx-auto block text-xl transition-all duration-300 hover:scale-110"
+                className='mt-4 bg-red-500 text-white p-4 rounded-xl mx-auto block text-xl transition-all duration-300 hover:scale-110'
                 onClick={loadMore}
               >
                 Xem thêm
