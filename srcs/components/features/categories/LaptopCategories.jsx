@@ -1,11 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import { useNavigate } from "react-router-dom";
 
 const LaptopCategories = ({ onClose }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const containerRef = useRef();
+  const navigate = useNavigate();
 
   const categories = {
+    Laptop: {
+      items: [
+        "Laptop Gaming",
+        "Laptop Văn phòng",
+        "Laptop Đồ họa",
+        "Ultrabook",
+        "Laptop Doanh nhân",
+      ],
+    },
     "Laptop Gaming": {
       items: [
         "PC GVN",
@@ -117,9 +128,74 @@ const LaptopCategories = ({ onClose }) => {
   };
 
   const handleClickCategory = (category) => {
-    const el = document.getElementById(category);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (category === "Bàn phím") {
+      navigate("/san-pham?category=keyboard");
+    } else if (category === "SSD laptop") {
+      navigate("/san-pham?category=ssd");
+    } else if (category === "Tai Nghe") {
+      navigate("/san-pham?category=headphone");
+    } else if (category === "Đế tản nhiệt") {
+      navigate("/san-pham?category=pccooling");
+    } else if (category === "Chuột + Lót chuột") {
+      navigate("/san-pham?category=mouse");
+    } else if (category === "PC GVN") {
+      navigate("/san-pham?category=pcgaming");
+    } else if (category === "Laptop") {
+      navigate("/san-pham?category=laptop");
+    } else if (category === "Laptop Đồ họa") {
+      navigate("/san-pham?category=laptop-do-hoa");
+    } else if (category === "Laptop Doanh nhân") {
+      navigate("/san-pham?category=laptop-doanh-nhan");
+    } else if (category === "Laptop Gaming") {
+      navigate("/san-pham?category=laptop-gaming");
+    } else if (category === "Laptop Văn phòng") {
+      navigate("/san-pham?category=laptop-van-phong");
+    } else if (category === "ASUS OLED Series") {
+      navigate("/san-pham?category=laptop-asus-oled");
+    } else if (category === "Vivobook Series") {
+      navigate("/san-pham?category=laptop-asus-vivobook");
+    } else if (category === "Zenbook Series") {
+      navigate("/san-pham?category=laptop-asus-zenbook");
+    } else if (category === "ASUS TUF Gaming") {
+      navigate("/san-pham?category=laptop-asus-tuf");
+    } else if (category === "ASUS ROG Strix") {
+      navigate("/san-pham?category=laptop-rog-strix");
+    } else if (category === "ASUS ROG Zephyrus") {
+      navigate("/san-pham?category=laptop-rog-zephyrus");
+    } else if (category === "Aspire Series") {
+      navigate("/san-pham?category=laptop-acer-aspire");
+    } else if (category === "Swift Series") {
+      navigate("/san-pham?category=laptop-acer-swift");
+    } else if (category === "Acer Predator Helios") {
+      navigate("/san-pham?category=laptop-acer-predator-helios");
+    } else if (category === "Acer Nitro 5") {
+      navigate("/san-pham?category=laptop-acer-nitro");
+    } else if (category === "MSI Cyborg Series") {
+      navigate("/san-pham?category=laptop-msi-cyborg");
+    } else if (category === "MSI Katana Series") {
+      navigate("/san-pham?category=laptop-msi-katana");
+    } else if (category === "Modern Series") {
+      navigate("/san-pham?category=laptop-msi-modern");
+    } else if (category === "Prestige Series") {
+      navigate("/san-pham?category=laptop-msi-prestige");
+    } else if (category === "MSI Raider Series") {
+      navigate("/san-pham?category=laptop-msi-raider");
+    } else if (category === "Ideapad Series") {
+      navigate("/san-pham?category=laptop-lenovo-ideapad");
+    } else if (category === "Legion Series") {
+      navigate("/san-pham?category=laptop-lenovo-legion");
+    } else if (category === "Thinkbook Series") {
+      navigate("/san-pham?category=laptop-lenovo-thinkbook");
+    } else if (category === "Thinkpad Series") {
+      navigate("/san-pham?category=laptop-lenovo-thinkpad");
+    } else if (category === "Yoga Series") {
+      navigate("/san-pham?category=laptop-lenovo-yoga");
+    } else {
+      // Default behavior for other categories
+      const el = document.getElementById(category);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
     onClose?.();
   };
