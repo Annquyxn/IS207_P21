@@ -171,6 +171,7 @@ function ProductPage() {
                 {categoryParam === 'keyboard' && 'Bàn phím'}
                 {categoryParam === 'ssd' && 'SSD Laptop'}
                 {categoryParam === 'headphone' && 'Tai Nghe'}
+                {categoryParam === 'pccooling' && 'Tản nhiệt PC'}
               </h2>
             )}
             <ProductRow products={visibleProducts} />

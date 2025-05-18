@@ -125,6 +125,8 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=ssd");
     } else if (category === "Tai Nghe") {
       navigate("/san-pham?category=headphone");
+    } else if (category === "Đế tản nhiệt") {
+      navigate("/san-pham?category=pccooling");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);
