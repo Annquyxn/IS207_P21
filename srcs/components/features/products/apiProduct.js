@@ -7,9 +7,8 @@ function formatCurrency(value) {
     maximumFractionDigits: 0,
   })}₫`
 }
-
-export async function fetchProducts(category = 'keyboard') {
-  let tableName = 'keyboards';
+export async function fetchProducts(category = 'laptop') {
+  let tableName = 'laptop';
   
   if (category === 'ssd') {
     tableName = 'ssd';
@@ -23,7 +22,31 @@ export async function fetchProducts(category = 'keyboard') {
     tableName = 'mouse';
   } else if (category === 'pcgaming') {
     tableName = 'pcgaming';
+  } else if (category === 'laptop') {
+    tableName = 'laptop';
+  } else if (category === 'laptop-do-hoa') {
+    tableName = 'laptop_do_hoa';
+  } else if (category === 'laptop-doanh-nhan') {
+    tableName = 'laptop_doanh_nhan';
+  } else if (category === 'laptop-gaming') {
+    tableName = 'laptop_gaming';
+  } else if (category === 'laptop-van-phong') {
+    tableName = 'laptop_van_phong';
+  } else if (category === 'laptop-asus-oled') {
+    tableName = 'laptop_asus_oled';
+  } else if (category === 'laptop-asus-vivobook') {
+    tableName = 'laptop_asus_vivobook';
+  } else if (category === 'laptop-asus-zenbook') {
+    tableName = 'laptop_asus_zenbook';
+  } else if (category === 'laptop-asus-tuf') {
+    tableName = 'laptop_tuf_gaming';
+  } else if (category === 'laptop-rog-strix') {
+    tableName = 'laptop_rog_strix';
+  } else if (category === 'laptop-rog-zephyrus') {
+    tableName = 'laptop_rog_zephyrus';
   }
+  
+  
   
   const { data, error } = await supabase.from(tableName).select('*')
   
