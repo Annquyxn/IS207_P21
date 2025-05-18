@@ -1,0 +1,781 @@
+[
+  {
+    "id": 1062054084,
+    "title": "Tai nghe SteelSeries Arctis GameBuds Black",
+    "vendor": "Steelseries",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-steelseries-arctis-gamebuds-black",
+    "price": "4590000",
+    "link": "https://gearvn.com/products/tai-nghe-steelseries-arctis-gamebuds-black",
+    "image": {
+      "created_at": null,
+      "id": 1434567478,
+      "position": 1,
+      "product_id": 1062054084,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/tai-nghe-steelseries-arctis-game__4__97ac4b29c010400480900330264bfa77.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1062054074,
+    "title": "Tai nghe SteelSeries Arctis GameBuds White",
+    "vendor": "Steelseries",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-steelseries-arctis-gamebuds-white",
+    "price": "4590000",
+    "link": "https://gearvn.com/products/tai-nghe-steelseries-arctis-gamebuds-white",
+    "image": {
+      "created_at": null,
+      "id": 1434566537,
+      "position": 1,
+      "product_id": 1062054074,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/tai-nghe-steelseries-arctis-game_8094a06452954b54a8bae1589d12dd3c.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1057382925,
+    "title": "Tai nghe Edifier True Wireless X1 Lite White",
+    "vendor": "Edifier",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-edifier-true-wireless-x1-lite-white",
+    "price": "350000",
+    "link": "https://gearvn.com/products/tai-nghe-edifier-true-wireless-x1-lite-white",
+    "image": {
+      "created_at": null,
+      "id": 1413871260,
+      "position": 1,
+      "product_id": 1057382925,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/tai-nghe-khong-day-tws-edifier-x__4__39d73dca0e3d477999bd74e8b4f20ccf.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1057382923,
+    "title": "Tai nghe Edifier True Wireless X1 Lite Black",
+    "vendor": "Edifier",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-edifier-true-wireless-x1-lite-black",
+    "price": "350000",
+    "link": "https://gearvn.com/products/tai-nghe-edifier-true-wireless-x1-lite-black",
+    "image": {
+      "created_at": null,
+      "id": 1413870898,
+      "position": 1,
+      "product_id": 1057382923,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/tai-nghe-khong-day-tws-edifier-x_a875c8939f664f69966dd38f52c701c4.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1056956172,
+    "title": "Tai nghe DareU EH925L Black Red RGB",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh925l-black-red-rgb",
+    "price": "799000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh925l-black-red-rgb",
+    "image": {
+      "created_at": null,
+      "id": 1408099585,
+      "position": 1,
+      "product_id": 1056956172,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/925_heiwushi_24-07-12_2560_3389_5f7927994ab345ffa6af37b008d3ed78.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1056861274,
+    "title": "Tai nghe Razer Kraken V4 X USB",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-kraken-v4-x-usb",
+    "price": "2440000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-kraken-v4-x-usb",
+    "image": {
+      "created_at": null,
+      "id": 1406871573,
+      "position": 1,
+      "product_id": 1056861274,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/kraken_v4_x__2024__render_02__1__3dcb108fe0fd4b69ae24fef347f2aa98.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1055763978,
+    "title": "Tai nghe ASUS TUF GAMING H1 Wireless Black(90YH0391-B3UA00)",
+    "vendor": "ASUS",
+    "product_type": "Quà tặng laptop",
+    "handle": "tai-nghe-asus-tuf-gaming-h1-wireless-black-90yh0391-b3ua00",
+    "price": "1490000",
+    "link": "https://gearvn.com/products/tai-nghe-asus-tuf-gaming-h1-wireless-black-90yh0391-b3ua00",
+    "image": {
+      "created_at": null,
+      "id": 1397705029,
+      "position": 1,
+      "product_id": 1055763978,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/w692_6f9f5f8ddac84d3593c8e5fa17926a3f.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1053733157,
+    "title": "Tai nghe Edifier True Wireless X2S Xám",
+    "vendor": "Edifier",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-edifier-true-wireless-x2s-xam",
+    "price": "350000",
+    "link": "https://gearvn.com/products/tai-nghe-edifier-true-wireless-x2s-xam",
+    "image": {
+      "created_at": null,
+      "id": 1378377603,
+      "position": 1,
+      "product_id": 1053733157,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/fbc7c5ba2ed97ae302e171a8630f9082_d115e1862c8541898841d878b1caf878.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1053733156,
+    "title": "Tai nghe Edifier True Wireless X2S Xanh lá",
+    "vendor": "Edifier",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-edifier-true-wireless-x2s-xanh-la",
+    "price": "350000",
+    "link": "https://gearvn.com/products/tai-nghe-edifier-true-wireless-x2s-xanh-la",
+    "image": {
+      "created_at": null,
+      "id": 1378377249,
+      "position": 1,
+      "product_id": 1053733156,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/f0480a000773b8de24b2388ea22bff6d_a13f698b93f54ff9bf538766f0d0dba5.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1053733151,
+    "title": "Tai nghe Edifier True Wireless X2S Đen",
+    "vendor": "Edifier",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-edifier-true-wireless-x2s-den",
+    "price": "350000",
+    "link": "https://gearvn.com/products/tai-nghe-edifier-true-wireless-x2s-den",
+    "image": {
+      "created_at": null,
+      "id": 1378377073,
+      "position": 1,
+      "product_id": 1053733151,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/1d4f73c2c65eb338c63d877e48ccdfe3_77a166fe42704512a76080e63844f585.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1053201801,
+    "title": "Tai nghe Razer Barracuda X 2022 Mecury",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-barracuda-x-2022-mercury",
+    "price": "2750000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-barracuda-x-2022-mercury",
+    "image": {
+      "created_at": null,
+      "id": 1372684724,
+      "position": 1,
+      "product_id": 1053201801,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/fa444e5000345c08a0423239a1f74e0_b0be69c248e648859e4e38b77797585a_large_85b9c829cc454533aa48f303327eb87b.gif",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1051125803,
+    "title": "Tai nghe E-Dra EH493W",
+    "vendor": "E-Dra",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-e-dra-eh493w",
+    "price": "690000",
+    "link": "https://gearvn.com/products/tai-nghe-e-dra-eh493w",
+    "image": {
+      "created_at": null,
+      "id": 1365761715,
+      "position": 1,
+      "product_id": 1051125803,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/gearvn-tai-nghe-e-dra-eh493w-1_27b2b485e0054c89bca407e6cda32d98.png",
+      "alt": "GEARVN - Tai nghe E-Dra EH493W",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1051038230,
+    "title": "Tai nghe DareU EH406 (MULTI-LED)",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh406-multi-led",
+    "price": "260000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh406-multi-led",
+    "image": {
+      "created_at": null,
+      "id": 1354765149,
+      "position": 1,
+      "product_id": 1051038230,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/1_2cc845a01c7e49b092fcb5b8924c12b4.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047272115,
+    "title": "Tai nghe DareU EH416 RGB",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh416-rgb",
+    "price": "350000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh416-rgb",
+    "image": {
+      "created_at": null,
+      "id": 1316527048,
+      "position": 1,
+      "product_id": 1047272115,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/gearvn-tai-nghe-dareu-eh416-rgb-1_50b1586d8678429aaee7922ec536c3f3_418f44656d36414e8b56e8c62927e5c7.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047271078,
+    "title": "Tai nghe Razer BlackShark V2 X",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-blackshark-v2-x",
+    "price": "1090000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-blackshark-v2-x",
+    "image": {
+      "created_at": null,
+      "id": 1461534850,
+      "position": 1,
+      "product_id": 1047271078,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/vn-tai-nghe-razer-blackshark-v2-photoroom_e7d768a99de7423b9d24382728d710ce.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047270927,
+    "title": "Tai nghe DareU EH469 7.1 RGB Pink",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh469-7-1-rgb-pink",
+    "price": "380000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh469-7-1-rgb-pink",
+    "image": {
+      "created_at": null,
+      "id": 1316518572,
+      "position": 1,
+      "product_id": 1047270927,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/34400_dareu_eh469_pink_1d57e30add8f42eca3eaa006d32481e2_5fea9259b65343acadecc1b76079c8b4.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047270920,
+    "title": "Tai nghe DAREU EH469 7.1 RGB Black",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh469-7-1-rgb",
+    "price": "390000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh469-7-1-rgb",
+    "image": {
+      "created_at": null,
+      "id": 1316518563,
+      "position": 1,
+      "product_id": 1047270920,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/dareu_eh469_rgb_usb_7_1_led_rgb_black_89760ada19024400ac16ba534fc195ab_b9be5feaf75248fab587ccee1c2c4636.jpg",
+      "alt": "Tai nghe DareU EH469 7.1 RGB Black",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047265571,
+    "title": "Tai nghe DareU EH925S Pink RGB",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-gaming-dareu-eh925s-pink-rgb",
+    "price": "890000",
+    "link": "https://gearvn.com/products/tai-nghe-gaming-dareu-eh925s-pink-rgb",
+    "image": {
+      "created_at": null,
+      "id": 1316491323,
+      "position": 1,
+      "product_id": 1047265571,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/nghe-gaming-dareu-eh925s-pink-rgb-666_ff9eb8be3df94fc5927285fae3bd1d9a_5d41015fde1e4a359103b6452f19f8bd.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047265567,
+    "title": "Tai nghe DareU EH722X 7.1 White",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh722x-7-1-white",
+    "price": "590000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh722x-7-1-white",
+    "image": {
+      "created_at": null,
+      "id": 1316491297,
+      "position": 1,
+      "product_id": 1047265567,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/n-tai-nghe-dareu-eh722x-7-1-white-666_0d31c9147b02414181cc6394444c96eb_a9e117eb9cbd41529da8e7e0a7e34f8b.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047265566,
+    "title": "Tai nghe DareU EH722X 7.1 Pink",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh722x-7-1-pink",
+    "price": "590000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh722x-7-1-pink",
+    "image": {
+      "created_at": null,
+      "id": 1316491290,
+      "position": 1,
+      "product_id": 1047265566,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/vn-tai-nghe-dareu-eh722x-7-1-pink-666_47afec73c97a48a2a3c16fa53ed09245_17053b8a0abe461d93f83107ffabc176.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047265563,
+    "title": "Tai nghe DareU EH722X 7.1 Black",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh722x-7-1-black",
+    "price": "590000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh722x-7-1-black",
+    "image": {
+      "created_at": null,
+      "id": 1316491257,
+      "position": 1,
+      "product_id": 1047265563,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/n-tai-nghe-dareu-eh722x-7-1-black-666_b52e47ea70be411bb8d8eb894e254934_a77f91fa66874b2c914e7b7aa33adcde.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047264871,
+    "title": "Tai nghe MSI H991",
+    "vendor": "MSI",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-msi-h991",
+    "price": "1400000",
+    "link": "https://gearvn.com/products/tai-nghe-msi-h991",
+    "image": {
+      "created_at": null,
+      "id": 1316483510,
+      "position": 1,
+      "product_id": 1047264871,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/34065_h13_59bdf63f449e4116b7e0d6039d82f1d7_ae959173a6b24dbe8c8ec1b8e3559f64.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047263170,
+    "title": "Tai nghe True Wireless Huawei Freebuds 4i Black",
+    "vendor": "Huawei",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-true-wireless-huawei-freebuds-4i",
+    "price": "1590000",
+    "link": "https://gearvn.com/products/tai-nghe-true-wireless-huawei-freebuds-4i",
+    "image": {
+      "created_at": null,
+      "id": 1316468685,
+      "position": 1,
+      "product_id": 1047263170,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/e-true-wireless-huawei-freebuds-4i-10_ef5c44584d0a4bc897fd3dba2e59379e_b79acfd12a7542ffbd1e5ffe89ad503a.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047263167,
+    "title": "Tai nghe True Wireless Aukey T21 Black",
+    "vendor": "Aukey",
+    "product_type": "Tai nghe Audio",
+    "handle": "tai-nghe-true-wireless-aukey-t21",
+    "price": "590000",
+    "link": "https://gearvn.com/products/tai-nghe-true-wireless-aukey-t21",
+    "image": {
+      "created_at": null,
+      "id": 1316468676,
+      "position": 1,
+      "product_id": 1047263167,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/product_117953_1_de1ac19ea01c4c779c71c3a41bd17136_795a7342b7524a7c868ac83a2420178f.jpeg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047263166,
+    "title": "Tai nghe True Wireless Aukey EP-K01 Lite Black",
+    "vendor": "Aukey",
+    "product_type": "Tai nghe Audio",
+    "handle": "tai-nghe-true-wireless-aukey-ep-k01-lite",
+    "price": "790000",
+    "link": "https://gearvn.com/products/tai-nghe-true-wireless-aukey-ep-k01-lite",
+    "image": {
+      "created_at": null,
+      "id": 1316468671,
+      "position": 1,
+      "product_id": 1047263166,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/thumb_1615902642_a59c4094fe1943acb96897d7776276d9_4a226489944341658043456fa37a6da0.jpeg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047263163,
+    "title": "Tai Nghe Steelseries Tusq",
+    "vendor": "Steelseries",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-steelseries-tusq",
+    "price": "790000",
+    "link": "https://gearvn.com/products/tai-nghe-steelseries-tusq",
+    "image": {
+      "created_at": null,
+      "id": 1316468658,
+      "position": 1,
+      "product_id": 1047263163,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/thumbtainghe_3c1d782be4a145aeb5d9fd692b65eea8_0fb7a4fcc5684ae0a286646d4012dea8.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047262090,
+    "title": "Tai nghe Steelseries Arctis Prime",
+    "vendor": "Steelseries",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-steelseries-arctis-prime",
+    "price": "2890000",
+    "link": "https://gearvn.com/products/tai-nghe-steelseries-arctis-prime",
+    "image": {
+      "created_at": null,
+      "id": 1316462418,
+      "position": 1,
+      "product_id": 1047262090,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/s-arctis-prime-gaming-headset-black-1_5f75994ab24a4bc3b9aa8b51b837d1fb_e18fd18144c144078cbc3d14f7baf6af.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047262084,
+    "title": "Tai nghe Razer Kraken V3 X USB",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-kraken-v3-x-usb",
+    "price": "1250000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-kraken-v3-x-usb",
+    "image": {
+      "created_at": null,
+      "id": 1316462389,
+      "position": 1,
+      "product_id": 1047262084,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/ezgif-3-2a102e266ba9_15326bef447c473eb07d61b0e843d206_5771f81db9cb441cbc3698ac0e24f888.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047255676,
+    "title": "Tai nghe Steelseries Arctis 7P+ Wireless White",
+    "vendor": "Steelseries",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-steelseries-arctis-7p-wireless-white",
+    "price": "4990000",
+    "link": "https://gearvn.com/products/tai-nghe-steelseries-arctis-7p-wireless-white",
+    "image": {
+      "created_at": null,
+      "id": 1316410815,
+      "position": 1,
+      "product_id": 1047255676,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/eelseries-arctis-7p_-wireless-white-1_a705821952c3422bb910508092bf85c1_dbee456a2d4a407dafbda152324f0047.png",
+      "alt": "GEARVN Tai nghe Steelseries Arctis 7P+ Wireless White",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047255674,
+    "title": "Tai nghe Razer Kraken V3 HyperSense",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-kraken-v3-hypersense",
+    "price": "1990000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-kraken-v3-hypersense",
+    "image": {
+      "created_at": null,
+      "id": 1316410805,
+      "position": 1,
+      "product_id": 1047255674,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/a1_6d3e87d438bc44bc8a482e5e709d0fb7_a6aa53140a6a4bc9a095e9a547006abc.jpg",
+      "alt": "GEARVN - Tai nghe Razer Kraken V3 HyperSense",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047255659,
+    "title": "Tai nghe DareU EH925 Black Red RGB",
+    "vendor": "DareU",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-dareu-eh925-black-red-rgb",
+    "price": "790000",
+    "link": "https://gearvn.com/products/tai-nghe-dareu-eh925-black-red-rgb",
+    "image": {
+      "created_at": null,
+      "id": 1316410726,
+      "position": 1,
+      "product_id": 1047255659,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/22_tai_nghe_dareu_eh925_rgb_black_red_ba84e226bf154e6d8988a859043d4995_ffc77a6fa6954e0c8ee4aca2b688cb5f.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047253067,
+    "title": "Tai nghe True Wireless JBL TUNE 220TWS Black",
+    "vendor": "Không thương hiệu",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-true-wireless-jbl-tune-220tws",
+    "price": "990000",
+    "link": "https://gearvn.com/products/tai-nghe-true-wireless-jbl-tune-220tws",
+    "image": {
+      "created_at": null,
+      "id": 1316394190,
+      "position": 1,
+      "product_id": 1047253067,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/t220blu_d5a7c020f75141f6a3b2865ec1b0e7ba_5efbd4e259894847a9aead2ad32c2ad5.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047252948,
+    "title": "Tai nghe JBL Quantum 400",
+    "vendor": "JBL",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-jbl-quantum-400",
+    "price": "2490000",
+    "link": "https://gearvn.com/products/tai-nghe-jbl-quantum-400",
+    "image": {
+      "created_at": null,
+      "id": 1316393775,
+      "position": 1,
+      "product_id": 1047252948,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/l1003852_aaba305d66d54241b24b0bf7558122ff_9018e65c08a341fa9487cec1bfd57342.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047252906,
+    "title": "Tai nghe Creative HS-930i2",
+    "vendor": "CREATIVE",
+    "product_type": "Tai nghe Audio",
+    "handle": "tai-nghe-creative-hs-930i2",
+    "price": "1100000",
+    "link": "https://gearvn.com/products/tai-nghe-creative-hs-930i2",
+    "image": {
+      "created_at": null,
+      "id": 1316393657,
+      "position": 1,
+      "product_id": 1047252906,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/phone_1544485962_422a8267_progressive_c85f9bef89b84a30a7455ba0cee4c8e8_401b8f9e1cd64b4fa1ce4259d7727e70.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047249836,
+    "title": "Tai nghe Alienware AW510H Lunar Light",
+    "vendor": "DELL",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-alienware-aw510h-lunar-light",
+    "price": "2890000",
+    "link": "https://gearvn.com/products/tai-nghe-alienware-aw510h-lunar-light",
+    "image": {
+      "created_at": null,
+      "id": 1316373457,
+      "position": 1,
+      "product_id": 1047249836,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/-nghe-alienware-aw510h-lunar-light-1s_0e8b7e17cab34a7587639d099ed4c676_e06a260c28e942d2b98641aa67bab5c4.png",
+      "alt": "GEARVN - Tai nghe Alienware AW510H Lunar Light",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047246670,
+    "title": "Tai nghe Razer Barracuda X 2022",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-barracuda-x-2022",
+    "price": "2750000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-barracuda-x-2022",
+    "image": {
+      "created_at": null,
+      "id": 1316354214,
+      "position": 1,
+      "product_id": 1047246670,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/thumbtainghe_2dabdc1c9373434ab81022d11552600c_a27bc61bd0564a69b22b79b5c08aa857.png",
+      "alt": "GEARVN - Tai nghe Razer Barracuda X 2022",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047244800,
+    "title": "Tai nghe Steelseries Arctis 7 Plus Wireless White",
+    "vendor": "Steelseries",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-steelseries-arctis-7-plus-wireless-white",
+    "price": "4290000",
+    "link": "https://gearvn.com/products/tai-nghe-steelseries-arctis-7-plus-wireless-white",
+    "image": {
+      "created_at": null,
+      "id": 1316336351,
+      "position": 1,
+      "product_id": 1047244800,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/100_crop-scale_optimize_subsampling-2_0c2baded9a3440838555f96f9c076639_8d99e60850a54dee8226dd3ebdaf0e12.png",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047231346,
+    "title": "Tai nghe True Wireless Audio-Technica ATH-CK3TW Red",
+    "vendor": "Audio-Technica",
+    "product_type": "Tai nghe Audio",
+    "handle": "tai-nghe-true-wireless-ath-ck3tw",
+    "price": "2290000",
+    "link": "https://gearvn.com/products/tai-nghe-true-wireless-ath-ck3tw",
+    "image": {
+      "created_at": null,
+      "id": 1316274790,
+      "position": 1,
+      "product_id": 1047231346,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/less-audio-technica-ath-ck3tw-1999992_3bd267966f2c41c9ad29d618f39ab276_9b44123454cb4fd1b04fdf3288cd9c5a.jpg",
+      "alt": null,
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047222717,
+    "title": "Tai nghe E-Dra EH494W White",
+    "vendor": "E-Dra",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-e-dra-eh494w-white",
+    "price": "950000",
+    "link": "https://gearvn.com/products/tai-nghe-e-dra-eh494w-white",
+    "image": {
+      "created_at": null,
+      "id": 1316252056,
+      "position": 1,
+      "product_id": 1047222717,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/gearvn-tai-nghe-e-dra-eh494w-white-1_46cdca3aaf3b448bbccc0d74c6d72782_603b4458b3b0406b891a4a63f0efe9ef.png",
+      "alt": "GEARVN Tai nghe E-Dra EH494W White",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047222713,
+    "title": "Tai nghe E-Dra EH494W Black",
+    "vendor": "E-Dra",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-e-dra-eh494w-black",
+    "price": "950000",
+    "link": "https://gearvn.com/products/tai-nghe-e-dra-eh494w-black",
+    "image": {
+      "created_at": null,
+      "id": 1316252049,
+      "position": 1,
+      "product_id": 1047222713,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/thumbtainghe_c1ce7889bff647f19795eb76888ae6ee_ba41dcf7d95f4be19d03b376815e2131.png",
+      "alt": "GEARVN - Tai nghe E-Dra EH494W Black",
+      "variant_ids": null
+    }
+  },
+  {
+    "id": 1047214798,
+    "title": "Tai nghe Razer Barracuda X 2022 Quart",
+    "vendor": "Razer",
+    "product_type": "Tai nghe gaming",
+    "handle": "tai-nghe-razer-barracuda-x-2022-quart",
+    "price": "2750000",
+    "link": "https://gearvn.com/products/tai-nghe-razer-barracuda-x-2022-quart",
+    "image": {
+      "created_at": null,
+      "id": 1316224766,
+      "position": 1,
+      "product_id": 1047214798,
+      "updated_at": null,
+      "src": "https://product.hstatic.net/200000722513/product/hinh-1_ef0f3da93df44ee98a711e72a502bfa0_40d4fed11ca94cacadfe8ad44bdea27d.jpg",
+      "alt": "GEARVN Tai nghe Razer Barracuda X 2022 Quart",
+      "variant_ids": null
+    }
+  }
+]

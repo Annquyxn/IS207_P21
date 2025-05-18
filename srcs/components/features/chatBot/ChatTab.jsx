@@ -1,12 +1,22 @@
-// === ChatTab.jsx ===
 import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import { BotMessage, UserMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { ChatHeader } from "./ChatHeader";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/products";
+// Direct API URL to FastAPI backend
+const API_URL = "/api/direct-query";
+const TEST_API_URL = "/api/test";
+
+// Create an axios instance with default config
+const api = axios.create({
+  baseURL: "http://localhost:8000",
+  timeout: 10000,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  }
+});
 
 export default function ChatTab({ onClose }) {
   const [messages, setMessages] = useState([
@@ -19,11 +29,42 @@ export default function ChatTab({ onClose }) {
   const [inputValue, setInputValue] = useState("");
   const [model, setModel] = useState("deepseek");
   const [loading, setLoading] = useState(false);
+  const [apiStatus, setApiStatus] = useState("checking");
   const messagesEndRef = useRef(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  useEffect(() => {
+    console.log("ChatTab mounted, testing API connection...");
+    checkApiConnection();
+    
+    // Set up interval to check API connection periodically
+    const intervalId = setInterval(() => {
+      if (apiStatus === "error" && retryCount < 5) {
+        console.log(`Retrying API connection (${retryCount + 1}/5)...`);
+        checkApiConnection();
+        setRetryCount(prev => prev + 1);
+      }
+    }, 5000);
+    
+    return () => clearInterval(intervalId);
+  }, [apiStatus, retryCount]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const checkApiConnection = () => {
+    api.get("/products")
+      .then(response => {
+        console.log("API test response:", response.data);
+        setApiStatus("connected");
+        setRetryCount(0);
+      })
+      .catch(err => {
+        console.error("API test error:", err);
+        setApiStatus("error");
+      });
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,17 +90,29 @@ export default function ChatTab({ onClose }) {
     setInputValue("");
     setLoading(true);
 
-    const payload = {
-      query: inputValue.trim(),
-      model: mapModelName(model),
-    };
-
+    console.log("Sending request to API");
+    
     try {
-      const response = await axios.post(API_URL, payload, {
-        headers: { "Content-Type": "application/json" },
+      // Use FormData for the request
+      const formData = new FormData();
+      formData.append("query", inputValue.trim());
+      formData.append("model", mapModelName(model));
+      
+      console.log("Sending form data:", {
+        query: inputValue.trim(),
+        model: mapModelName(model)
       });
+      
+      // Make the axios request
+      const response = await api.post(API_URL, formData);
+      
+      // Log the response
+      console.log("API response:", response);
+      
+      const data = response.data;
+      console.log("Response data:", data);
 
-      const responseData = response.data?.response || [];
+      const responseData = data?.response || [];
       const botMsg = {
         id: uuidv4(),
         from: "bot",
@@ -71,14 +124,27 @@ export default function ChatTab({ onClose }) {
       };
 
       setMessages((prev) => [...prev, botMsg]);
+      setApiStatus("connected");
     } catch (error) {
+      console.error("API Error:", error);
+      
+      let errorMessage = "Không thể kết nối đến máy chủ";
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        errorMessage = `Lỗi từ máy chủ: ${error.response.status} - ${error.response.data?.detail || "Unknown error"}`;
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = "Không nhận được phản hồi từ máy chủ. Vui lòng kiểm tra kết nối mạng và đảm bảo máy chủ đang chạy.";
+        setApiStatus("error");
+      } else {
+        // Something happened in setting up the request
+        errorMessage = `Lỗi: ${error.message}`;
+      }
+      
       const errorMsg = {
         id: uuidv4(),
         from: "bot",
-        text:
-          error.response?.status === 404
-            ? "Không tìm thấy dữ liệu sản phẩm."
-            : "Có lỗi xảy ra, vui lòng thử lại sau.",
+        text: errorMessage,
       };
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
@@ -91,6 +157,11 @@ export default function ChatTab({ onClose }) {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  const handleRetryConnection = () => {
+    setApiStatus("checking");
+    checkApiConnection();
   };
 
   return (
@@ -134,6 +205,24 @@ export default function ChatTab({ onClose }) {
         </select>
       </div>
 
+      {apiStatus === "checking" && (
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded mt-2 text-sm">
+          Đang kiểm tra kết nối API...
+        </div>
+      )}
+
+      {apiStatus === "error" && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mt-2 text-sm">
+          <p>API không kết nối được. Vui lòng kiểm tra lại máy chủ.</p>
+          <button 
+            onClick={handleRetryConnection}
+            className="mt-1 px-2 py-1 bg-red-200 hover:bg-red-300 rounded text-xs"
+          >
+            Thử lại kết nối
+          </button>
+        </div>
+      )}
+
       <main
         className="flex-1 overflow-y-auto space-y-3 py-4 px-2 bg-gray-50 rounded-xl border border-gray-200 mt-3 mb-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
         style={{ scrollbarWidth: "thin" }}
@@ -155,6 +244,7 @@ export default function ChatTab({ onClose }) {
         onSend={sendMessage}
         onKeyPress={handleKeyPress}
         loading={loading}
+        disabled={apiStatus === "error"}
       />
     </section>
   );

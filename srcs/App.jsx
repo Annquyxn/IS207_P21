@@ -1,46 +1,46 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 // import các thành phần cần thiết từ framer-motion
-import Layout from './components/ui/Layout';
-import HomePage from './components/pages/HomePage';
-import ProductPage from './components/pages/ProductPage';
-import CheckoutPage from './components/pages/CheckoutPage';
-import CompleteOrderPage from './components/pages/CompleteOrderPage';
-import PaymentPage from './components/pages/PaymentPage';
-import ShippingInfoPage from './components/pages/ShippingInfoPage';
-import BuildPCPage from './components/pages/BuildPCPage';
-import User from './components/pages/User';
-import UserPage from './components/features/user/UserPage';
-import UserAddress from './components/features/user/UserAddress';
-import UserOrders from './components/features/user/UserOrders';
-import AccountForm from './components/features/user/FormAccount';
-import ShoppingCartPage from './components/pages/ShoppingCartPage';
-import ProductDetailPage from './components/pages/ProductDetailPage';
-import AnimatedPage from './components/ui/AnimatedPage';
-import AboutGearVN from './components/features/footer-components/AboutGearVN';
-import JobPage from './components/features/footer-components/JobPage';
-import CustomerSupportForm from './components/features/footer-components/CustomerSupportForm';
-import InstallmentPlan from './components/features/footer-components/InstallmentPlan';
-import PaymentGuide from './components/features/footer-components/PaymentGuide';
-import PcBuilder from './components/features/footer-components/PcBuilder';
-import PrivacyPolicy from './components/features/footer-components/PrivacyPolicy';
-import ShippingPolicy from './components/features/footer-components/ShippingPolicy';
-import ShoppingGuide from './components/features/footer-components/ShoppingGuide';
-import ShowroomSystem from './components/features/footer-components/ShowroomSystem';
-import WarrantyLookup from './components/features/footer-components/WarrantyLookup';
-import WarrantyPolicy from './components/features/footer-components/WarrantyPolicy';
+import Layout from "./components/ui/Layout";
+import HomePage from "./components/pages/HomePage";
+import ProductPage from "./components/pages/ProductPage";
+import CheckoutPage from "./components/pages/CheckoutPage";
+import CompleteOrderPage from "./components/pages/CompleteOrderPage";
+import PaymentPage from "./components/pages/PaymentPage";
+import ShippingInfoPage from "./components/pages/ShippingInfoPage";
+import BuildPCPage from "./components/pages/BuildPCPage";
+import User from "./components/pages/User";
+import UserPage from "./components/features/user/UserPage";
+import UserAddress from "./components/features/user/UserAddress";
+import UserOrders from "./components/features/user/UserOrders";
+import AccountForm from "./components/features/user/FormAccount";
+import ShoppingCartPage from "./components/pages/ShoppingCartPage";
+import ProductDetailPage from "./components/pages/ProductDetailPage";
+import AnimatedPage from "./components/ui/AnimatedPage";
+import AboutGearVN from "./components/features/footer-components/AboutGearVN";
+import JobPage from "./components/features/footer-components/JobPage";
+import CustomerSupportForm from "./components/features/footer-components/CustomerSupportForm";
+import InstallmentPlan from "./components/features/footer-components/InstallmentPlan";
+import PaymentGuide from "./components/features/footer-components/PaymentGuide";
+import PcBuilder from "./components/features/footer-components/PcBuilder";
+import PrivacyPolicy from "./components/features/footer-components/PrivacyPolicy";
+import ShippingPolicy from "./components/features/footer-components/ShippingPolicy";
+import ShoppingGuide from "./components/features/footer-components/ShoppingGuide";
+import ShowroomSystem from "./components/features/footer-components/ShowroomSystem";
+import WarrantyLookup from "./components/features/footer-components/WarrantyLookup";
+import WarrantyPolicy from "./components/features/footer-components/WarrantyPolicy";
 
 function App() {
   return (
     <BrowserRouter>
-      <main className='flex-1'>
-        <AnimatePresence mode='wait'>
+      <main className="flex-1">
+        <AnimatePresence mode="wait">
           <Routes>
-            <Route path='/' element={<Layout />}>
-              <Route index element={<Navigate replace to='home' />} />
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Navigate replace to="home" />} />
               <Route
-                path='home'
+                path="home"
                 element={
                   <AnimatedPage>
                     <HomePage />
@@ -49,7 +49,7 @@ function App() {
               />
 
               <Route
-                path='san-pham'
+                path="san-pham"
                 element={
                   <AnimatedPage>
                     <ProductPage />
@@ -57,7 +57,7 @@ function App() {
                 }
               />
               <Route
-                path='checkout'
+                path="checkout"
                 element={
                   <AnimatedPage>
                     <CheckoutPage />
@@ -66,7 +66,7 @@ function App() {
               />
 
               <Route
-                path='/product/:id'
+                path="/product/:id"
                 element={
                   <AnimatedPage>
                     <ProductDetailPage />
@@ -75,7 +75,7 @@ function App() {
               />
 
               <Route
-                path='shopping-cart'
+                path="shopping-cart"
                 element={
                   <AnimatedPage>
                     <ShoppingCartPage />
@@ -84,7 +84,7 @@ function App() {
               />
 
               <Route
-                path='complete'
+                path="complete"
                 element={
                   <AnimatedPage>
                     <CompleteOrderPage />
@@ -92,7 +92,7 @@ function App() {
                 }
               />
               <Route
-                path='payment-page'
+                path="payment-page"
                 element={
                   <AnimatedPage>
                     <PaymentPage />
@@ -100,7 +100,7 @@ function App() {
                 }
               />
               <Route
-                path='ship-info'
+                path="ship-info"
                 element={
                   <AnimatedPage>
                     <ShippingInfoPage />
@@ -108,7 +108,7 @@ function App() {
                 }
               />
               <Route
-                path='build-pc'
+                path="build-pc"
                 element={
                   <AnimatedPage>
                     <BuildPCPage />
@@ -116,7 +116,7 @@ function App() {
                 }
               />
 
-              <Route path='user' element={<User />}>
+              <Route path="user" element={<User />}>
                 <Route
                   index
                   element={
@@ -126,7 +126,7 @@ function App() {
                   }
                 />
                 <Route
-                  path='address'
+                  path="address"
                   element={
                     <AnimatedPage>
                       <UserAddress />
@@ -134,7 +134,7 @@ function App() {
                   }
                 />
                 <Route
-                  path='orders'
+                  path="orders"
                   element={
                     <AnimatedPage>
                       <UserOrders />
@@ -142,7 +142,7 @@ function App() {
                   }
                 />
                 <Route
-                  path='update'
+                  path="update"
                   element={
                     <AnimatedPage>
                       <AccountForm />
@@ -153,7 +153,7 @@ function App() {
             </Route>
 
             <Route
-              path='about'
+              path="about"
               element={
                 <AnimatedPage>
                   <AboutGearVN />
@@ -162,7 +162,7 @@ function App() {
             />
 
             <Route
-              path='jobs'
+              path="jobs"
               element={
                 <AnimatedPage>
                   <JobPage />
@@ -171,7 +171,7 @@ function App() {
             />
 
             <Route
-              path='contact'
+              path="contact"
               element={
                 <AnimatedPage>
                   <CustomerSupportForm />
@@ -180,7 +180,7 @@ function App() {
             />
 
             <Route
-              path='warranty-policy'
+              path="warranty-policy"
               element={
                 <AnimatedPage>
                   <WarrantyPolicy />
@@ -189,7 +189,7 @@ function App() {
             />
 
             <Route
-              path='shipping-policy'
+              path="shipping-policy"
               element={
                 <AnimatedPage>
                   <ShippingPolicy />
@@ -198,7 +198,7 @@ function App() {
             />
 
             <Route
-              path='privacy-policy'
+              path="privacy-policy"
               element={
                 <AnimatedPage>
                   <PrivacyPolicy />
@@ -207,7 +207,7 @@ function App() {
             />
 
             <Route
-              path='showrooms'
+              path="showrooms"
               element={
                 <AnimatedPage>
                   <ShowroomSystem />
@@ -216,7 +216,7 @@ function App() {
             />
 
             <Route
-              path='shopping-guide'
+              path="shopping-guide"
               element={
                 <AnimatedPage>
                   <ShoppingGuide />
@@ -225,7 +225,7 @@ function App() {
             />
 
             <Route
-              path='payment-guide'
+              path="payment-guide"
               element={
                 <AnimatedPage>
                   <PaymentGuide />
@@ -234,7 +234,7 @@ function App() {
             />
 
             <Route
-              path='installment'
+              path="installment"
               element={
                 <AnimatedPage>
                   <InstallmentPlan />
@@ -243,7 +243,7 @@ function App() {
             />
 
             <Route
-              path='warranty-lookup'
+              path="warranty-lookup"
               element={
                 <AnimatedPage>
                   <WarrantyLookup />
