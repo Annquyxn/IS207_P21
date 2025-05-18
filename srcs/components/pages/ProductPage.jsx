@@ -37,7 +37,8 @@ function ProductPage() {
     const getProducts = async () => {
       setLoading(true);
       try {
-        const data = await fetchProducts();
+        // Pass the category parameter to fetchProducts
+        const data = await fetchProducts(filters.category);
         setProducts(data);
         setError(null);
       } catch (err) {
@@ -49,7 +50,7 @@ function ProductPage() {
     };
     
     getProducts();
-  }, []);
+  }, [filters.category]);
 
   const processedProducts = useMemo(() => {
     let filtered = products;
@@ -165,8 +166,12 @@ function ProductPage() {
           </div>
         ) : (
           <>
-            {categoryParam === 'keyboard' && (
-              <h2 className='text-2xl font-bold mb-4'>Bàn phím</h2>
+            {categoryParam && (
+              <h2 className='text-2xl font-bold mb-4'>
+                {categoryParam === 'keyboard' && 'Bàn phím'}
+                {categoryParam === 'ssd' && 'SSD Laptop'}
+                {categoryParam === 'headphone' && 'Tai Nghe'}
+              </h2>
             )}
             <ProductRow products={visibleProducts} />
             {visibleProducts.length < processedProducts.length && (

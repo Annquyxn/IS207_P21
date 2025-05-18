@@ -121,6 +121,10 @@ const LaptopCategories = ({ onClose }) => {
   const handleClickCategory = (category) => {
     if (category === "Bàn phím") {
       navigate("/san-pham?category=keyboard");
+    } else if (category === "SSD laptop") {
+      navigate("/san-pham?category=ssd");
+    } else if (category === "Tai Nghe") {
+      navigate("/san-pham?category=headphone");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);

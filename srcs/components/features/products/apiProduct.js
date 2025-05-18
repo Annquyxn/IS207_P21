@@ -8,11 +8,21 @@ function formatCurrency(value) {
   })}₫`
 }
 
-export async function fetchProducts() {
-  const { data, error } = await supabase.from('keyboards').select('*')
+export async function fetchProducts(category = 'keyboard') {
+  let tableName = 'keyboards';
+  
+  if (category === 'ssd') {
+    tableName = 'ssd';
+  } else if (category === 'keyboard') {
+    tableName = 'keyboards';
+  } else if (category === 'headphone') {
+    tableName = 'headphone';
+  }
+  
+  const { data, error } = await supabase.from(tableName).select('*')
   
   if (error) {
-    console.error('Error fetching products:', error.message)
+    console.error(`Error fetching ${tableName}:`, error.message)
     return []
   }
 
@@ -42,6 +52,7 @@ export async function fetchProducts() {
       detailImage: item.detail_image || '',
       performance: item.performance || '',
       extends: item.extends || '',
+      category: tableName,
     }
   })
 }
