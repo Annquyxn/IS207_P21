@@ -62,7 +62,17 @@ export async function fetchProducts(category = 'laptop') {
     tableName = 'laptop_msi_prestige';
   } else if (category === 'laptop-msi-raider') {
     tableName = 'laptop_msi_raider';
-  }
+  } else if (category === 'laptop-lenovo-ideapad') {
+    tableName = 'laptop_lenovo_ideapad';
+  } else if (category === 'laptop-lenovo-legion') {
+    tableName = 'laptop_lenovo_legion';
+  } else if (category === 'laptop-lenovo-thinkbook') {
+    tableName = 'laptop_lenovo_thinkbook';
+  } else if (category === 'laptop-lenovo-thinkpad') {
+    tableName = 'laptop_lenovo_thinkpad';
+  } else if (category === 'laptop-lenovo-yoga') {
+    tableName = 'laptop_lenovo_yoga';
+  } 
   
   const { data, error } = await supabase.from(tableName).select('*')
   

@@ -180,6 +180,16 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=laptop-msi-prestige");
     } else if (category === "MSI Raider Series") {
       navigate("/san-pham?category=laptop-msi-raider");
+    } else if (category === "Ideapad Series") {
+      navigate("/san-pham?category=laptop-lenovo-ideapad");
+    } else if (category === "Legion Series") {
+      navigate("/san-pham?category=laptop-lenovo-legion");
+    } else if (category === "Thinkbook Series") {
+      navigate("/san-pham?category=laptop-lenovo-thinkbook");
+    } else if (category === "Thinkpad Series") {
+      navigate("/san-pham?category=laptop-lenovo-thinkpad");
+    } else if (category === "Yoga Series") {
+      navigate("/san-pham?category=laptop-lenovo-yoga");
     } else {
       // Default behavior for other categories
       const el = document.getElementById(category);
