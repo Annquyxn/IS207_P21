@@ -4,12 +4,8 @@ import ProductInfo from '@/components/features/detail/ProductInfo';
 import ProductGallery from '@/components/features/detail/ProductGallery';
 import ProductDetails from '@/components/features/detail/ProductDetails';
 import ExpandSection from '@/components/features/detail/ExpandSection';
-<<<<<<< HEAD
 import { fetchProducts } from '@/components/features/products/apiProduct';
 import Spinner from '@/components/ui/Spinner';
-=======
-import products from '../features/products/product';
->>>>>>> 25080ff9eb9f585b62ee71a2e3b5073bf1e48114
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -17,7 +13,6 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-<<<<<<< HEAD
   useEffect(() => {
     const getProduct = async () => {
       setLoading(true);
@@ -32,7 +27,7 @@ const ProductDetailPage = () => {
         setLoading(false);
       }
     };
-    
+
     getProduct();
   }, [id]);
 
@@ -53,10 +48,9 @@ const ProductDetailPage = () => {
       </main>
     );
   }
-=======
+
   if (!product)
     return <p className='text-center py-10'>Không tìm thấy sản phẩm</p>;
->>>>>>> 25080ff9eb9f585b62ee71a2e3b5073bf1e48114
 
   return (
     <main className='bg-white w-full max-w-[1200px] mx-auto px-4 py-6'>

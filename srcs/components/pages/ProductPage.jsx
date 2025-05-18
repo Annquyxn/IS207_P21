@@ -33,7 +33,7 @@ function ProductPage() {
         setLoading(false);
       }
     };
-    
+
     getProducts();
   }, []);
 

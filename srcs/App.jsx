@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 
 // import các thành phần cần thiết từ framer-motion
 import Layout from './components/ui/Layout';
@@ -30,22 +30,20 @@ import ShoppingGuide from './components/features/footer-components/ShoppingGuide
 import ShowroomSystem from './components/features/footer-components/ShowroomSystem';
 import WarrantyLookup from './components/features/footer-components/WarrantyLookup';
 import WarrantyPolicy from './components/features/footer-components/WarrantyPolicy';
-import ScrollToTop from './components/ui/ScrollToTop';
 import adminRoute from './adminRoute';
-
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <BrowserRouter>
-      <main className="flex-1">
-        <AnimatePresence mode="wait">
+      <main className='flex-1'>
+        <AnimatePresence mode='wait'>
           <Routes>
-
             <Route path='/' element={<Layout />}>
               <Route index element={<Navigate replace to='home' />} />
               {adminRoute}
               <Route
-                path="home"
+                path='home'
                 element={
                   <AnimatedPage>
                     <HomePage />
@@ -54,7 +52,7 @@ function App() {
               />
 
               <Route
-                path="san-pham"
+                path='san-pham'
                 element={
                   <AnimatedPage>
                     <ProductPage />
@@ -62,7 +60,7 @@ function App() {
                 }
               />
               <Route
-                path="checkout"
+                path='checkout'
                 element={
                   <AnimatedPage>
                     <CheckoutPage />
@@ -71,7 +69,7 @@ function App() {
               />
 
               <Route
-                path="/product/:id"
+                path='/product/:id'
                 element={
                   <AnimatedPage>
                     <ProductDetailPage />
@@ -80,7 +78,7 @@ function App() {
               />
 
               <Route
-                path="shopping-cart"
+                path='shopping-cart'
                 element={
                   <AnimatedPage>
                     <ShoppingCartPage />
@@ -89,7 +87,7 @@ function App() {
               />
 
               <Route
-                path="complete"
+                path='complete'
                 element={
                   <AnimatedPage>
                     <CompleteOrderPage />
@@ -97,7 +95,7 @@ function App() {
                 }
               />
               <Route
-                path="payment-page"
+                path='payment-page'
                 element={
                   <AnimatedPage>
                     <PaymentPage />
@@ -105,7 +103,7 @@ function App() {
                 }
               />
               <Route
-                path="ship-info"
+                path='ship-info'
                 element={
                   <AnimatedPage>
                     <ShippingInfoPage />
@@ -113,7 +111,7 @@ function App() {
                 }
               />
               <Route
-                path="build-pc"
+                path='build-pc'
                 element={
                   <AnimatedPage>
                     <BuildPCPage />
@@ -121,7 +119,7 @@ function App() {
                 }
               />
 
-              <Route path="user" element={<User />}>
+              <Route path='user' element={<User />}>
                 <Route
                   index
                   element={
@@ -131,7 +129,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="address"
+                  path='address'
                   element={
                     <AnimatedPage>
                       <UserAddress />
@@ -139,7 +137,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="orders"
+                  path='orders'
                   element={
                     <AnimatedPage>
                       <UserOrders />
@@ -147,7 +145,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="update"
+                  path='update'
                   element={
                     <AnimatedPage>
                       <AccountForm />
@@ -158,7 +156,7 @@ function App() {
             </Route>
 
             <Route
-              path="about"
+              path='about'
               element={
                 <AnimatedPage>
                   <AboutGearVN />
@@ -167,7 +165,7 @@ function App() {
             />
 
             <Route
-              path="jobs"
+              path='jobs'
               element={
                 <AnimatedPage>
                   <JobPage />
@@ -176,7 +174,7 @@ function App() {
             />
 
             <Route
-              path="contact"
+              path='contact'
               element={
                 <AnimatedPage>
                   <CustomerSupportForm />
@@ -185,7 +183,7 @@ function App() {
             />
 
             <Route
-              path="warranty-policy"
+              path='warranty-policy'
               element={
                 <AnimatedPage>
                   <WarrantyPolicy />
@@ -194,7 +192,7 @@ function App() {
             />
 
             <Route
-              path="shipping-policy"
+              path='shipping-policy'
               element={
                 <AnimatedPage>
                   <ShippingPolicy />
@@ -203,7 +201,7 @@ function App() {
             />
 
             <Route
-              path="privacy-policy"
+              path='privacy-policy'
               element={
                 <AnimatedPage>
                   <PrivacyPolicy />
@@ -212,7 +210,7 @@ function App() {
             />
 
             <Route
-              path="showrooms"
+              path='showrooms'
               element={
                 <AnimatedPage>
                   <ShowroomSystem />
@@ -221,7 +219,7 @@ function App() {
             />
 
             <Route
-              path="shopping-guide"
+              path='shopping-guide'
               element={
                 <AnimatedPage>
                   <ShoppingGuide />
@@ -230,7 +228,7 @@ function App() {
             />
 
             <Route
-              path="payment-guide"
+              path='payment-guide'
               element={
                 <AnimatedPage>
                   <PaymentGuide />
@@ -239,7 +237,7 @@ function App() {
             />
 
             <Route
-              path="installment"
+              path='installment'
               element={
                 <AnimatedPage>
                   <InstallmentPlan />
@@ -248,7 +246,7 @@ function App() {
             />
 
             <Route
-              path="warranty-lookup"
+              path='warranty-lookup'
               element={
                 <AnimatedPage>
                   <WarrantyLookup />
@@ -257,6 +255,26 @@ function App() {
             />
           </Routes>
         </AnimatePresence>
+        <Toaster
+          position='top-center'
+          gutter={12}
+          containerStyle={{ margin: '8px' }}
+          toastOptions={{
+            success: {
+              duration: 3000,
+            },
+            error: {
+              duration: 5000,
+            },
+            style: {
+              fontSize: '16px',
+              maxWidth: '500px',
+              padding: '16px 24px',
+              backgroundColor: 'var(--color-grey-0)',
+              color: 'var(--color-grey-700)',
+            },
+          }}
+        />
       </main>
     </BrowserRouter>
   );
