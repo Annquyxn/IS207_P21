@@ -3,7 +3,6 @@ import ProductRow from '../../features/admin/product/ProductRow';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import ProductForm from '../../features/admin/product/ProductForm';
-import Modal from '../../ui/Modal';
 
 const products = [
   {
@@ -21,28 +20,29 @@ const pageSize = 7;
 
 const ProductManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(products.length / pageSize);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
+  const totalPages = Math.ceil(products.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentProducts = products.slice(startIndex, startIndex + pageSize);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className='relative p-4 space-y-4'>
-      <button
-        onClick={openModal}
-        className='absolute top-4 right-4 p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition'
-        title='Thêm sản phẩm'
-      >
-        <AiOutlinePlus className='w-5 h-5' />
-      </button>
+    <div className='relative p-4 space-y-6'>
+      <div className='flex justify-between items-center'>
+        <h2 className='text-xl font-semibold'>Quản lý sản phẩm</h2>
+        <button
+          onClick={() => setShowForm((prev) => !prev)}
+          className='flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition'
+        >
+          <AiOutlinePlus className='w-5 h-5' />
+          {showForm ? 'Ẩn form' : 'Thêm sản phẩm'}
+        </button>
+      </div>
 
-      <h2 className='text-xl font-semibold mb-6'>Quản lý sản phẩm</h2>
+      {showForm && <ProductForm onCancel={() => setShowForm(false)} />}
 
       {/* Header */}
-      <div className='grid grid-cols-[0.6fr_0.5fr_1.2fr_2fr_1fr_1fr_1fr] gap-x-6 px-6 py-4 bg-gray-100 text-sm font-semibold text-gray-600 uppercase rounded-md'>
+      <div className='grid grid-cols-[0.6fr_0.5fr_1.2fr_2fr_1fr_1fr_1fr] gap-x-6 px-6 py-2 bg-red-100 text-base font-bold text-gray-800 border-b border-red-300 rounded-md'>
         <div></div>
         <div>ID</div>
         <div>Category</div>
@@ -74,7 +74,7 @@ const ProductManager = () => {
             onClick={() => setCurrentPage(i + 1)}
             className={`px-3 py-1 border rounded ${
               currentPage === i + 1
-                ? 'bg-blue-600 text-white'
+                ? 'bg-red-600 text-white'
                 : 'hover:bg-gray-100'
             }`}
           >
@@ -89,12 +89,6 @@ const ProductManager = () => {
           <HiChevronRight className='w-5 h-5' />
         </button>
       </div>
-
-      {isModalOpen && (
-        <Modal onClose={closeModal}>
-          <ProductForm onCloseModal={closeModal} />
-        </Modal>
-      )}
     </div>
   );
 };
