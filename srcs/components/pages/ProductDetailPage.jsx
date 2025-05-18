@@ -27,7 +27,7 @@ const ProductDetailPage = () => {
         setLoading(false);
       }
     };
-    
+
     getProduct();
   }, [id]);
 
@@ -48,6 +48,7 @@ const ProductDetailPage = () => {
       </main>
     );
   }
+
   if (!product)
     return <p className='text-center py-10'>Không tìm thấy sản phẩm</p>;
 
