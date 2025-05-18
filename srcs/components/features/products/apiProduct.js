@@ -88,8 +88,32 @@ export async function fetchProducts(category = 'laptop') {
     tableName = 'laptop_hp_omen';
   } else if (category === 'laptop-hp-victus') {
     tableName = 'laptop_hp_victus';
+  } else if (category === 'laptop-chay-ai') {
+    tableName = 'laptop_chay_ai';
+  } else if (category === 'laptop-duoi-15-trieu') {
+    tableName = 'laptop_duoi_15tr';
+  } else if (category === 'laptop-tren-20-trieu') {
+    tableName = 'laptop_tren_20tr';
+  } else if (category === 'laptop-tu-15-den-20-trieu') {
+    tableName = 'laptop_tu_15_den_20_trieu';
+  } else if (category === 'cpu-intel-i3') {
+    tableName = 'cpu_intel_i3';
+  } else if (category === 'cpu-intel-i5') {
+    tableName = 'cpu_intel_i5';
+  } else if (category === 'cpu-intel-i7') {
+    tableName = 'cpu_intel_i7';
+  } else if (category === 'cpu-intel-i9') {
+    tableName = 'cpu_intel_i9';
+  } else if (category === 'cpu-amd-r3') {
+    tableName = 'cpu_amd_r3';
+  } else if (category === 'cpu-amd-r5') {
+    tableName = 'cpu_amd_r5';
+  } else if (category === 'cpu-amd-r7') {
+    tableName = 'cpu_amd_r7';
+  } else if (category === 'cpu-amd-r9') {
+    tableName = 'cpu_amd_r9';
   }
-  
+
   const { data, error } = await supabase.from(tableName).select('*');
   
   if (error) {

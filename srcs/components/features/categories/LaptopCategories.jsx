@@ -206,8 +206,32 @@ const LaptopCategories = ({ onClose }) => {
       navigate("/san-pham?category=laptop-hp-victus");
     } else if (category === "HP Omen") {
       navigate("/san-pham?category=laptop-hp-omen");
+    } else if (category === "Dưới 15 triệu") {
+      navigate("/san-pham?category=laptop-duoi-15-trieu");
+    } else if (category === "Từ 15 đến 20 triệu") {
+      navigate("/san-pham?category=laptop-tu-15-den-20-trieu");
+    } else if (category === "Trên 20 triệu") {
+      navigate("/san-pham?category=laptop-tren-20-trieu");
+    } else if (category === "Chạy tốt mô hình AI") {
+      navigate("/san-pham?category=laptop-chay-ai");
+    } else if (category === "Intel Core i3") {
+      navigate("/san-pham?category=cpu-intel-i3");
+    } else if (category === "Intel Core i5") {
+      navigate("/san-pham?category=cpu-intel-i5");
+    } else if (category === "Intel Core i7") {
+      navigate("/san-pham?category=cpu-intel-i7");
+    } else if (category === "Intel Core i9") {
+      navigate("/san-pham?category=cpu-intel-i9");
+    } else if (category === "AMD Ryzen 3") {
+      navigate("/san-pham?category=cpu-amd-r3");
+    } else if (category === "AMD Ryzen 5") {
+      navigate("/san-pham?category=cpu-amd-r5");
+    } else if (category === "AMD Ryzen 7") {
+      navigate("/san-pham?category=cpu-amd-r7");
+    } else if (category === "AMD Ryzen 9") {
+      navigate("/san-pham?category=cpu-amd-r9");
     } else {
-      // Default behavior for other categories
+
       const el = document.getElementById(category);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
