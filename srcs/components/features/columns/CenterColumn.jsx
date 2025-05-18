@@ -1,5 +1,11 @@
 import Slider from 'react-slick';
 import ShockDeal from '../voucher/ShockDeal';
+import Banner0 from '@/assets/banner/banner-0.png';
+import Banner1 from '@/assets/banner/banner-1.png';
+import Banner2 from '@/assets/banner/banner-2.png';
+import Banner3 from '@/assets/banner/banner-3.png';
+import Banner4 from '@/assets/banner/banner-4.png';
+import Banner5 from '@/assets/banner/banner-5.png';
 
 function CenterColumn() {
   const settings = {
@@ -44,11 +50,7 @@ function CenterColumn() {
     ),
   };
 
-  const banners = [
-    'https://file.hstatic.net/200000722513/file/man_hinh_thang_04_banner_web_slider_800x400.jpg',
-    'https://file.hstatic.net/200000722513/file/thang_04_laptop_gaming_banner_web_slider_800x400.jpg',
-    'https://file.hstatic.net/200000722513/file/asus_zenbook_a14_800x400.png',
-  ];
+  const banners = [Banner0, Banner1, Banner2, Banner3, Banner4, Banner5];
 
   return (
     <section className='relative w-full max-w-full overflow-hidden rounded-lg'>
@@ -58,7 +60,10 @@ function CenterColumn() {
         </div>
 
         {banners.map((src, idx) => (
-          <div key={idx} className='w-full h-[408px] overflow-hidden'>
+          <div
+            key={idx}
+            className='w-full h-[408px] overflow-hidden object-contain'
+          >
             <img
               src={src}
               alt={`banner-${idx}`}

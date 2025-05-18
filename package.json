@@ -25,6 +25,7 @@
     "react-dom": "^19.0.0",
     "react-fontawesome": "^1.7.1",
     "react-hook-form": "^7.56.3",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-router": "^5.3.4",
     "react-router-dom": "^7.6.0",
@@ -32,6 +33,8 @@
     "slick-carousel": "^1.8.1",
     "style-components": "^0.1.0",
     "styled-components": "^6.1.17",
+    "tailwind-scrollbar-hide": "^2.0.0",
+    "toaster": "^0.1.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

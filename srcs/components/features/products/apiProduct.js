@@ -1,15 +1,15 @@
-import { supabase } from '@/components/services/supabase'
+import { supabase } from '@/components/services/supabase';
 
 function formatCurrency(value) {
-  if (!value) return '0₫'
+  if (!value) return '0₫';
   return `${Number(value).toLocaleString('vi-VN', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  })}₫`
+  })}₫`;
 }
 export async function fetchProducts(category = 'laptop') {
   let tableName = 'laptop';
-  
+
   if (category === 'ssd') {
     tableName = 'ssd';
   } else if (category === 'keyboard') {
@@ -71,7 +71,7 @@ export async function fetchProducts(category = 'laptop') {
   } else if (category === 'laptop-lenovo-thinkpad') {
     tableName = 'laptop_lenovo_thinkpad';
   } else if (category === 'laptop-lenovo-yoga') {
-    tableName = 'laptop_lenovo_yoga'; 
+    tableName = 'laptop_lenovo_yoga';
   } else if (category === 'laptop-dell-alienware') {
     tableName = 'laptop_dell_alienware';
   } else if (category === 'laptop-dell-g15') {
@@ -90,23 +90,23 @@ export async function fetchProducts(category = 'laptop') {
     tableName = 'laptop_hp_victus';
   }
   
-  const { data, error } = await supabase.from(tableName).select('*')
+  const { data, error } = await supabase.from(tableName).select('*');
   
   if (error) {
-    console.error(`Error fetching ${tableName}:`, error.message)
-    return []
+    console.error(`Error fetching ${tableName}:`, error.message);
+    return [];
   }
 
-  return data.map(item => {
-    const title = item.title?.replace(/-/g, ' ') || 'No Title'
-    const brand = item.brand || 'Unknown'
-    const salePrice = item.sale_price || 0
-    const originalPrice = item.original_price || Math.round(salePrice * 1.2)
+  return data.map((item) => {
+    const title = item.title?.replace(/-/g, ' ') || 'No Title';
+    const brand = item.brand || 'Unknown';
+    const salePrice = item.sale_price || 0;
+    const originalPrice = item.original_price || Math.round(salePrice * 1.2);
 
     const discount =
       originalPrice && salePrice
         ? `${Math.round(((originalPrice - salePrice) / originalPrice) * 100)}%`
-        : '0%'
+        : '0%';
 
     return {
       id: item.id || '',
@@ -124,6 +124,6 @@ export async function fetchProducts(category = 'laptop') {
       performance: item.performance || '',
       extends: item.extends || '',
       category: tableName,
-    }
-  })
+    };
+  });
 }
