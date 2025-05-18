@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ProductFilters from '@/components/features/products/ProductFilters';
 import ProductRow from '@/components/features/products/ProductRow';
 import { fetchProducts } from '@/components/features/products/apiProduct';
@@ -9,20 +9,15 @@ import Spinner from '../ui/Spinner';
 function ProductPage() {
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [sortBy, setSortBy] = useState('default');
-<<<<<<< HEAD
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-=======
->>>>>>> 25080ff9eb9f585b62ee71a2e3b5073bf1e48114
   const [filters, setFilters] = useState({
     priceRange: null,
     cpu: null,
     socket: null,
   });
-  const [loading, setLoading] = useState(false);
-  const [displayedProducts, setDisplayedProducts] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -99,21 +94,16 @@ function ProductPage() {
     });
   }, [products, selectedBrand, filters, sortBy]);
 
-  //
   useEffect(() => {
-<<<<<<< HEAD
     setVisibleProducts(processedProducts.slice(0, 15));
   }, [processedProducts]);
-=======
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setDisplayedProducts(processedProducts);
-      setLoading(false);
-    }, 200);
->>>>>>> 25080ff9eb9f585b62ee71a2e3b5073bf1e48114
 
-    return () => clearTimeout(timer);
-  }, [processedProducts]);
+  const loadMore = () => {
+    setVisibleProducts((prev) => [
+      ...prev,
+      ...processedProducts.slice(prev.length, prev.length + 10),
+    ]);
+  };
 
   return (
     <main className='bg-gray-200 w-full min-h-screen p-6 flex justify-center'>
@@ -130,7 +120,6 @@ function ProductPage() {
             }
           />
         </div>
-
         <ActiveFilters
           selectedBrand={selectedBrand}
           filters={filters}
@@ -157,7 +146,17 @@ function ProductPage() {
             {error}
           </div>
         ) : (
-          <ProductRow products={displayedProducts} />
+          <>
+            <ProductRow products={visibleProducts} />
+            {visibleProducts.length < processedProducts.length && (
+              <button
+                className='mt-4 bg-red-500 text-white p-4 rounded-xl mx-auto block text-xl transition-all duration-300 hover:scale-110'
+                onClick={loadMore}
+              >
+                Xem thêm
+              </button>
+            )}
+          </>
         )}
       </div>
     </main>
