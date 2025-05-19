@@ -16,6 +16,7 @@ function ProductPage() {
   const [sortBy, setSortBy] = useState('default');
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
@@ -37,7 +38,6 @@ function ProductPage() {
     const getProducts = async () => {
       setLoading(true);
       try {
-        // Pass the category parameter to fetchProducts
         const data = await fetchProducts(filters.category);
         setProducts(data);
         setError(null);
@@ -94,9 +94,6 @@ function ProductPage() {
       );
     }
 
-    // If keyboard category is selected, it's already filtered by the API
-    // as the fetchProducts function is fetching from the keyboards table
-
     return [...filtered].sort((a, b) => {
       if (sortBy === 'price-asc') {
         const priceA = parsePrice(a.salePrice);
@@ -112,15 +109,22 @@ function ProductPage() {
     });
   }, [products, selectedBrand, filters, sortBy]);
 
+  // Reset visible products when filters change
   useEffect(() => {
-    setVisibleProducts(processedProducts.slice(0, 15));
+    setVisibleProducts(processedProducts.slice(0, 10));
   }, [processedProducts]);
 
-  const loadMore = () => {
-    setVisibleProducts((prev) => [
-      ...prev,
-      ...processedProducts.slice(prev.length, prev.length + 10),
-    ]);
+  const loadMore = async () => {
+    setLoadingMore(true);
+    try {
+      const currentLength = visibleProducts.length;
+      const nextProducts = processedProducts.slice(currentLength, currentLength + 10);
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setVisibleProducts(prev => [...prev, ...nextProducts]);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   return (
@@ -166,16 +170,21 @@ function ProductPage() {
           </div>
         ) : (
           <>
-                          {categoryParam && (                <h2 className='text-2xl font-bold mb-4'>                  {categoryParam === 'keyboard' && 'Bàn phím'}                  {categoryParam === 'ssd' && 'SSD Laptop'}                  {categoryParam === 'headphone' && 'Tai Nghe'}                  {categoryParam === 'pccoling' && 'Tản nhiệt PC'}                </h2>              )}
-            <ProductRow products={visibleProducts} />
-            {visibleProducts.length < processedProducts.length && (
-              <button
-                className='mt-4 bg-red-500 text-white p-4 rounded-xl mx-auto block text-xl transition-all duration-300 hover:scale-110'
-                onClick={loadMore}
-              >
-                Xem thêm
-              </button>
+            {categoryParam && (
+              <h2 className='text-2xl font-bold mb-4'>
+                {categoryParam === 'keyboard' && 'Bàn phím'}
+                {categoryParam === 'ssd' && 'SSD Laptop'}
+                {categoryParam === 'headphone' && 'Tai Nghe'}
+                {categoryParam === 'pccoling' && 'Tản nhiệt PC'}
+              </h2>
             )}
+            <ProductRow 
+              products={visibleProducts} 
+              isCategoryPage={!!categoryParam}
+              onLoadMore={loadMore}
+              hasMore={visibleProducts.length < processedProducts.length}
+              loadingMore={loadingMore}
+            />
           </>
         )}
       </div>

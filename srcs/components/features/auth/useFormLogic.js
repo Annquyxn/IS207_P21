@@ -15,6 +15,7 @@ export function useLoginFormLogic() {
   const mutation = useMutation({
     mutationFn: apiLogin,
     onSuccess: (user) => {
+      alert(user.message || 'Đăng nhập thành công');
       localStorage.setItem('user', JSON.stringify(user));
       navigate('/dashboard');
     },
