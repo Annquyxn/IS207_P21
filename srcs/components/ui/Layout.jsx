@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
+import ChatBotContainer from '../features/chatBot/ChatBotContainer';
 
 function Layout() {
   const location = useLocation();
@@ -14,6 +15,7 @@ function Layout() {
         <Outlet key={location.key} />
       </main>
       {!hideHeaderFooter && <Footer />}
+      {!hideHeaderFooter && <ChatBotContainer />}
     </div>
   );
 }

@@ -1,62 +1,36 @@
 import Spinner from '@/components/ui/Spinner';
 import { useAddressFormLogic } from './useAddressFormLogic';
 
-function AddressForm() {
+function AddressForm({ onSubmitSuccess }) {
   const {
     register,
     handleSubmit,
     errors,
     watch,
-    onSubmit,
+    onSubmit: originalOnSubmit,
     isLoading,
     isSuccess,
   } = useAddressFormLogic();
+
+  // Wrap original submit handler to also call onSubmitSuccess prop if provided
+  const onSubmit = (data) => {
+    originalOnSubmit(data);
+    if (onSubmitSuccess) {
+      onSubmitSuccess(data);
+    }
+  };
 
   const selectedGender = watch('gender');
   const selectedShippingMethod = watch('shippingMethod');
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
-      {/* Họ tên và SĐT */}
-      <div className='flex flex-col md:flex-row gap-6'>
-        <div className='flex-1'>
-          <input
-            type='text'
-            placeholder='Họ và Tên'
-            className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            {...register('fullName', { required: 'Full name is required' })}
-          />
-          {errors.fullName && (
-            <p className='text-red-500 text-sm mt-2'>
-              {errors.fullName.message}
-            </p>
-          )}
-        </div>
-        <div className='flex-1'>
-          <input
-            type='tel'
-            placeholder='Số điện thoại liên lạc'
-            className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            {...register('phone', {
-              required: 'Phone number is required',
-              pattern: {
-                value: /^\d+$/,
-                message: 'Please enter a valid phone number',
-              },
-            })}
-          />
-          {errors.phone && (
-            <p className='text-red-500 text-sm mt-2'>{errors.phone.message}</p>
-          )}
-        </div>
-      </div>
-
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5'>
       {/* Giới tính */}
       <div className='flex gap-6'>
         {['male', 'female'].map((gender) => (
           <label
             key={gender}
-            className='flex items-center gap-2 cursor-pointer text-lg'
+            className='flex items-center gap-2 cursor-pointer text-base'
           >
             <input
               type='radio'
@@ -65,7 +39,7 @@ function AddressForm() {
               value={gender}
             />
             <div
-              className={`w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center ${
+              className={`w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center ${
                 selectedGender === gender
                   ? gender === 'male'
                     ? 'bg-blue-500'
@@ -82,108 +56,153 @@ function AddressForm() {
         ))}
       </div>
 
-      {/* Địa chỉ giao hàng */}
-      <h3 className='text-2xl font-semibold text-gray-700 mt-6'>
-        Địa chỉ giao hàng
-      </h3>
-      <div className='flex flex-col md:flex-row gap-6'>
-        <div className='flex-1 min-w-[240px]'>
-          <select
-            className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            {...register('city', { required: 'City is required' })}
-          >
-            <option value=''>Chọn tỉnh/thành phố</option>
-          </select>
-          {errors.city && (
-            <p className='text-red-500 text-sm mt-2'>{errors.city.message}</p>
+      {/* Họ tên và SĐT */}
+      <div className='flex flex-col md:flex-row gap-5'>
+        <div className='flex-1'>
+          <input
+            type='text'
+            placeholder='Họ và Tên'
+            className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
+            {...register('fullName', { required: 'Vui lòng nhập họ tên' })}
+          />
+          {errors.fullName && (
+            <p className='text-red-500 text-sm mt-1'>
+              {errors.fullName.message}
+            </p>
           )}
         </div>
-        <div className='flex-1 min-w-[240px]'>
+        <div className='flex-1'>
+          <input
+            type='tel'
+            placeholder='Số điện thoại liên lạc'
+            className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
+            {...register('phone', {
+              required: 'Vui lòng nhập số điện thoại',
+              pattern: {
+                value: /^\d+$/,
+                message: 'Số điện thoại không hợp lệ',
+              },
+            })}
+          />
+          {errors.phone && (
+            <p className='text-red-500 text-sm mt-1'>{errors.phone.message}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Địa chỉ giao hàng */}
+      <h3 className='text-base font-medium text-gray-700 mt-2'>
+        Địa chỉ giao hàng
+      </h3>
+      <div className='flex flex-col md:flex-row gap-5'>
+        <div className='flex-1'>
           <select
-            className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            {...register('district', { required: 'District is required' })}
+            className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
+            {...register('city', { required: 'Vui lòng chọn tỉnh/thành phố' })}
+          >
+            <option value=''>Chọn tỉnh/thành phố</option>
+            <option value='HCM'>TP Hồ Chí Minh</option>
+            <option value='HN'>Hà Nội</option>
+            <option value='DN'>Đà Nẵng</option>
+          </select>
+          {errors.city && (
+            <p className='text-red-500 text-sm mt-1'>{errors.city.message}</p>
+          )}
+        </div>
+        <div className='flex-1'>
+          <select
+            className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
+            {...register('district', { required: 'Vui lòng chọn quận/huyện' })}
           >
             <option value=''>Chọn quận/huyện</option>
+            <option value='Q1'>Quận 1</option>
+            <option value='Q2'>Quận 2</option>
+            <option value='Q3'>Quận 3</option>
           </select>
           {errors.district && (
-            <p className='text-red-500 text-sm mt-2'>
+            <p className='text-red-500 text-sm mt-1'>
               {errors.district.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className='flex flex-col md:flex-row gap-6'>
-        <div className='flex-1 min-w-[240px]'>
+      <div className='flex flex-col md:flex-row gap-5'>
+        <div className='flex-1'>
           <select
-            className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            {...register('ward', { required: 'Ward is required' })}
+            className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
+            {...register('ward', { required: 'Vui lòng chọn phường/xã' })}
           >
-            <option value=''>Chọn xã/thị trấn</option>
+            <option value=''>Chọn phường/xã</option>
+            <option value='P1'>Phường 1</option>
+            <option value='P2'>Phường 2</option>
+            <option value='P3'>Phường 3</option>
           </select>
           {errors.ward && (
-            <p className='text-red-500 text-sm mt-2'>{errors.ward.message}</p>
+            <p className='text-red-500 text-sm mt-1'>{errors.ward.message}</p>
           )}
         </div>
         <div className='flex-1'>
           <input
             type='text'
             placeholder='Số nhà, tên đường'
-            className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            {...register('street', { required: 'Street address is required' })}
+            className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
+            {...register('street', { required: 'Vui lòng nhập địa chỉ cụ thể' })}
           />
           {errors.street && (
-            <p className='text-red-500 text-sm mt-2'>{errors.street.message}</p>
+            <p className='text-red-500 text-sm mt-1'>{errors.street.message}</p>
           )}
         </div>
       </div>
 
       <input
         type='text'
-        placeholder='Ghi chú thêm'
-        className='w-full min-h-[50px] border-2 border-gray-300 rounded-lg bg-white px-4 py-3 text-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
+        placeholder='Ghi chú thêm (tùy chọn)'
+        className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500'
         {...register('note')}
       />
 
       {/* Dịch vụ giao hàng */}
-      <h3 className='text-2xl font-semibold text-gray-700 mt-6'>
+      <h3 className='text-base font-medium text-gray-700 mt-2'>
         Dịch vụ giao hàng
       </h3>
-      {['standard', 'express'].map((method) => (
-        <label
-          key={method}
-          className='flex items-center gap-2 cursor-pointer text-lg'
-        >
-          <input
-            type='radio'
-            className='hidden'
-            {...register('shippingMethod')}
-            value={method}
-          />
-          <div
-            className={`w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center ${
-              selectedShippingMethod === method ? 'bg-blue-500' : 'bg-white'
-            }`}
+      <div className='space-y-3'>
+        {['standard', 'express'].map((method) => (
+          <label
+            key={method}
+            className='flex items-center gap-2 cursor-pointer text-base'
           >
-            {selectedShippingMethod === method && (
-              <div className='w-3 h-3 rounded-full bg-white'></div>
-            )}
-          </div>
-          <span>
-            {method === 'standard' ? 'Giao hàng tiết kiệm' : 'Giao hàng nhanh'}
-          </span>
-        </label>
-      ))}
+            <input
+              type='radio'
+              className='hidden'
+              {...register('shippingMethod')}
+              value={method}
+            />
+            <div
+              className={`w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center ${
+                selectedShippingMethod === method ? 'bg-blue-500' : 'bg-white'
+              }`}
+            >
+              {selectedShippingMethod === method && (
+                <div className='w-3 h-3 rounded-full bg-white'></div>
+              )}
+            </div>
+            <span>
+              {method === 'standard' ? 'Giao hàng tiết kiệm' : 'Giao hàng nhanh'}
+            </span>
+          </label>
+        ))}
+      </div>
 
       <button
         type='submit'
         disabled={isLoading}
-        className={`mt-6 px-6 py-3 font-semibold rounded-lg flex items-center justify-center gap-2 text-white transition-all transform ${
+        className={`mt-4 px-5 py-2.5 font-medium rounded-lg flex items-center justify-center gap-2 text-white text-base transition-all ${
           isSuccess
             ? 'bg-green-600 hover:bg-green-700'
             : 'bg-blue-600 hover:bg-blue-700'
         } ${
-          isLoading ? 'opacity-80 cursor-not-allowed' : 'hover:-translate-y-1'
+          isLoading ? 'opacity-80 cursor-not-allowed' : 'hover:-translate-y-0.5'
         }`}
       >
         {isLoading ? (

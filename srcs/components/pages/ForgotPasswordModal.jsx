@@ -1,16 +1,16 @@
-import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import ForgotPasswordForm from '@/components/features/auth/ForgotPasswordForm';
-import ModalWrapper from '../ui/ModalWrapper';
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import ForgotPasswordForm from "@/components/features/auth/ForgotPasswordForm";
+import ModalWrapper from "../ui/ModalWrapper";
 
 const apiForgotPassword = async ({ email }) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (email === 'admin@example.com') {
-        resolve({ message: 'Link khôi phục đã được gửi' });
+      if (email === "admin@example.com") {
+        resolve({ message: "Link khôi phục đã được gửi" });
       } else {
-        reject(new Error('Email không tồn tại trong hệ thống'));
+        reject(new Error("Email không tồn tại trong hệ thống"));
       }
     }, 1500);
   });
@@ -28,10 +28,6 @@ function ForgotPasswordModal() {
     mutationFn: apiForgotPassword,
     onSuccess: (data) => {
       alert(data.message);
-
-      navigate('/home', {
-        state: { modal: 'login', force: Date.now() }, // ép key mới
-      });
     },
     onError: (error) => {
       alert(error.message);

@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import ProductCard from '@/components/features/products/ProductCard';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import Spinner from '@/components/ui/Spinner';
 
 const CATEGORY_LABELS = {
   laptop: 'Laptop',
@@ -50,7 +49,6 @@ function ProductRow({
           )}
 
           {isCategoryPage ? (
-            // Grid layout for category pages
             <>
               <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6'>
                 {items.map((product) => (
@@ -61,7 +59,7 @@ function ProductRow({
                 <button
                   onClick={onLoadMore}
                   disabled={loadingMore}
-                  className='mt-8 bg-red-500 text-white px-6 py-3 rounded-lg mx-auto  text-lg transition-all duration-300 hover:bg-red-600 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                  className='mt-8 bg-red-500 text-white px-6 py-3 rounded-lg mx-auto text-lg transition-all duration-300 hover:bg-red-600 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
                 >
                   {loadingMore ? (
                     <>
@@ -75,8 +73,8 @@ function ProductRow({
               )}
             </>
           ) : (
-            // Slider layout for home page
             <>
+              {/* Nút scroll trái/phải */}
               <button
                 onClick={() => scroll(category, 'left')}
                 className='absolute -left-9 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-300 p-2 rounded-full shadow-md hover:bg-gray-100 transition'
@@ -89,6 +87,8 @@ function ProductRow({
               >
                 <AiOutlineRight size={18} />
               </button>
+
+              {/* Dòng sản phẩm dạng slider */}
               <div
                 ref={(el) => (scrollRefs.current[category] = el)}
                 className='flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth scroll-hidden pr-6'
