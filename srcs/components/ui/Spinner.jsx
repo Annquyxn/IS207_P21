@@ -1,6 +1,4 @@
-import React from 'react';
-
-const Spinner = ({ className = 'w-6 h-6', color = 'text-blue-500' }) => {
+const Spinner = ({ className = 'w-6 h-6', color = 'text-red-500' }) => {
   return (
     <div
       className='flex items-center justify-center'
