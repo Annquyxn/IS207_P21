@@ -10,6 +10,7 @@ import CompleteOrderPage from './components/pages/CompleteOrderPage';
 import PaymentPage from './components/pages/PaymentPage';
 import ShippingInfoPage from './components/pages/ShippingInfoPage';
 import BuildPCPage from './components/pages/BuildPCPage';
+import OrderPage from './components/pages/OrderPage';
 import User from './components/pages/User';
 import UserPage from './components/features/user/UserPage';
 import UserAddress from './components/features/user/UserAddress';

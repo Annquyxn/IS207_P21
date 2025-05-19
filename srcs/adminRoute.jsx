@@ -5,6 +5,7 @@ import OrderManager from "./components/pages/admin/OrderManager";
 import AdminRoute from "./components/routes/AdminRoute";
 import AdminLayout from "./components/ui/AdminLayout";
 import Dashboard from "./components/pages/admin/Dashboard";
+import ResetPasswordForm from "./components/pages/ResetPasswordForm";
 
 const adminRoute = (
   <Route
