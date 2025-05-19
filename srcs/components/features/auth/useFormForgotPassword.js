@@ -1,6 +1,6 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
-export function useForgotPasswordLogic(onSubmitHandler) {
+export function useForgotPasswordLogic() {
   const {
     register,
     handleSubmit,
@@ -9,7 +9,7 @@ export function useForgotPasswordLogic(onSubmitHandler) {
 
   return {
     register,
-    handleSubmit: handleSubmit(onSubmitHandler),
+    handleSubmit,
     errors,
   };
 }
