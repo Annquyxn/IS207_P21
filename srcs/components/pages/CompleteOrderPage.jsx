@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SuccessIcon from '@/components/features/icons/SuccessIcon';
 import VoucherBadge from '../ui/VoucherBadge';
 import { FaUser, FaPhone, FaMapMarkerAlt, FaBox, FaTruck, FaTag, FaCheckCircle, FaArrowLeft, 
@@ -7,21 +8,67 @@ import { FaUser, FaPhone, FaMapMarkerAlt, FaBox, FaTruck, FaTag, FaCheckCircle, 
 function CompleteOrderPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [activePaymentDetails, setActivePaymentDetails] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   
-  const orderDetails = {
-    orderNumber: "DH123456789",
-    customerName: 'Nguyễn Văn A',
-    phone: '0000000000',
-    address: 'Số ..., Đường..., Phường..., Quận,..., Thành phố',
-    productPrice: 12000000,
-    shippingFee: 0,
-    discount: 500000,
-    total: 11500000,
-    deliveryEstimate: '2 - 3 ngày',
-    orderDate: '10/08/2023',
-    paymentMethod: 'Thanh toán khi nhận hàng',
-    paymentIcon: 'cod', // 'cod', 'bank', 'e-wallet'
-  };
+  // Lấy thông tin đơn hàng từ location state
+  const { orderInfo } = location.state || {};
+  
+  // Kiểm tra nếu không có thông tin đơn hàng, chuyển hướng về trang chủ
+  useEffect(() => {
+    if (!orderInfo) {
+      navigate('/');
+    }
+  }, [orderInfo, navigate]);
+  
+  // Xây dựng đối tượng orderDetails từ orderInfo
+  const orderDetails = orderInfo ? {
+    orderNumber: orderInfo.id || "DH" + Math.floor(Math.random() * 1000000),
+    customerName: orderInfo.addressData?.fullName || 'Khách hàng',
+    phone: orderInfo.addressData?.phone || '0000000000',
+    address: `${orderInfo.addressData?.street || ''}, ${orderInfo.addressData?.ward || ''}, ${orderInfo.addressData?.district || ''}, ${orderInfo.addressData?.city || ''}`,
+    productPrice: parsePrice(orderInfo.product?.salePrice) * (orderInfo.product?.quantity || 1),
+    shippingFee: orderInfo.addressData ? calculateShippingFee(orderInfo.addressData.shippingMethod, parsePrice(orderInfo.product?.salePrice)) : 0,
+    discount: orderInfo.discount?.amount || 0,
+    total: calculateTotal(
+      parsePrice(orderInfo.product?.salePrice) * (orderInfo.product?.quantity || 1),
+      orderInfo.addressData ? calculateShippingFee(orderInfo.addressData.shippingMethod, parsePrice(orderInfo.product?.salePrice)) : 0,
+      orderInfo.discount?.amount || 0
+    ),
+    deliveryEstimate: orderInfo.addressData?.shippingMethod === 'express' ? '1 - 2 ngày' : '2 - 3 ngày',
+    orderDate: new Date().toLocaleDateString('vi-VN'),
+    paymentMethod: getPaymentMethodName(orderInfo.paymentMethod),
+    paymentIcon: orderInfo.paymentMethod || 'cod',
+    discountCode: orderInfo.discount?.code || '',
+    productInfo: orderInfo.product || {}
+  } : null;
+
+  // Hàm chuyển đổi giá sản phẩm từ chuỗi sang số
+  function parsePrice(priceStr) {
+    if (!priceStr) return 0;
+    return parseInt(priceStr.replace(/[^\d]/g, ''));
+  }
+  
+  // Hàm tính phí vận chuyển
+  function calculateShippingFee(shippingMethod, productPrice) {
+    if (productPrice >= 500000) return 0; // Miễn phí với đơn >= 500K
+    return shippingMethod === 'express' ? 50000 : 30000;
+  }
+  
+  // Hàm tính tổng tiền
+  function calculateTotal(productPrice, shippingFee, discount) {
+    return productPrice + shippingFee - discount;
+  }
+  
+  // Hàm lấy tên phương thức thanh toán
+  function getPaymentMethodName(paymentMethod) {
+    switch(paymentMethod) {
+      case 'bank': return 'Chuyển khoản ngân hàng';
+      case 'wallet': return 'Thanh toán qua ví điện tử';
+      case 'cod':
+      default: return 'Thanh toán khi nhận hàng';
+    }
+  }
 
   // Format price to VND
   const formatPrice = (price) => {
@@ -30,10 +77,10 @@ function CompleteOrderPage() {
   
   // Get payment method icon based on payment type
   const getPaymentIcon = () => {
-    switch(orderDetails.paymentIcon) {
+    switch(orderDetails?.paymentIcon) {
       case 'bank':
         return <FaCreditCard className="text-blue-600" />;
-      case 'e-wallet':
+      case 'wallet':
         return <FaWallet className="text-purple-600" />;
       case 'cod':
       default:
@@ -43,7 +90,7 @@ function CompleteOrderPage() {
   
   // Get payment method color scheme
   const getPaymentColorScheme = () => {
-    switch(orderDetails.paymentIcon) {
+    switch(orderDetails?.paymentIcon) {
       case 'bank':
         return {
           bg: 'bg-blue-100',
@@ -51,7 +98,7 @@ function CompleteOrderPage() {
           border: 'border-blue-300',
           icon: 'text-blue-600'
         };
-      case 'e-wallet':
+      case 'wallet':
         return {
           bg: 'bg-purple-100',
           text: 'text-purple-800',
@@ -86,6 +133,15 @@ function CompleteOrderPage() {
 
   // Get color scheme
   const paymentColors = getPaymentColorScheme();
+
+  // Nếu không có thông tin đơn hàng, hiển thị màn hình loading
+  if (!orderDetails) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-500">Đang tải thông tin đơn hàng...</p>
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-gradient-to-b from-blue-50 to-white py-10 px-4'>
@@ -217,6 +273,43 @@ function CompleteOrderPage() {
           </div>
         </section>
 
+        {/* Product Info Section */}
+        <section className='bg-white rounded-3xl shadow-xl p-8 mb-8 transform transition-all duration-500 hover:shadow-2xl'>
+          <div className='flex items-center justify-between border-b pb-4 mb-6'>
+            <h2 className='text-xl font-bold text-gray-800 flex items-center gap-2'>
+              <FaBox className="text-blue-600" /> Thông tin sản phẩm
+            </h2>
+          </div>
+          
+          <div className="flex gap-4 items-start mb-6">
+            <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-gray-200 shadow-sm">
+              <img
+                src={orderDetails.productInfo.image}
+                alt={orderDetails.productInfo.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-800 line-clamp-2">
+                {orderDetails.productInfo.title}
+              </h3>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-sm font-bold text-red-600">
+                  {orderDetails.productInfo.salePrice}
+                </span>
+                {orderDetails.productInfo.originalPrice && (
+                  <span className="text-xs text-gray-500 line-through">
+                    {orderDetails.productInfo.originalPrice}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1 mt-2 text-sm text-gray-500">
+                <span>Số lượng: {orderDetails.productInfo.quantity || 1}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Delivery Info Section */}
         <section className='bg-white rounded-3xl shadow-xl p-8 mb-8 transform transition-all duration-500 hover:shadow-2xl'>
           <div className='flex items-center justify-between border-b pb-4 mb-6'>
@@ -324,17 +417,19 @@ function CompleteOrderPage() {
               </div>
             </div>
 
-            <div className='flex justify-between items-center bg-gray-50 p-3 rounded-lg'>
-              <div className='flex items-center gap-3 text-gray-700'>
-                <FaTag className="text-gray-500" /> Giảm giá
+            {orderDetails.discount > 0 && (
+              <div className='flex justify-between items-center bg-gray-50 p-3 rounded-lg'>
+                <div className='flex items-center gap-3 text-gray-700'>
+                  <FaTag className="text-gray-500" /> Giảm giá
+                </div>
+                <div className='flex items-center gap-3'>
+                  <span className='font-medium text-green-600'>
+                    -{formatPrice(orderDetails.discount)}
+                  </span>
+                  {orderDetails.discountCode && <VoucherBadge code={orderDetails.discountCode} color="#E1F5FE" />}
+                </div>
               </div>
-              <div className='flex items-center gap-3'>
-                <span className='font-medium text-green-600'>
-                  -{formatPrice(orderDetails.discount)}
-                </span>
-                <VoucherBadge code="GIAMGIA500" color="#E1F5FE" />
-              </div>
-            </div>
+            )}
 
             <div className='flex justify-between items-center p-4 mt-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100'>
               <div className='font-bold text-gray-800'>Tổng thanh toán</div>
@@ -348,7 +443,7 @@ function CompleteOrderPage() {
         <div className="text-center">
           <button 
             className="bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-6 rounded-full transition-all shadow-md hover:shadow-lg flex items-center gap-2 mx-auto"
-            onClick={() => window.history.back()}
+            onClick={() => navigate('/home')}
           >
             <FaArrowLeft size={14} /> Quay lại trang chủ
           </button>
