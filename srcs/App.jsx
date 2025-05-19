@@ -10,6 +10,7 @@ import CompleteOrderPage from "./components/pages/CompleteOrderPage";
 import PaymentPage from "./components/pages/PaymentPage";
 import ShippingInfoPage from "./components/pages/ShippingInfoPage";
 import BuildPCPage from "./components/pages/BuildPCPage";
+import OrderPage from "./components/pages/OrderPage";
 import User from "./components/pages/User";
 import UserPage from "./components/features/user/UserPage";
 import UserAddress from "./components/features/user/UserAddress";
@@ -30,16 +31,10 @@ import ShoppingGuide from "./components/features/footer-components/ShoppingGuide
 import ShowroomSystem from "./components/features/footer-components/ShowroomSystem";
 import WarrantyLookup from "./components/features/footer-components/WarrantyLookup";
 import WarrantyPolicy from "./components/features/footer-components/WarrantyPolicy";
-import ResetPasswordForm from "@/components/pages/ResetPasswordForm";
 import adminRoute from "./adminRoute";
 import { Toaster } from "react-hot-toast";
-
-const routes = [
-  {
-    path: "/reset-password",
-    element: <ResetPasswordForm />,
-  },
-];
+import ResetPasswordForm from "@/components/features/auth/ResetPasswordForm";
+import ForgotPasswordPage from "./components/pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -50,6 +45,14 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Navigate replace to="home" />} />
               {adminRoute}
+              <Route
+                path="order"
+                element={
+                  <AnimatedPage>
+                    <OrderPage />
+                  </AnimatedPage>
+                }
+              />
               <Route
                 path="home"
                 element={
@@ -261,6 +264,18 @@ function App() {
                 </AnimatedPage>
               }
             />
+
+            <Route
+              path="forgot-password"
+              element={
+                <AnimatedPage>
+                  <ForgotPasswordPage />
+                </AnimatedPage>
+              }
+            />
+
+            <Route path="/reset-password" element={<ResetPasswordForm />} />
+            {/* Đường dẫn này dùng cho link đặt lại mật khẩu Supabase, nhận token qua hash hoặc query */}
           </Routes>
         </AnimatePresence>
         <Toaster
