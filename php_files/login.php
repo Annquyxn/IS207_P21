@@ -7,6 +7,11 @@ $data = json_decode(file_get_contents("php://input"), true);
 $email = $data["username"];
 $password = $data["password"];
 
+if (!$data || !isset($data["username"]) || !isset($data["password"])) {
+    echo json_encode(["error" => "Thiếu dữ liệu gửi lên"]);
+    exit;
+}
+
 $apiUrl = "https://yqbaaipksxorhlynhmfd.supabase.co/auth/v1/token?grant_type=password";
 $apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxYmFhaXBrc3hvcmhseW5obWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDA3NDAsImV4cCI6MjA2MzExNjc0MH0.W7bgKUJmSuMS9YcmQlLK8Ol1ZOSeRcaHICECY6HWk1k";
 
