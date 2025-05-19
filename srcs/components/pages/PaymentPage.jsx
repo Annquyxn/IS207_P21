@@ -11,7 +11,7 @@ function PaymentPage() {
       customerName: "Nguyễn Văn A",
       phone: "0000000000",
       address: "Số ..., Đường..., Phường..., Quận,..., Thành phố",
-      productPrice: 12000000,
+      productPrice: 12000000, 
       shippingFee: 0,
       discount: 500000,
       discountCode: "GIAMGIA500",
