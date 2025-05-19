@@ -1,24 +1,15 @@
-import { supabase } from './supabase';
-import bcrypt from 'bcryptjs';
+export async function apiLogin(data) {
+  const response = await fetch('http://localhost:8000/login.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data), // { username, password }
+  });
 
-export async function apiLogin({ username, password }) {
-  const { data, error } = await supabase
-    .from('LoginForm')
-    .select('*')
-    .eq('username', username)
-    .single();
-
-  if (error) {
-    console.error('Lỗi khi truy vấn dữ liệu:', error.message);
-    throw new Error('Tài khoản không tồn tại');
+  if (!response.ok) {
+    throw new Error('Đăng nhập thất bại');
   }
 
-  const isPasswordValid = await bcrypt.compare(password, data.password);
-
-  if (!isPasswordValid) {
-    console.error('Mật khẩu không đúng');
-    throw new Error('Mật khẩu không đúng');
-  }
-
-  return data;
+  return response.json();
 }
