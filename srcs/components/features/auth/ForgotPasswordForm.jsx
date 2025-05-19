@@ -78,5 +78,5 @@ function ForgotPasswordForm({ onSubmit, isLoading, showBack }) {
     </AnimatedPage>
   );
 }
-
 export default ForgotPasswordForm;
+
