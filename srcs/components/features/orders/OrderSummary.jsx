@@ -11,7 +11,9 @@ function OrderSummary() {
 
       {/* Phí vận chuyển */}
       <div className="flex justify-between w-full items-center mt-4">
-        <span className="text-xl font-extrabold text-gray-700">Phí vận chuyển</span>
+        <span className="text-xl font-extrabold text-gray-700">
+          Phí vận chuyển
+        </span>
         <span className="text-xl font-semibold text-right text-gray-800">
           0<span className="underline">đ</span>
         </span>
