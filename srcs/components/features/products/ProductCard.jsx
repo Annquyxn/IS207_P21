@@ -14,6 +14,8 @@ const ProductCard = ({
 }) => {
   const navigate = useNavigate();
 
+  console.log('ProductCard:', { originalPrice, salePrice });
+
   const handleNavigate = () => {
     navigate(`/product/${id}`);
   };
@@ -28,7 +30,10 @@ const ProductCard = ({
     console.log('Thêm giỏ:', title);
   };
 
-  const imageUrl = image && image.trim() ? image : 'https://via.placeholder.com/300x200?text=No+Image';
+  const imageUrl =
+    image && image.trim()
+      ? image
+      : 'https://via.placeholder.com/300x200?text=No+Image';
 
   return (
     <div
@@ -41,7 +46,7 @@ const ProductCard = ({
         className='w-full h-[180px] object-contain mb-3 rounded-lg bg-gray-50'
       />
 
-      <div className="text-xs text-gray-500 mb-1">{brand}</div>
+      <div className='text-xs text-gray-500 mb-1'>{brand}</div>
       <h3 className='text-base font-semibold h-[48px] line-clamp-2 mb-2'>
         {title}
       </h3>
@@ -50,7 +55,7 @@ const ProductCard = ({
       <div className='text-lg font-bold text-red-600 mb-2'>{salePrice}</div>
 
       <div className='flex justify-between items-center mb-3 text-sm'>
-        <span className='text-green-600 font-medium'>{discount} giảm</span>
+        <span className='text-green-600 font-medium'>Giảm {discount}</span>
         <span className='text-yellow-500 font-semibold flex items-center gap-1'>
           <FiStar /> {rating}
         </span>

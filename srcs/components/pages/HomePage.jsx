@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import LoginModal from './LoginModal';
 import RegistrationModal from './RegistrationModal';
 import ForgotPasswordModal from './ForgotPasswordModal';
+import ProductFeatured from './ProductFeatured';
 
 function HomePage() {
   const location = useLocation();
@@ -29,7 +30,7 @@ function HomePage() {
       </div>
 
       <div className='mt-8'>
-        <ProductPage />
+        <ProductFeatured />
       </div>
 
       <div className='mt-auto'>
