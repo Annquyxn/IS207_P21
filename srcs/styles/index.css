@@ -63,3 +63,7 @@
   --image-grayscale: 0;
   --image-opacity: 100%;
 }
+
+.hide-internal-title h2 {
+  display: none !important;
+}

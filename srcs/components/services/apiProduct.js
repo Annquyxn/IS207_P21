@@ -48,3 +48,23 @@ export async function countProduct() {
 
   return count || 0;
 }
+
+export const getFeaturedProducts = async (category) => {
+  let query = supabase.from('product').select('*');
+
+  if (category) {
+    query = query
+      .eq('category', category)
+      .order('rating', { ascending: false })
+      .limit(10);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Lỗi get featured:', error);
+    throw new Error('Không thể tải sản phẩm nổi bật');
+  }
+
+  return data;
+};

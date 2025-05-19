@@ -11,7 +11,14 @@ const CATEGORY_LABELS = {
   other: 'Linh kiện khác',
 };
 
-function ProductRow({ products, isCategoryPage = false, onLoadMore, hasMore, loadingMore }) {
+function ProductRow({
+  products,
+  isCategoryPage = false,
+  onLoadMore,
+  hasMore,
+  loadingMore,
+  hideTitle = false,
+}) {
   const scrollRefs = useRef({});
 
   const grouped = products.reduce((acc, product) => {
@@ -36,9 +43,11 @@ function ProductRow({ products, isCategoryPage = false, onLoadMore, hasMore, loa
     <div className='space-y-12'>
       {Object.entries(grouped).map(([category, items]) => (
         <section key={category} className='relative'>
-          <h2 className='text-xl font-bold mb-4'>
-            {CATEGORY_LABELS[category] || category}
-          </h2>
+          {!hideTitle && (
+            <h2 className='text-xl font-bold mb-4'>
+              {CATEGORY_LABELS[category] || category}
+            </h2>
+          )}
 
           {isCategoryPage ? (
             // Grid layout for category pages
@@ -52,7 +61,7 @@ function ProductRow({ products, isCategoryPage = false, onLoadMore, hasMore, loa
                 <button
                   onClick={onLoadMore}
                   disabled={loadingMore}
-                  className='mt-8 bg-red-500 text-white px-6 py-3 rounded-lg mx-auto block text-lg transition-all duration-300 hover:bg-red-600 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                  className='mt-8 bg-red-500 text-white px-6 py-3 rounded-lg mx-auto  text-lg transition-all duration-300 hover:bg-red-600 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
                 >
                   {loadingMore ? (
                     <>

@@ -28,9 +28,9 @@ function ProductPage() {
 
   // Update category filter when URL parameter changes
   useEffect(() => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      category: categoryParam || null
+      category: categoryParam || null,
     }));
   }, [categoryParam]);
 
@@ -48,7 +48,7 @@ function ProductPage() {
         setLoading(false);
       }
     };
-    
+
     getProducts();
   }, [filters.category]);
 
@@ -118,10 +118,13 @@ function ProductPage() {
     setLoadingMore(true);
     try {
       const currentLength = visibleProducts.length;
-      const nextProducts = processedProducts.slice(currentLength, currentLength + 10);
+      const nextProducts = processedProducts.slice(
+        currentLength,
+        currentLength + 10
+      );
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setVisibleProducts(prev => [...prev, ...nextProducts]);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setVisibleProducts((prev) => [...prev, ...nextProducts]);
     } finally {
       setLoadingMore(false);
     }
@@ -162,7 +165,7 @@ function ProductPage() {
 
         {loading ? (
           <div className='flex justify-center py-12'>
-            <Spinner className='w-12 h-12 text-blue-500' />
+            <Spinner className='w-12 h-12 text-red-500' />
           </div>
         ) : error ? (
           <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative'>
@@ -178,8 +181,8 @@ function ProductPage() {
                 {categoryParam === 'pccoling' && 'Tản nhiệt PC'}
               </h2>
             )}
-            <ProductRow 
-              products={visibleProducts} 
+            <ProductRow
+              products={visibleProducts}
               isCategoryPage={!!categoryParam}
               onLoadMore={loadMore}
               hasMore={visibleProducts.length < processedProducts.length}
