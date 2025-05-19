@@ -17,6 +17,7 @@ import UserOrders from './components/features/user/UserOrders';
 import AccountForm from './components/features/user/FormAccount';
 import ShoppingCartPage from './components/pages/ShoppingCartPage';
 import ProductDetailPage from './components/pages/ProductDetailPage';
+import OrderPage from './components/pages/OrderPage';
 import AnimatedPage from './components/ui/AnimatedPage';
 import AboutGearVN from './components/features/footer-components/AboutGearVN';
 import JobPage from './components/features/footer-components/JobPage';
@@ -73,6 +74,15 @@ function App() {
                 element={
                   <AnimatedPage>
                     <ProductDetailPage />
+                  </AnimatedPage>
+                }
+              />
+
+              <Route
+                path='order'
+                element={
+                  <AnimatedPage>
+                    <OrderPage />
                   </AnimatedPage>
                 }
               />
