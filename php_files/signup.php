@@ -1,61 +1,55 @@
 <?php
-include 'connect.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json");
 
-function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+// Lấy dữ liệu gửi từ client
+$data = json_decode(file_get_contents("php://input"), true);
+$email = $data["email"] ?? null;
+$password = $data["password"] ?? null;
+
+// Kiểm tra đầu vào
+if (!$email || !$password) {
+  http_response_code(400);
+  echo json_encode(["error" => "Thiếu email hoặc mật khẩu"]);
+  exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = test_input($_POST["name"]);
-    $email_or_phone = test_input($_POST["email"]);
-    $password = test_input($_POST["password"]);
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+// Supabase API endpoint và API key
+$apiUrl = "https://yqbaaipksxorhlynhmfd.supabase.co/auth/v1/signup";
+$apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxYmFhaXBrc3hvcmhseW5obWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDA3NDAsImV4cCI6MjA2MzExNjc0MH0.W7bgKUJmSuMS9YcmQlLK8Ol1ZOSeRcaHICECY6HWk1k";
 
-   
-    if (filter_var($email_or_phone, FILTER_VALIDATE_EMAIL)) {
-        $email = $email_or_phone;
-        $phone = null;
-    } elseif (preg_match('/^[0-9]{9,15}$/', $email_or_phone)) {
-        $email = null;
-        $phone = $email_or_phone;
-    } else {
-        die("");
-    }
+// Dữ liệu gửi lên Supabase
+$payload = json_encode([
+  "email" => $email,
+  "password" => $password
+]);
 
-    // Kiểm tra xem email hoặc phone đã tồn tại chưa
-    $check_sql = "SELECT * FROM users WHERE email = ? OR phone = ?";
-    $stmt = $conn->prepare($check_sql);
-    if (!$stmt) {
-        die("Lỗi prepare (check): " . $conn->error);
-    }
+// Gửi request với cURL
+$ch = curl_init($apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  "Content-Type: application/json",
+  "apikey: $apiKey",
+  "Authorization: Bearer $apiKey"
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
-    $stmt->bind_param("ss", $email, $phone);
-    $stmt->execute();
-    $check_result = $stmt->get_result();
+// Nhận phản hồi
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$error = curl_error($ch);
+curl_close($ch);
 
-    if ($check_result->num_rows > 0) {
-        echo "<script>alert('Email hoặc Số điện thoại đã được sử dụng. Vui lòng sử dụng Email hoặc số điện thoại khác'); window.history.back();</script>";
-    } else {
-        // Chèn dữ liệu mới vào bảng users
-        $insert_sql = "INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($insert_sql);
-        if (!$stmt) {
-            die("Lỗi prepare (insert): " . $conn->error);
-        }
-
-        $stmt->bind_param("ssss", $name, $email, $phone, $hashed_password);
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Tạo tài khoản thành công!'); window.history.back();</script>";
-        } else {
-            echo "<script>alert('Lỗi tạo tài khoản!'); window.history.back();</script>" . $conn->error;
-        }
-    }
-
-    $stmt->close();
-    $conn->close();
+// Xử lý phản hồi
+if ($httpCode === 200 || $httpCode === 201) {
+  echo $response;
+} else {
+  http_response_code($httpCode);
+  echo json_encode([
+    "error" => "Đăng ký thất bại",
+    "details" => json_decode($response, true),
+    "curl_error" => $error
+  ]);
 }
-?>

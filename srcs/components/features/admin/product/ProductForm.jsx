@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useCreateProduct } from './useCreateProduct';
 
 function ProductForm({ onCancel }) {
+  const { createProduct, isCreating } = useCreateProduct();
   const {
     register,
     handleSubmit,
@@ -10,10 +12,16 @@ function ProductForm({ onCancel }) {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log('Dữ liệu gửi đi:', data);
-    toast.success('Đã thêm sản phẩm thành công!');
-    reset();
-    onCancel();
+    createProduct(data, {
+      onSuccess: () => {
+        toast.success('Đã thêm sản phẩm thành công!');
+        reset();
+        onCancel();
+      },
+      onError: (err) => {
+        toast.error(err.message || 'Thêm sản phẩm thất bại!');
+      },
+    });
   };
 
   return (
@@ -23,7 +31,7 @@ function ProductForm({ onCancel }) {
         <h3 className='text-sm font-semibold text-gray-700 uppercase mb-4'>
           Thông tin chung
         </h3>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           <div>
             <label className='text-sm font-medium'>ID</label>
             <input
@@ -36,7 +44,7 @@ function ProductForm({ onCancel }) {
             )}
           </div>
           <div>
-            <label className='text-sm font-medium'>Tiêu đề</label>
+            <label className='text-sm font-medium'>Tên</label>
             <input
               type='text'
               {...register('title')}
@@ -50,6 +58,17 @@ function ProductForm({ onCancel }) {
               {...register('brand')}
               className='w-full border rounded px-3 py-2 mt-1'
             />
+          </div>
+          <div>
+            <label className='text-sm font-medium'>Loại</label>
+            <input
+              type='text'
+              {...register('category', { required: 'Không được để trống' })}
+              className='w-full border rounded px-3 py-2 mt-1'
+            />
+            {errors.category && (
+              <p className='text-red-500 text-sm'>{errors.category.message}</p>
+            )}
           </div>
         </div>
       </section>
@@ -72,7 +91,7 @@ function ProductForm({ onCancel }) {
             <label className='text-sm font-medium'>Giá gốc</label>
             <input
               type='number'
-              {...register('originalPrice')}
+              {...register('original_price')}
               className='w-full border rounded px-3 py-2 mt-1'
             />
           </div>
@@ -80,7 +99,7 @@ function ProductForm({ onCancel }) {
             <label className='text-sm font-medium'>Giá sale</label>
             <input
               type='number'
-              {...register('salePrice')}
+              {...register('sale_price')}
               className='w-full border rounded px-3 py-2 mt-1'
             />
           </div>
@@ -114,7 +133,7 @@ function ProductForm({ onCancel }) {
             <label className='text-sm font-medium'>Số lượt đánh giá</label>
             <input
               type='number'
-              {...register('reviewCount')}
+              {...register('review_count')}
               className='w-full border rounded px-3 py-2 mt-1'
             />
           </div>
@@ -147,7 +166,7 @@ function ProductForm({ onCancel }) {
             <label className='text-sm font-medium'>Ảnh chi tiết</label>
             <input
               type='text'
-              {...register('detailImage')}
+              {...register('detail_image')}
               className='w-full border rounded px-3 py-2 mt-1'
             />
           </div>
@@ -180,6 +199,7 @@ function ProductForm({ onCancel }) {
       <div className='flex justify-end gap-3 pt-4'>
         <button
           type='button'
+          disabled={isCreating}
           onClick={() => {
             reset();
             onCancel();
@@ -189,6 +209,7 @@ function ProductForm({ onCancel }) {
           Huỷ
         </button>
         <button
+          disabled={isCreating}
           type='submit'
           className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition'
         >
