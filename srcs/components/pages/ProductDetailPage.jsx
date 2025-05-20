@@ -4,8 +4,9 @@ import ProductInfo from '@/components/features/detail/ProductInfo';
 import ProductGallery from '@/components/features/detail/ProductGallery';
 import ProductDetails from '@/components/features/detail/ProductDetails';
 import ExpandSection from '@/components/features/detail/ExpandSection';
-import { fetchProducts } from '@/components/features/products/apiProduct';
 import Spinner from '@/components/ui/Spinner';
+import { getProduct } from '../services/apiProduct';
+import { convertKeysToCamelCase } from '../../utils/caseConverter';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -14,11 +15,12 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const getProduct = async () => {
+    const getProductData = async () => {
       setLoading(true);
       try {
-        const data = await fetchProducts();
-        const foundProduct = data.find((p) => p.id === id);
+        const data = await getProduct();
+        const camelized = convertKeysToCamelCase(data);
+        const foundProduct = camelized.find((p) => String(p.id) === id);
         setProduct(foundProduct || null);
       } catch (err) {
         console.error('Error fetching product:', err);
@@ -28,7 +30,7 @@ const ProductDetailPage = () => {
       }
     };
 
-    getProduct();
+    getProductData();
   }, [id]);
 
   if (loading) {
@@ -55,7 +57,14 @@ const ProductDetailPage = () => {
   return (
     <main className='bg-white w-full max-w-[1200px] mx-auto px-4 py-6'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-        <ProductGallery image={product.image} thumbnails={product.thumbnails} />
+        <ProductGallery
+          image={product.image}
+          thumbnails={
+            product.thumbnails
+              ? product.thumbnails.split(',').map((url) => url.trim())
+              : []
+          }
+        />
         <ProductInfo product={product} />
       </div>
 
