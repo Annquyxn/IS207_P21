@@ -66,7 +66,9 @@ function PaymentPage() {
                 <FaMapMarkerAlt className="text-gray-500 mt-1" />
                 <div>
                   <p className="text-sm text-gray-500">Địa chỉ giao hàng</p>
-                  <p className="font-medium">{order.address}</p>
+                  <p className="font-medium">
+                    {order.fullAddress || order.address}
+                  </p>
                 </div>
               </div>
             </div>

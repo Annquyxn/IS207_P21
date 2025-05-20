@@ -7,16 +7,34 @@ function AddressForm({ onSubmitSuccess }) {
     handleSubmit,
     errors,
     watch,
+    setValue,
     onSubmit: originalOnSubmit,
     isLoading,
     isSuccess,
+    provinceOptions,
+    districtOptions,
+    wardOptions,
   } = useAddressFormLogic();
 
-  // Wrap original submit handler to also call onSubmitSuccess prop if provided
   const onSubmit = (data) => {
-    originalOnSubmit(data);
+    // Thêm tên đầy đủ của các địa điểm vào dữ liệu
+    const selectedProvince = provinceOptions.find(p => p.value === data.city);
+    const selectedDistrict = districtOptions.find(d => d.value === data.district);
+    const selectedWard = wardOptions.find(w => w.value === data.ward);
+    
+    const enhancedData = {
+      ...data,
+      // Lưu cả mã và tên đầy đủ
+      cityName: selectedProvince?.label || '',
+      districtName: selectedDistrict?.label || '',
+      wardName: selectedWard?.label || '',
+      // Tạo chuỗi địa chỉ đầy đủ
+      fullAddress: `${data.street}, ${selectedWard?.label || ''}, ${selectedDistrict?.label || ''}, ${selectedProvince?.label || ''}`
+    };
+    
+    originalOnSubmit(enhancedData);
     if (onSubmitSuccess) {
-      onSubmitSuccess(data);
+      onSubmitSuccess(enhancedData);
     }
   };
 
@@ -99,11 +117,17 @@ function AddressForm({ onSubmitSuccess }) {
           <select
             className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
             {...register('city', { required: 'Vui lòng chọn tỉnh/thành phố' })}
+            onChange={(e) => {
+              // Set giá trị và kích hoạt hook form register
+              setValue('city', e.target.value, { shouldValidate: true });
+            }}
           >
             <option value=''>Chọn tỉnh/thành phố</option>
-            <option value='HCM'>TP Hồ Chí Minh</option>
-            <option value='HN'>Hà Nội</option>
-            <option value='DN'>Đà Nẵng</option>
+            {provinceOptions.map((province) => (
+              <option key={province.value} value={province.value}>
+                {province.label}
+              </option>
+            ))}
           </select>
           {errors.city && (
             <p className='text-red-500 text-sm mt-1'>{errors.city.message}</p>
@@ -113,11 +137,17 @@ function AddressForm({ onSubmitSuccess }) {
           <select
             className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
             {...register('district', { required: 'Vui lòng chọn quận/huyện' })}
+            disabled={!watch('city')}
+            onChange={(e) => {
+              setValue('district', e.target.value, { shouldValidate: true });
+            }}
           >
             <option value=''>Chọn quận/huyện</option>
-            <option value='Q1'>Quận 1</option>
-            <option value='Q2'>Quận 2</option>
-            <option value='Q3'>Quận 3</option>
+            {districtOptions.map((district) => (
+              <option key={district.value} value={district.value}>
+                {district.label}
+              </option>
+            ))}
           </select>
           {errors.district && (
             <p className='text-red-500 text-sm mt-1'>
@@ -132,11 +162,17 @@ function AddressForm({ onSubmitSuccess }) {
           <select
             className='w-full min-h-[44px] border border-gray-300 rounded-lg bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500'
             {...register('ward', { required: 'Vui lòng chọn phường/xã' })}
+            disabled={!watch('district')}
+            onChange={(e) => {
+              setValue('ward', e.target.value, { shouldValidate: true });
+            }}
           >
             <option value=''>Chọn phường/xã</option>
-            <option value='P1'>Phường 1</option>
-            <option value='P2'>Phường 2</option>
-            <option value='P3'>Phường 3</option>
+            {wardOptions.map((ward) => (
+              <option key={ward.value} value={ward.value}>
+                {ward.label}
+              </option>
+            ))}
           </select>
           {errors.ward && (
             <p className='text-red-500 text-sm mt-1'>{errors.ward.message}</p>

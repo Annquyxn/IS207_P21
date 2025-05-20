@@ -16,7 +16,7 @@ function ShippingInfo({ order }) {
 
         <div className="flex gap-5 items-center">
           <span className="w-[210px] font-bold">Địa chỉ nhận hàng:</span>
-          <span>{order.address}</span>
+          <span>{order.fullAddress || order.address}</span>
         </div>
 
         <div className="flex gap-5 items-center">
