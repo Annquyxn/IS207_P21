@@ -1,5 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart, FiZap, FiStar } from 'react-icons/fi';
+import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'react-hot-toast';
+import { useCart } from '@/components/hooks/useCart';
 
 const ProductCard = ({
   id,
@@ -13,6 +16,20 @@ const ProductCard = ({
   reviewCount,
 }) => {
   const navigate = useNavigate();
+  const [showCheckoutOptions, setShowCheckoutOptions] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const { addToCart } = useCart();
+
+  // Clear the "added to cart" state after a delay
+  useEffect(() => {
+    if (isAddedToCart) {
+      const timer = setTimeout(() => {
+        setShowCheckoutOptions(false);
+        setIsAddedToCart(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAddedToCart]);
 
   const handleNavigate = () => {
     navigate(`/product/${id}`);
@@ -38,10 +55,35 @@ const ProductCard = ({
     });
   };
 
-  const handleAddToCart = (e) => {
+  // Memoize the add to cart handler to avoid recreation on each render
+  const handleAddToCart = useCallback((e) => {
     e.stopPropagation();
-    console.log('Thêm giỏ:', title);
-  };
+    
+    // Prepare product data
+    const productData = {
+      id,
+      name: title,
+      price: parseInt(salePrice.replace(/[^\d]/g, '')),
+      originalPrice: originalPrice ? parseInt(originalPrice.replace(/[^\d]/g, '')) : null,
+      image,
+      brand,
+      sku: `SKU${id}`,
+    };
+    
+    // Add to cart using the mutation pattern from useCart
+    addToCart(productData, (result) => {
+      // Show success notification based on the action (add or update)
+      if (result.action === 'add') {
+        toast.success(`Đã thêm ${title} vào giỏ hàng!`);
+      } else {
+        toast.success(`Đã cập nhật số lượng ${title} trong giỏ hàng!`);
+      }
+      
+      // Set state outside of render
+      setIsAddedToCart(true);
+      setShowCheckoutOptions(true);
+    });
+  }, [id, title, salePrice, originalPrice, image, brand, addToCart]);
 
   const calculateDiscountPercentage = () => {
     try {
@@ -82,6 +124,49 @@ const ProductCard = ({
   const formattedOriginalPrice = originalPrice
     ? formatPrice(originalPrice)
     : '0₫';
+
+  // Handle checkout directly from the toast notification
+  const handleDirectCheckout = useCallback((e) => {
+    e.stopPropagation();
+    // Get current cart from localStorage
+    const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // If there's only one item, go directly to order
+    if (cartItems.length === 1) {
+      const formattedProduct = {
+        id: cartItems[0].id,
+        title: cartItems[0].name,
+        brand: cartItems[0].brand,
+        image: cartItems[0].image,
+        originalPrice: cartItems[0].originalPrice ? formatPrice(cartItems[0].originalPrice) : formatPrice(0),
+        salePrice: formatPrice(cartItems[0].price),
+        quantity: cartItems[0].quantity,
+      };
+      
+      navigate('/order', {
+        state: {
+          product: formattedProduct,
+        },
+      });
+      
+      toast.success('Đang tiến hành đặt hàng...', { 
+        icon: '🛒',
+        duration: 2000
+      });
+    } else {
+      // If there are multiple items, go to shopping cart
+      navigate('/shopping-cart');
+    }
+    
+    // Hide checkout options
+    setShowCheckoutOptions(false);
+  }, [navigate]);
+
+  // Handle continue shopping
+  const handleContinueShopping = useCallback((e) => {
+    e.stopPropagation();
+    setShowCheckoutOptions(false);
+  }, []);
 
   return (
     <div
@@ -133,6 +218,25 @@ const ProductCard = ({
         >
           <FiShoppingCart className='inline mr-2 w-3 h-3' /> Thêm vào giỏ hàng
         </button>
+        
+        {showCheckoutOptions && (
+          <div className="absolute bottom-0 left-0 right-0 bg-white p-3 rounded-b-2xl shadow-lg z-10 border-t border-gray-100 transition-all duration-300">
+            <div className="flex flex-col gap-2">
+              <button 
+                onClick={handleDirectCheckout}
+                className="w-full py-2 rounded-xl bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition duration-300"
+              >
+                <FiZap className="inline mr-2 w-3 h-3" /> Thanh toán ngay
+              </button>
+              <button 
+                onClick={handleContinueShopping}
+                className="w-full py-2 rounded-xl bg-gray-200 text-gray-800 text-xs font-medium hover:bg-gray-300 transition duration-300"
+              >
+                Tiếp tục mua sắm
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
