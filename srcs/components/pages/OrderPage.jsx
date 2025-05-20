@@ -289,6 +289,10 @@ const OrderPage = () => {
                 <PaymentMethods 
                   paymentMethod={paymentMethod}
                   setPaymentMethod={setPaymentMethod}
+                  orderInfo={{
+                    product: product,
+                    discount: appliedDiscount
+                  }}
                 />
                 <div className="mt-8">
                   <button

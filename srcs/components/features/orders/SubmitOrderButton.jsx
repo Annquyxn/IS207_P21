@@ -34,7 +34,6 @@ function SubmitOrderButton({
     setIsSubmitting(true);
     
     try {
-      // Gọi API để lưu đơn hàng vào Supabase
       const data = await insertOrder({
         addressData,
         paymentMethod,
@@ -42,18 +41,15 @@ function SubmitOrderButton({
         discount
       });
       
-      // Đặt đơn hàng thành công
       setIsSuccess(true);
       
-      // Gọi callback thành công nếu có
       if (onSuccess) {
         setTimeout(() => {
           onSuccess(data);
-        }, 1000); // Cho người dùng thấy trạng thái thành công trong 1 giây
+        }, 1000); 
       }
     } catch (error) {
       console.error('Lỗi khi đặt đơn hàng:', error);
-      // Gọi callback lỗi nếu có
       onError?.(error.message || 'Đã xảy ra lỗi khi đặt hàng');
     } finally {
       setIsSubmitting(false);

@@ -20,5 +20,5 @@ uvicorn[standard]
 beautifulsoup4
 openpyxl
 langchain_chroma
-
+qrcode[pil]
 
