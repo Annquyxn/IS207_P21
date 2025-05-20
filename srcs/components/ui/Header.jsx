@@ -10,12 +10,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LaptopCategories from '../features/categories/LaptopCategories';
 import NotificationList from '../features/notify/NotificationList';
+import { useNotifications } from '../features/notify/NotificationContext';
 
 function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef(null);
   const navigate = useNavigate();
+  const { newCount: notificationCount, addToCart } = useNotifications();
 
   const handleCloseCategories = () => setShowCategories(false);
 
@@ -33,7 +35,12 @@ function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Hàm chuyển sang trang đăng nhập
+  const handleAddToCart = () => {
+    addToCart({ name: 'Sản phẩm' });
+
+    alert('Đã thêm sản phẩm vào giỏ hàng!');
+  };
+
   const handleLoginClick = () => {
     navigate('/home', { state: { modal: 'login' } });
   };
@@ -51,7 +58,7 @@ function Header() {
             onClick={() => navigate('/home')}
           >
             <img
-              src='/public/logo-1.png' // ← đường dẫn tới logo, bà có thể đổi
+              src='/public/logo-1.png'
               alt='GearVN Logo'
               className='w-10 h-10 object-contain'
             />
@@ -60,7 +67,6 @@ function Header() {
             </span>
           </div>
 
-          {/* Danh mục */}
           <div
             className='group relative'
             onMouseEnter={() => setShowCategories(true)}
@@ -86,7 +92,6 @@ function Header() {
             )}
           </div>
 
-          {/* Search */}
           <div className='relative flex-grow max-w-xl'>
             <div className='bg-white flex items-center rounded-full px-6 py-2 shadow-sm'>
               <input
@@ -99,36 +104,41 @@ function Header() {
           </div>
         </div>
 
-        {/* Right Section */}
         <div className='flex items-center gap-4'>
-          {/* Địa chỉ */}
           <div className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'>
             <IoLocationOutline className='text-xl' />
             <span className='text-base font-medium'>Địa chỉ</span>
           </div>
 
-          {/* Thông báo */}
           <div className='relative' ref={notificationRef}>
             <div
               className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
               onClick={() => setShowNotifications(!showNotifications)}
             >
-              <IoNotificationsOutline className='text-xl' />
+              <div className="relative">
+                <IoNotificationsOutline className='text-xl' />
+                {notificationCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-red-700 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {notificationCount}
+                  </span>
+                )}
+              </div>
               <span className='text-base font-medium'>Thông báo</span>
             </div>
             {showNotifications && <NotificationList />}
           </div>
 
-          {/* Giỏ hàng */}
           <div
             className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
-            onClick={handleShoppingClick}
+            onClick={() => {
+              handleAddToCart();
+              setTimeout(() => handleShoppingClick(), 500);
+            }}
           >
             <IoCartOutline className='text-xl' />
             <span className='text-base font-medium'>Giỏ hàng</span>
           </div>
 
-          {/* Đăng nhập */}
           <div
             className='flex items-center gap-2 bg-orange-500 px-4 py-2 rounded-full cursor-pointer hover:bg-orange-600 hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out'
             onClick={handleLoginClick}

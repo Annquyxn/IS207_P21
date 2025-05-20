@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '@/components/features/notify/NotificationContext';
 
 const ProductInfo = ({ product }) => {
   const navigate = useNavigate();
+  const { addToCart } = useNotifications();
 
   const handleBuyNow = () => {
     navigate('/order', {
@@ -18,6 +20,13 @@ const ProductInfo = ({ product }) => {
         }
       }
     });
+  };
+
+  const handleAddToCart = () => {
+    // Gọi hàm thông báo khi thêm sản phẩm vào giỏ hàng
+    addToCart({ name: product.title });
+    
+    // Logic thêm vào giỏ hàng có thể được thêm ở đây
   };
 
   // Tính phần trăm giảm giá
@@ -104,7 +113,10 @@ const ProductInfo = ({ product }) => {
         >
           Mua ngay
         </button>
-        <button className='bg-gray-100 text-gray-700 px-6 py-2 rounded-xl font-medium hover:bg-gray-200'>
+        <button 
+          onClick={handleAddToCart}
+          className='bg-gray-100 text-gray-700 px-6 py-2 rounded-xl font-medium hover:bg-gray-200'
+        >
           Thêm vào giỏ
         </button>
       </div>
