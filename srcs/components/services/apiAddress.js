@@ -62,18 +62,66 @@ export async function registerAddressForm({ addressData }) {
       fullAddress: fullAddress
     };
 
-    // Save to addressForm table
-    const { data, error } = await supabase
-      .from("addressForm")
-      .insert([formattedAddress])
-      .select();
+    // Try to save to Supabase but catch potential errors with missing table
+    try {
+      // Check if addressForm table exists by querying it
+      const { error: tableCheckError } = await supabase
+        .from("addressForm")
+        .select("id")
+        .limit(1);
 
-    if (error) {
-      console.error("Lỗi khi thêm địa chỉ:", error.message);
-      throw error;
+      if (tableCheckError) {
+        // If table doesn't exist, save to localStorage instead
+        console.warn("Không thể sử dụng Supabase (bảng không tồn tại), lưu vào localStorage:", tableCheckError.message);
+        
+        // Get existing saved addresses
+        const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
+        
+        // Add new address with unique local ID
+        const newAddress = {
+          ...formattedAddress,
+          id: `local_${Date.now()}`,
+          created_at: new Date().toISOString()
+        };
+        
+        savedAddresses.push(newAddress);
+        localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+        
+        return [newAddress]; // Return in same format as Supabase would
+      } else {
+        // If table exists, save to Supabase
+        const { data, error } = await supabase
+          .from("addressForm")
+          .insert([formattedAddress])
+          .select();
+
+        if (error) {
+          throw error;
+        }
+
+        return data;
+      }
+    } catch (dbError) {
+      console.error("Lỗi khi thêm địa chỉ vào cơ sở dữ liệu:", dbError.message);
+      
+      // Fallback to localStorage if any DB error occurs
+      try {
+        const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
+        const newAddress = {
+          ...formattedAddress,
+          id: `local_${Date.now()}`,
+          created_at: new Date().toISOString()
+        };
+        
+        savedAddresses.push(newAddress);
+        localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+        
+        return [newAddress]; 
+      } catch (localStorageError) {
+        console.error("Lỗi khi lưu vào localStorage:", localStorageError);
+        throw new Error("Không thể lưu địa chỉ vào bất kỳ hệ thống nào");
+      }
     }
-
-    return data;
   } catch (error) {
     console.error("Lỗi khi xử lý địa chỉ:", error.message);
     throw error;
