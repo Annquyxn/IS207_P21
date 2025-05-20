@@ -1,15 +1,24 @@
+import React from "react";
 import IconSvg from "@/components/features/notify/IconSvg";
 
-export default function NotificationItem({ title, description, icon, color }) {
+function NotificationItem({ title, description, icon, color, time, isNew, className = "" }) {
   return (
-    <article className="flex gap-4 mb-6 last:mb-0 hover:scale-[1.01] transition-transform">
-      <IconSvg className={color}>{icon}</IconSvg>
-      <div className="flex-1">
-        <h2 className="text-base font-semibold font-sans mb-1 text-gray-800">
-          {title}
-        </h2>
-        <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+    <div className={`p-4 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${className}`}>
+      <div className="flex items-start gap-3">
+        <div className={`${color} mt-1`}>{icon}</div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-gray-800">{title}</h3>
+            {isNew && (
+              <span className="bg-blue-100 text-blue-700 text-xs px-1.5 py-0.5 rounded-full">Mới</span>
+            )}
+          </div>
+          <p className="text-sm text-gray-600 mt-1">{description}</p>
+          {time && <p className="text-xs text-gray-500 mt-1">{time}</p>}
+        </div>
       </div>
-    </article>
+    </div>
   );
 }
+
+export default NotificationItem;

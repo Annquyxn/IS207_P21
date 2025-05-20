@@ -4,15 +4,27 @@ import SuccessIcon from '@/components/features/icons/SuccessIcon';
 import VoucherBadge from '../ui/VoucherBadge';
 import { FaUser, FaPhone, FaMapMarkerAlt, FaBox, FaTruck, FaTag, FaCheckCircle, FaArrowLeft, 
          FaCreditCard, FaMoneyBillWave, FaWallet, FaLock, FaCcVisa, FaCcMastercard } from 'react-icons/fa';
+import { useNotifications } from '@/components/features/notify/NotificationContext';
 
 function CompleteOrderPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [activePaymentDetails, setActivePaymentDetails] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { orderSuccess } = useNotifications();
   
   // Lấy thông tin đơn hàng từ location state
   const { orderInfo } = location.state || {};
+  
+  // Tạo hoặc lấy mã đơn hàng từ sessionStorage
+  // Sử dụng sessionKey để đảm bảo đơn hàng mới sẽ có mã khác khi quay lại trang đặt hàng
+  const sessionKey = 'currentOrderNumber';
+  let orderNumber = sessionStorage.getItem(sessionKey);
+  
+  if (!orderNumber && orderInfo) {
+    orderNumber = orderInfo.id || "DH" + Math.floor(Math.random() * 1000000);
+    sessionStorage.setItem(sessionKey, orderNumber);
+  }
   
   // Kiểm tra nếu không có thông tin đơn hàng, chuyển hướng về trang chủ
   useEffect(() => {
@@ -23,7 +35,7 @@ function CompleteOrderPage() {
   
   // Xây dựng đối tượng orderDetails từ orderInfo
   const orderDetails = orderInfo ? {
-    orderNumber: orderInfo.id || "DH" + Math.floor(Math.random() * 1000000),
+    orderNumber: orderNumber || "Đang xử lý",
     customerName: orderInfo.addressData?.fullName || 'Khách hàng',
     phone: orderInfo.addressData?.phone || '0000000000',
     address: orderInfo.addressData?.fullAddress || 
@@ -125,6 +137,11 @@ function CompleteOrderPage() {
     const paymentTimer = setTimeout(() => {
       setActivePaymentDetails(true);
     }, 1000);
+    
+    // Thêm thông báo đặt hàng thành công nếu có thông tin đơn hàng và mã đơn hàng
+    if (orderDetails && orderNumber) {
+      orderSuccess(orderNumber);
+    }
     
     return () => {
       clearTimeout(timer);
