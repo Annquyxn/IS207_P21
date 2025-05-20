@@ -62,14 +62,39 @@ const OrderPage = () => {
 
   // Format price to VND
   const formatPrice = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₫";
+    if (!price && price !== 0) return "0 ₫";
+    
+    // If price is already a string in the right format, return it
+    if (typeof price === 'string' && price.includes('₫')) {
+      return price;
+    }
+    
+    try {
+      // Convert to string if it's a number
+      const priceStr = typeof price === 'number' ? price.toString() : price;
+      // Remove non-digit characters if it's a string
+      const numericPrice = priceStr.replace ? parseInt(priceStr.replace(/[^\d]/g, '')) : parseInt(priceStr);
+      return numericPrice.toLocaleString('vi-VN') + " ₫";
+    } catch (error) {
+      console.error('Error formatting price:', error, price);
+      return (price || 0) + " ₫";
+    }
   };
 
   // Calculate final price
   const calculateFinalPrice = () => {
-    const originalPrice = parseInt(product?.salePrice?.replace(/[^\d]/g, '') || 0);
-    const discountAmount = appliedDiscount ? appliedDiscount.amount : 0;
-    return originalPrice - discountAmount;
+    try {
+      const originalPrice = product?.salePrice ? 
+        (typeof product.salePrice === 'string' && product.salePrice.replace ? 
+          parseInt(product.salePrice.replace(/[^\d]/g, '')) : 
+          parseInt(product.salePrice) || 0) : 0;
+      
+      const discountAmount = appliedDiscount ? appliedDiscount.amount : 0;
+      return originalPrice - discountAmount;
+    } catch (error) {
+      console.error('Error calculating final price:', error);
+      return 0;
+    }
   };
 
   const stepIcons = {
@@ -367,24 +392,39 @@ const OrderPage = () => {
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-sm font-bold text-red-600">
-                      {formatPrice(parseInt(product.salePrice.replace(/[^\d]/g, '')))}
+                      {product?.salePrice ? formatPrice(product.salePrice) : formatPrice(0)}
                     </span>
-                    <span className="text-xs text-gray-500 line-through">
-                      {formatPrice(parseInt(product.originalPrice.replace(/[^\d]/g, '')))}
-                    </span>
+                    {product?.originalPrice && (
+                      <span className="text-xs text-gray-500 line-through">
+                        {formatPrice(product.originalPrice)}
+                      </span>
+                    )}
                     {/* Hiển thị % giảm giá */}
                     {(() => {
-                      const original = parseInt(product.originalPrice.replace(/[^\d]/g, '')) || 0;
-                      const sale = parseInt(product.salePrice.replace(/[^\d]/g, '')) || 0;
-                      if (original > sale) {
-                        const discountPercent = Math.round(((original - sale) / original) * 100);
-                        return (
-                          <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-medium">
-                            -{discountPercent}%
-                          </span>
-                        );
+                      try {
+                        if (!product?.originalPrice || !product?.salePrice) return null;
+                        
+                        const original = typeof product.originalPrice === 'string' && product.originalPrice.replace ?
+                          parseInt(product.originalPrice.replace(/[^\d]/g, '')) : 
+                          typeof product.originalPrice === 'number' ? product.originalPrice : 0;
+                          
+                        const sale = typeof product.salePrice === 'string' && product.salePrice.replace ?
+                          parseInt(product.salePrice.replace(/[^\d]/g, '')) : 
+                          typeof product.salePrice === 'number' ? product.salePrice : 0;
+                          
+                        if (original > sale) {
+                          const discountPercent = Math.round(((original - sale) / original) * 100);
+                          return (
+                            <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-medium">
+                              -{discountPercent}%
+                            </span>
+                          );
+                        }
+                        return null;
+                      } catch (error) {
+                        console.error('Error calculating discount percentage:', error);
+                        return null;
                       }
-                      return null;
                     })()}
                   </div>
                   <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
@@ -451,7 +491,10 @@ const OrderPage = () => {
 
             {/* Order Summary Component */}
             <OrderSummary 
-              subtotal={parseInt(product.salePrice.replace(/[^\d]/g, ''))}
+              subtotal={product?.salePrice ? 
+                (typeof product.salePrice === 'string' && product.salePrice.replace ? 
+                  parseInt(product.salePrice.replace(/[^\d]/g, '')) : 
+                  parseInt(product.salePrice) || 0) : 0}
               shipping={0}
               discount={appliedDiscount?.amount || 0}
               total={calculateFinalPrice()}
