@@ -26,7 +26,8 @@ function CompleteOrderPage() {
     orderNumber: orderInfo.id || "DH" + Math.floor(Math.random() * 1000000),
     customerName: orderInfo.addressData?.fullName || 'Khách hàng',
     phone: orderInfo.addressData?.phone || '0000000000',
-    address: `${orderInfo.addressData?.street || ''}, ${orderInfo.addressData?.ward || ''}, ${orderInfo.addressData?.district || ''}, ${orderInfo.addressData?.city || ''}`,
+    address: orderInfo.addressData?.fullAddress || 
+      `${orderInfo.addressData?.street || ''}, ${orderInfo.addressData?.wardName || orderInfo.addressData?.ward || ''}, ${orderInfo.addressData?.districtName || orderInfo.addressData?.district || ''}, ${orderInfo.addressData?.cityName || orderInfo.addressData?.city || ''}`,
     productPrice: parsePrice(orderInfo.product?.salePrice) * (orderInfo.product?.quantity || 1),
     shippingFee: orderInfo.addressData ? calculateShippingFee(orderInfo.addressData.shippingMethod, parsePrice(orderInfo.product?.salePrice)) : 0,
     discount: orderInfo.discount?.amount || 0,

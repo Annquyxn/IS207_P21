@@ -331,7 +331,10 @@ const OrderPage = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <FiHome className="text-gray-400" />
-                        <p className="text-gray-800">{addressData?.address}</p>
+                        <p className="text-gray-800">
+                          {addressData?.fullAddress || 
+                           `${addressData?.street || ''}, ${addressData?.wardName || addressData?.ward || ''}, ${addressData?.districtName || addressData?.district || ''}, ${addressData?.cityName || addressData?.city || ''}`}
+                        </p>
                       </div>
                     </div>
                   </div>
