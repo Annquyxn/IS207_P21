@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Server Status</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2563eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .status-box {
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status-offline {
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+        }
+        .status-online {
+            background-color: #dcfce7;
+            border: 1px solid #22c55e;
+        }
+        .instructions {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .instructions ol {
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .port-list {
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #2563eb;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Server Status Checker</h1>
+    
+    <div id="status" class="status-box status-offline">
+        <h2>Server Status: <span id="statusText">Checking...</span></h2>
+        <p id="statusMessage">Checking QR server availability...</p>
+    </div>
+
+    <div class="port-list">
+        <h3>Server URLs:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>http://127.0.0.1:8000</td>
+                    <td id="status-127001">Checking... <span class="loading"></span></td>
+                </tr>
+                <tr>
+                    <td>http://localhost:8000</td>
+                    <td id="status-localhost">Checking... <span class="loading"></span></td>
+                </tr>
+                <tr>
+                    <td>http://localhost:8001</td>
+                    <td id="status-localhost8001">Checking... <span class="loading"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="instructions">
+        <h3>Khởi động QR Server:</h3>
+        <ol>
+            <li>Tìm file <strong>run_qr_server.bat</strong> trong thư mục gốc của dự án (IS207_P21)</li>
+            <li>Double-click vào file này để chạy</li>
+            <li>Giữ cửa sổ terminal mở khi sử dụng tính năng thanh toán</li>
+            <li>Nếu cách trên không hoạt động, mở Windows Command Prompt hoặc PowerShell và chạy các lệnh sau:</li>
+        </ol>
+        <pre>cd C:\Users\Admin\Desktop\ok\IS207_P21\python-ChatBot\qrCode
+python -m uvicorn main:app --host 0.0.0.0 --port 8000</pre>
+        
+        <p>Sau khi chạy lệnh, nhấn nút bên dưới để kiểm tra lại trạng thái server:</p>
+        <button onclick="checkServerStatus()">Kiểm tra lại trạng thái</button>
+    </div>
+
+    <script>
+        // Function to check server status
+        async function checkServerStatus() {
+            document.getElementById('statusText').textContent = 'Checking...';
+            document.getElementById('statusMessage').textContent = 'Checking QR server availability...';
+            document.getElementById('status-127001').innerHTML = 'Checking... <span class="loading"></span>';
+            document.getElementById('status-localhost').innerHTML = 'Checking... <span class="loading"></span>';
+            document.getElementById('status-localhost8001').innerHTML = 'Checking... <span class="loading"></span>';
+            
+            const urls = [
+                'http://127.0.0.1:8000/health',
+                'http://localhost:8000/health',
+                'http://localhost:8001/health'
+            ];
+            
+            let anyServerAvailable = false;
+            let availableUrl = null;
+            
+            for (let i = 0; i < urls.length; i++) {
+                const url = urls[i];
+                const elementId = i === 0 ? 'status-127001' : (i === 1 ? 'status-localhost' : 'status-localhost8001');
+                
+                try {
+                    const response = await fetch(url, { 
+                        method: 'GET',
+                        headers: { 'Cache-Control': 'no-cache' },
+                        mode: 'cors',
+                        timeout: 2000
+                    });
+                    
+                    if (response.ok) {
+                        document.getElementById(elementId).innerHTML = '<span style="color: green;">✓ Online</span>';
+                        anyServerAvailable = true;
+                        availableUrl = url.replace('/health', '');
+                    } else {
+                        document.getElementById(elementId).innerHTML = '<span style="color: red;">✗ Error</span>';
+                    }
+                } catch (error) {
+                    document.getElementById(elementId).innerHTML = '<span style="color: red;">✗ Offline</span>';
+                }
+            }
+            
+            const statusBox = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            if (anyServerAvailable) {
+                statusBox.className = 'status-box status-online';
+                statusText.textContent = 'ONLINE';
+                statusMessage.innerHTML = `QR Server đang chạy tại <strong>${availableUrl}</strong>! Bạn có thể sử dụng tính năng thanh toán với mã QR.`;
+            } else {
+                statusBox.className = 'status-box status-offline';
+                statusText.textContent = 'OFFLINE';
+                statusMessage.innerHTML = 'QR Server chưa được khởi động. Vui lòng làm theo hướng dẫn bên dưới.';
+            }
+        }
+        
+        // Check status when page loads
+        window.onload = checkServerStatus;
+    </script>
+</body>
+</html> 
