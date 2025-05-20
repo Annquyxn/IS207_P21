@@ -12,272 +12,86 @@ const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₫";
 };
 
-// QR Code Component for payment methods
-const PaymentQRCode = ({ orderDetails, visible }) => {
-  const [qrData, setQrData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [apiUrl, setApiUrl] = useState('http://127.0.0.1:8000'); // Sử dụng 127.0.0.1 thay vì localhost
-  const [paymentStatus, setPaymentStatus] = useState('pending'); // pending, processing, completed, failed
-  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+// Payment Confirmation Component that shows completion for digital payments
+const PaymentConfirmation = ({ orderDetails, visible }) => {
   const { orderSuccess } = useNotifications();
+  const [notificationSent, setNotificationSent] = useState(false);
 
   useEffect(() => {
-    // Debug logs
-    console.log("PaymentQRCode component:", { 
-      visible, 
-      paymentIcon: orderDetails?.paymentIcon,
-      orderNumber: orderDetails?.orderNumber,
-      total: orderDetails?.total
-    });
-    
-    if (!visible || !orderDetails || !orderDetails.paymentIcon) {
-      return;
-    }
-    
-    // Remove the check for cod since we want to handle that separately
-    if (orderDetails.paymentIcon === 'cod') {
-      console.log("COD payment detected, not showing QR code");
-      return;
-    }
-
-    const fetchQrCode = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        // Determine which API endpoint to use based on payment method
-        const endpoint = orderDetails.paymentIcon === 'bank' 
-          ? '/mbqr' 
-          : orderDetails.paymentIcon === 'wallet' 
-            ? '/momoqr'
-            : null;
-
-        if (!endpoint) {
-          throw new Error('Unsupported payment method');
-        }
-
-        console.log("Fetching QR code from endpoint:", `${apiUrl}${endpoint}`);
-        
-        const response = await fetch(`${apiUrl}${endpoint}?amount=${orderDetails.total}&order_id=${orderDetails.orderNumber}`);
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Failed to generate QR code. Status: ${response.status}, Details: ${errorText}`);
-        }
-        const data = await response.json();
-        console.log("QR code data received:", data);
-        setQrData(data);
-        setPaymentStatus('pending'); // Đặt trạng thái chờ thanh toán
-      } catch (err) {
-        console.error('Error fetching QR code:', err);
-        setError(err.message);
-        setPaymentStatus('failed');
-        
-        // Try alternative URLs if the default fails
-        if (apiUrl === 'http://127.0.0.1:8000') {
-          console.log("Trying alternative API URL");
-          setApiUrl('http://localhost:8000');
-          // We'll let the effect run again with the new URL
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchQrCode();
-  }, [visible, orderDetails, apiUrl]);
-  
-  // Mock payment completion - trong thực tế sẽ cần một API webhook để xác nhận thanh toán
-  const simulatePaymentCompletion = () => {
-    setPaymentStatus('processing');
-    // Giả lập xử lý thanh toán mất 2 giây
-    setTimeout(() => {
-      setPaymentStatus('completed');
-      setShowPaymentSuccess(true);
-      // Thông báo thanh toán thành công
+    // Only send notification once
+    if (visible && orderDetails && !notificationSent) {
+      // Send a success notification
       orderSuccess(`Thanh toán #${orderDetails.orderNumber} thành công!`);
-      // Sau 3 giây sẽ tự động chuyển đến trang hoàn thành (trong thực tế sẽ là redirect)
-      setTimeout(() => {
-        console.log("Payment completed, would redirect to confirmation page");
-        // Trong thực tế: window.location.href = '/order-confirmation';
-      }, 3000);
-    }, 2000);
-  };
-
-  // Helper function to get payment method name
-  const getPaymentName = () => {
-    if (orderDetails.paymentIcon === 'bank') return 'MBBank';
-    if (orderDetails.paymentIcon === 'wallet') return 'Momo';
-    return '';
-  };
+      setNotificationSent(true);
+    }
+  }, [visible, orderDetails, orderSuccess, notificationSent]);
   
-  if (!visible || orderDetails.paymentIcon === 'cod') {
+  // Only show for digital payment methods
+  if (!visible || !orderDetails || orderDetails.paymentIcon === 'cod') {
     return null;
   }
   
-  // Hiển thị thông báo thanh toán thành công
-  if (showPaymentSuccess) {
-    return (
-      <div className="mt-5 rounded-xl bg-green-50 p-6 shadow-lg border border-green-200 overflow-hidden transition-all duration-500 animate-pulse">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-500 mb-4">
-            <FaCheckCircle size={30} />
-          </div>
-          <h3 className="text-xl font-bold text-green-700 mb-2">
-            Thanh toán thành công!
-          </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Đơn hàng của bạn đã được xác nhận và đang được xử lý.
-          </p>
-          <div className="text-xs text-gray-500 animate-pulse">
-            Đang chuyển hướng đến trang xác nhận đơn hàng...
+  // Get payment method icon based on payment type
+  const getPaymentIcon = () => {
+    switch(orderDetails?.paymentIcon) {
+      case 'bank':
+        return <FaCreditCard className="text-blue-600" />;
+      case 'momo':
+        return <FaWallet className="text-purple-600" />;
+      case 'card':
+        return <FaCcVisa className="text-indigo-600" />;
+      case 'cod':
+      default:
+        return <FaMoneyBillWave className="text-green-600" />;
+    }
+  };
+  
+  return (
+    <div className="mt-8 mb-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 p-8 shadow-lg border border-green-200 overflow-hidden transition-all duration-500">
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-600 mb-6 shadow-inner">
+          <FaCheckCircle size={40} />
+        </div>
+        <h3 className="text-2xl font-bold text-green-700 mb-3">
+          Thanh toán thành công!
+        </h3>
+        <p className="text-sm text-gray-600 mb-5 max-w-md mx-auto">
+          Đơn hàng #{orderDetails.orderNumber} đã được xác nhận và đang được xử lý.
+          Cảm ơn bạn đã sử dụng {orderDetails.paymentMethod}!
+        </p>
+        <div className="mt-6 p-6 bg-white rounded-xl border border-gray-200 shadow-sm max-w-sm mx-auto">
+          <h4 className="font-medium text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center justify-center gap-2">
+            <FaLock className="text-green-600" /> Thông tin thanh toán
+          </h4>
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between items-center border-b border-gray-50 pb-3">
+              <span className="text-gray-600">Phương thức:</span>
+              <span className="font-medium flex items-center gap-1">
+                {getPaymentIcon()} {orderDetails.paymentMethod}
+              </span>
+            </div>
+            <div className="flex justify-between items-center border-b border-gray-50 pb-3">
+              <span className="text-gray-600">Số tiền:</span>
+              <span className="font-bold text-blue-600">{formatPrice(orderDetails.total)}</span>
+            </div>
+            <div className="flex justify-between items-center border-b border-gray-50 pb-3">
+              <span className="text-gray-600">Thời gian:</span>
+              <span className="font-medium">{new Date().toLocaleTimeString('vi-VN')}, {new Date().toLocaleDateString('vi-VN')}</span>
+            </div>
+            <div className="flex justify-between items-center pt-1">
+              <span className="text-gray-600">Trạng thái:</span>
+              <span className="font-medium px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center gap-1">
+                <FaCheckCircle /> Thành công
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-5 rounded-xl bg-white p-5 shadow-lg border border-gray-200 overflow-hidden transition-all duration-300">
-      <div className="text-center mb-4">
-        <h3 className="font-bold text-gray-800 mb-1 flex items-center justify-center gap-2">
-          <FaQrcode className="text-blue-600" /> 
-          Mã QR thanh toán {getPaymentName()}
-        </h3>
-        <p className="text-sm text-gray-500">
-          Quét mã QR để thanh toán {formatPrice(orderDetails.total)} qua {getPaymentName()}
-        </p>
-      </div>
-
-      <div className="flex flex-col items-center">
-        {loading && (
-          <div className="flex flex-col items-center justify-center h-64">
-            <FaSpinner className="animate-spin text-blue-500 text-3xl mb-2" />
-            <p className="text-sm text-gray-500">Đang tạo mã QR...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="flex flex-col items-center justify-center h-64 text-red-500">
-            <FaExclamationCircle className="text-3xl mb-2" />
-            <p className="text-sm">Không thể tạo mã QR. Vui lòng thử lại sau.</p>
-            <p className="text-xs mt-1 max-w-md text-center opacity-75">{error}</p>
-            <div className="flex gap-2 mt-4">
-              <button 
-                onClick={() => window.location.reload()}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
-              >
-                Tải lại trang
-              </button>
-              <button 
-                onClick={() => setApiUrl(apiUrl === 'http://127.0.0.1:8000' ? 'http://localhost:8000' : 'http://127.0.0.1:8000')}
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1"
-              >
-                <FaSpinner className="animate-spin" />
-                Thử lại
-              </button>
-            </div>
-            <p className="text-xs mt-4 text-gray-500">
-              Nếu lỗi vẫn tiếp tục, vui lòng liên hệ hỗ trợ qua hotline: 1900 1234
-            </p>
-          </div>
-        )}
-
-        {!loading && !error && qrData && (
-          <div className="flex flex-col items-center">
-            <div className="bg-white p-4 rounded-lg border-2 border-blue-200 mb-4">
-              <img 
-                src={`data:image/png;base64,${qrData.qr_image_base64}`} 
-                alt="QR Code Payment" 
-                className="w-64 h-64 object-contain" 
-              />
-            </div>
-            
-            <div className="w-full">
-              <div className="flex justify-between items-center text-sm mb-2">
-                <span className="text-gray-600">Số tiền:</span>
-                <span className="font-bold text-blue-600">{formatPrice(qrData.amount)}</span>
-              </div>
-              <div className="flex justify-between items-center text-sm mb-2">
-                <span className="text-gray-600">Nội dung:</span>
-                <span className="font-medium">{qrData.note}</span>
-              </div>
-              
-              {orderDetails.paymentIcon === 'bank' && (
-                <div className="flex justify-between items-center text-sm mb-4">
-                  <span className="text-gray-600">Ngân hàng:</span>
-                  <span className="font-medium">MBBank</span>
-                </div>
-              )}
-
-              {/* Trạng thái thanh toán */}
-              <div className="flex items-center justify-center mb-4">
-                {paymentStatus === 'pending' && (
-                  <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">
-                    Đang chờ thanh toán...
-                  </span>
-                )}
-                {paymentStatus === 'processing' && (
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                    <FaSpinner className="animate-spin" /> Đang xử lý...
-                  </span>
-                )}
-                {paymentStatus === 'completed' && (
-                  <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
-                    Đã thanh toán
-                  </span>
-                )}
-                {paymentStatus === 'failed' && (
-                  <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-medium">
-                    Thanh toán thất bại
-                  </span>
-                )}
-              </div>
-              
-              <button 
-                onClick={() => {
-                  // Download QR code as image
-                  const link = document.createElement('a');
-                  link.href = `data:image/png;base64,${qrData.qr_image_base64}`;
-                  link.download = `payment-qr-${orderDetails.orderNumber}.png`;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors mt-2"
-              >
-                <FaDownload /> Tải mã QR
-              </button>
-              
-              {orderDetails.paymentIcon === 'wallet' && qrData.momo_uri && (
-                <a 
-                  href={qrData.momo_uri}
-                  className="w-full flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-colors mt-3"
-                >
-                  <FaWallet /> Mở ứng dụng Momo
-                </a>
-              )}
-              
-              {orderDetails.paymentIcon === 'bank' && qrData.mb_link && (
-                <a 
-                  href={qrData.mb_link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-colors mt-3"
-                >
-                  <FaCreditCard /> Mở MBBank
-                </a>
-              )}
-              
-              {/* Nút mô phỏng thanh toán thành công - trong thực tế thì không cần */}
-              <button
-                onClick={simulatePaymentCompletion}
-                className="w-full flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-lg transition-colors mt-3"
-              >
-                <FaCheckCircle /> Xác nhận đã thanh toán
-              </button>
-            </div>
-          </div>
-        )}
+        
+        {/* Thông tin bảo mật */}
+        <div className="mt-5 text-xs text-gray-500 flex items-center justify-center gap-2">
+          <FaLock className="text-gray-400" />
+          <span>Giao dịch của bạn được xử lý an toàn và bảo mật</span>
+        </div>
       </div>
     </div>
   );
@@ -286,7 +100,7 @@ const PaymentQRCode = ({ orderDetails, visible }) => {
 function CompleteOrderPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [activePaymentDetails, setActivePaymentDetails] = useState(false);
-  const [showQRCode, setShowQRCode] = useState(false);
+  const [orderNotificationSent, setOrderNotificationSent] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { orderSuccess } = useNotifications();
@@ -366,7 +180,8 @@ function CompleteOrderPage() {
   function getPaymentMethodName(paymentMethod) {
     switch(paymentMethod) {
       case 'bank': return 'Chuyển khoản ngân hàng';
-      case 'wallet': return 'Thanh toán qua ví điện tử';
+      case 'momo': return 'Thanh toán qua ví điện tử';
+      case 'card': return 'Thanh toán bằng thẻ ngân hàng';
       case 'cod':
       default: return 'Thanh toán khi nhận hàng';
     }
@@ -377,8 +192,10 @@ function CompleteOrderPage() {
     switch(orderDetails?.paymentIcon) {
       case 'bank':
         return <FaCreditCard className="text-blue-600" />;
-      case 'wallet':
+      case 'momo':
         return <FaWallet className="text-purple-600" />;
+      case 'card':
+        return <FaCcVisa className="text-indigo-600" />;
       case 'cod':
       default:
         return <FaMoneyBillWave className="text-green-600" />;
@@ -395,12 +212,19 @@ function CompleteOrderPage() {
           border: 'border-blue-300',
           icon: 'text-blue-600'
         };
-      case 'wallet':
+      case 'momo':
         return {
           bg: 'bg-purple-100',
           text: 'text-purple-800',
           border: 'border-purple-300',
           icon: 'text-purple-600'
+        };
+      case 'card':
+        return {
+          bg: 'bg-indigo-100',
+          text: 'text-indigo-800',
+          border: 'border-indigo-300',
+          icon: 'text-indigo-600'
         };
       case 'cod':
       default:
@@ -420,31 +244,27 @@ function CompleteOrderPage() {
     // Animate payment details after a delay
     const paymentTimer = setTimeout(() => {
       setActivePaymentDetails(true);
-      
-      // Show QR code for bank and wallet payments
-      if (orderDetails) {
-        console.log("Setting QR code visibility based on payment method:", orderDetails.paymentIcon);
-        // Always check both possible values to avoid any case issues
-        if (orderDetails.paymentIcon === 'bank' || orderDetails.paymentIcon === 'wallet') {
-          setShowQRCode(true);
-          console.log("QR code visibility set to true for payment method:", orderDetails.paymentIcon);
-        }
-      }
     }, 1000);
     
     // Thêm thông báo đặt hàng thành công nếu có thông tin đơn hàng và mã đơn hàng
-    if (orderDetails && orderNumber) {
+    if (orderDetails && orderNumber && !orderNotificationSent) {
       orderSuccess(orderNumber);
+      setOrderNotificationSent(true);
     }
     
     return () => {
       clearTimeout(timer);
       clearTimeout(paymentTimer);
     }
-  }, []);
+  }, [orderDetails, orderNumber, orderNotificationSent, orderSuccess]);
 
   // Get color scheme
   const paymentColors = getPaymentColorScheme();
+
+  // Check if payment is a digital payment (already completed before reaching this page)
+  const isDigitalPayment = orderDetails?.paymentIcon === 'bank' || 
+                          orderDetails?.paymentIcon === 'momo' || 
+                          orderDetails?.paymentIcon === 'card';
 
   // Nếu không có thông tin đơn hàng, hiển thị màn hình loading
   if (!orderDetails) {
@@ -514,19 +334,11 @@ function CompleteOrderPage() {
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.4);
           }
         }
-        @keyframes float {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
-        }
         .payment-method-badge {
-          animation: float 5s ease-in-out infinite;
+          transition: transform 0.3s ease;
+        }
+        .payment-method-badge:hover {
+          transform: translateY(-2px);
         }
         .payment-details {
           animation: fadeSlideIn 0.8s ease-out forwards;
@@ -632,16 +444,7 @@ function CompleteOrderPage() {
             {/* Enhanced Payment Method Badge */}
             <div 
               className={`payment-method-badge relative ${paymentColors.bg} ${paymentColors.text} px-3 py-2 rounded-lg shadow-md border ${paymentColors.border} cursor-pointer`}
-              onClick={() => {
-                setActivePaymentDetails(!activePaymentDetails);
-                setShowQRCode(!showQRCode);
-                // Debug log when clicking on payment method badge
-                console.log("Payment method clicked:", {
-                  paymentMethod: orderDetails.paymentMethod,
-                  paymentIcon: orderDetails.paymentIcon,
-                  showQRCode: !showQRCode
-                });
-              }}
+              onClick={() => setActivePaymentDetails(!activePaymentDetails)}
             >
               <div className="payment-card">
                 <div className="flex items-center gap-2">
@@ -651,12 +454,10 @@ function CompleteOrderPage() {
                   <div>
                     <p className="text-xs font-medium">Phương thức thanh toán</p>
                     <p className="text-sm font-bold">{orderDetails.paymentMethod}</p>
-                    {/* Debug info on payment method */}
-                    <p className="text-xs text-gray-500 mt-1 bg-black bg-opacity-5 px-1 rounded">
-                      Debug: {orderDetails.paymentIcon}
-                    </p>
                   </div>
-                  <div className={`absolute -top-1 -right-1 w-3 h-3 ${paymentColors.bg} rounded-full animate-ping opacity-75`}></div>
+                  {isDigitalPayment && (
+                    <div className={`absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full`}></div>
+                  )}
                 </div>
               </div>
             </div>
@@ -664,56 +465,67 @@ function CompleteOrderPage() {
           
           {/* Payment Details Popup */}
           {activePaymentDetails && (
-            <div className="payment-details mb-6 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200">
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+            <div className="payment-details mb-6 p-6 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 shadow-md">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200">
                 <h3 className="font-bold text-gray-800 flex items-center gap-2">
                   <FaLock className="text-green-600" /> Chi tiết thanh toán an toàn
                 </h3>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                   <FaCcVisa className="text-blue-700 text-xl" />
                   <FaCcMastercard className="text-red-500 text-xl" />
                 </div>
               </div>
               
-              <div className="flex items-center gap-3 mb-2">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full ${paymentColors.bg}`}>
+              <div className="flex items-center gap-4 mb-3">
+                <div className={`flex items-center justify-center w-12 h-12 rounded-full ${paymentColors.bg}`}>
                   {getPaymentIcon()}
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Phương thức</p>
-                  <p className="font-medium">{orderDetails.paymentMethod}</p>
+                  <p className="font-medium text-base">{orderDetails.paymentMethod}</p>
                 </div>
               </div>
               
-              {/* Show specific payment instructions based on method */}
-              {orderDetails.paymentIcon === 'bank' && (
-                <div className="mt-2 p-2 bg-blue-50 text-sm text-blue-800 rounded-lg">
-                  <p className="font-medium">Hướng dẫn thanh toán chuyển khoản:</p>
-                  <p>1. Quét mã QR bên dưới bằng app ngân hàng</p>
-                  <p>2. Kiểm tra thông tin và xác nhận thanh toán</p>
-                  <p>3. Đơn hàng sẽ được xác nhận tự động</p>
+              {/* Show payment confirmation for digital payments */}
+              {isDigitalPayment && (
+                <div className="mt-3 p-3 bg-green-50 text-sm text-green-800 rounded-lg border border-green-100 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <FaCheckCircle className="text-green-600 text-lg" />
+                    <div>
+                      <p className="font-medium">Thanh toán đã hoàn tất</p>
+                      <p className="text-xs mt-1">Giao dịch đã được xác nhận thành công</p>
+                    </div>
+                  </div>
+                  <div className="border-t border-green-100 mt-3 pt-3 flex justify-between items-center">
+                    <span className="text-sm">Số tiền đã thanh toán:</span>
+                    <span className="font-bold text-green-700">{formatPrice(orderDetails.total)}</span>
+                  </div>
                 </div>
               )}
               
-              {orderDetails.paymentIcon === 'wallet' && (
-                <div className="mt-2 p-2 bg-purple-50 text-sm text-purple-800 rounded-lg">
-                  <p className="font-medium">Hướng dẫn thanh toán qua Momo:</p>
-                  <p>1. Quét mã QR bên dưới bằng app MoMo</p>
-                  <p>2. Hoặc nhấn nút "Mở ứng dụng Momo" bên dưới</p>
-                  <p>3. Kiểm tra thông tin và xác nhận thanh toán</p>
+              {/* Show COD instructions */}
+              {orderDetails.paymentIcon === 'cod' && (
+                <div className="mt-3 p-3 bg-amber-50 text-sm text-amber-800 rounded-lg border border-amber-100 shadow-sm">
+                  <p className="font-medium mb-2">Hướng dẫn thanh toán khi nhận hàng:</p>
+                  <ol className="list-decimal pl-5 space-y-1">
+                    <li>Kiểm tra đơn hàng khi nhận</li>
+                    <li>Thanh toán cho nhân viên giao hàng</li>
+                    <li>Số tiền cần thanh toán: <span className="font-bold">{formatPrice(orderDetails.total)}</span></li>
+                  </ol>
                 </div>
               )}
               
-              <div className="text-sm text-gray-600 italic mt-2 text-center">
-                Giao dịch của bạn được mã hóa và bảo mật 100%
+              <div className="text-sm text-gray-600 italic mt-4 text-center flex items-center justify-center gap-2">
+                <FaLock className="text-gray-400" />
+                {isDigitalPayment 
+                  ? "Giao dịch thanh toán của bạn đã được xác nhận và bảo mật" 
+                  : "Vui lòng chuẩn bị đúng số tiền khi nhận hàng"}
               </div>
             </div>
           )}
 
-          {/* QR Code for payment */}
-          {(orderDetails.paymentIcon === 'bank' || orderDetails.paymentIcon === 'wallet') && (
-            <PaymentQRCode orderDetails={orderDetails} visible={showQRCode} />
-          )}
+          {/* Show Payment Confirmation for digital payments */}
+          <PaymentConfirmation orderDetails={orderDetails} visible={isDigitalPayment && activePaymentDetails} />
 
           <div className='space-y-5 mb-8'>
             <div className='flex items-start gap-4'>
@@ -783,37 +595,71 @@ function CompleteOrderPage() {
             <div className='flex justify-between items-center p-4 mt-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100'>
               <div className='font-bold text-gray-800'>Tổng thanh toán</div>
               <div className='text-lg font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent'>
-                {formatPrice(orderDetails.total)}
+                {/* Show 0 for digital payments as they're already paid */}
+                {isDigitalPayment ? formatPrice(0) : formatPrice(orderDetails.total)}
               </div>
             </div>
             
-            {/* Thông tin chuyển khoản/ví điện tử nếu có */}
-            {(orderDetails.paymentIcon === 'bank' || orderDetails.paymentIcon === 'wallet') && (
-              <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-blue-100">
-                <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                  {orderDetails.paymentIcon === 'bank' ? (
-                    <><FaCreditCard className="text-blue-600" /> Thông tin thanh toán MBBank</>
-                  ) : (
-                    <><FaWallet className="text-purple-600" /> Thông tin thanh toán Momo</>
-                  )}
+            {/* Show payment completion note for digital payments */}
+            {isDigitalPayment && (
+              <div className="mt-4 mb-6 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border border-green-200 shadow-sm transform transition hover:shadow-md">
+                <div className="flex items-center gap-3">
+                  <div className="bg-green-100 rounded-full p-2 flex-shrink-0">
+                    <FaCheckCircle className="text-green-600 text-lg" />
+                  </div>
+                  <div>
+                    <p className="text-green-800 font-medium">
+                      Thanh toán đã hoàn tất
+                    </p>
+                    <p className="text-sm text-green-700 opacity-80">
+                      {orderDetails.paymentMethod} • {formatPrice(orderDetails.total)} • {new Date().toLocaleDateString('vi-VN')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Only show COD payment instructions */}
+            {orderDetails.paymentIcon === 'cod' && (
+              <div className="mt-4 mb-6 p-5 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-100 shadow-sm transition-all hover:shadow-md">
+                <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2 pb-2 border-b border-amber-100">
+                  <FaMoneyBillWave className="text-amber-600" /> Thông tin thanh toán khi nhận hàng
                 </h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tài khoản:</span>
-                    <span className="font-medium">0982685374</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 flex items-center gap-2">
+                      <FaUser className="text-amber-500" /> Người nhận:
+                    </span>
+                    <span className="font-medium">{orderDetails.customerName}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Chủ tài khoản:</span>
-                    <span className="font-medium">DANG THIEN AN</span>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 flex items-center gap-2">
+                      <FaPhone className="text-amber-500" /> Số điện thoại:
+                    </span>
+                    <span className="font-medium">{orderDetails.phone}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Số tiền:</span>
-                    <span className="font-bold text-blue-600">{formatPrice(orderDetails.total)}</span>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 flex items-center gap-2">
+                      <FaMoneyBillWave className="text-amber-500" /> Số tiền cần thanh toán:
+                    </span>
+                    <span className="font-bold text-red-600">{formatPrice(orderDetails.total)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Nội dung chuyển khoản:</span>
-                    <span className="font-medium">ThanhToan_{orderDetails.orderNumber}</span>
+                </div>
+                
+                <div className="mt-4 p-3 bg-white rounded-lg border border-amber-200 shadow-inner">
+                  <div className="flex items-center gap-2">
+                    <FaExclamationCircle className="text-amber-500" />
+                    <p className="text-sm text-amber-800 font-medium">
+                      Lưu ý khi nhận hàng:
+                    </p>
                   </div>
+                  <ul className="list-disc pl-8 mt-2 text-sm text-gray-700 space-y-1">
+                    <li>Kiểm tra kỹ sản phẩm trước khi thanh toán</li>
+                    <li>Chuẩn bị sẵn số tiền chính xác</li>
+                    <li>Giữ lại biên lai giao hàng sau khi thanh toán</li>
+                  </ul>
                 </div>
               </div>
             )}

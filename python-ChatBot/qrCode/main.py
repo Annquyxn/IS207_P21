@@ -4,13 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 import qrcode
 import io
 import base64
-from datetime import datetime, timedelta
 from typing import Optional
 import logging
 import os
 import sys
 import traceback
+from datetime import datetime
 
+# Configure logging
 logging.basicConfig(level=logging.INFO, 
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -21,46 +22,18 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Add CORS middleware with more permissive configuration
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:8080",
-    "http://127.0.0.1",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:8080",
-    # Add any other origins that need to access this API
-    "*"  # Allow all origins (remove in production)
-]
-
+# Add CORS middleware - allow all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
-    expose_headers=["Content-Type", "X-Total-Count"],
-    max_age=86400,  # Cache preflight requests for 24 hours
+    allow_methods=["*"], 
+    allow_headers=["*"],
 )
 
-# Global exception handler
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unhandled exception: {exc}")
-    logger.error(traceback.format_exc())
-    return JSONResponse(
-        status_code=500,
-        content={
-            "message": "Internal server error",
-            "error": str(exc),
-            "path": str(request.url),
-            "timestamp": datetime.now().isoformat()
-        }
-    )
+# Pre-generated QR codes to avoid regenerating them each time
+MBBANK_QR = None
+MOMO_QR = None
 
 def generate_qr_code(content):
     """Generate a QR code from content and return base64 encoded image"""
@@ -75,140 +48,117 @@ def generate_qr_code(content):
         logger.error(traceback.format_exc())
         raise RuntimeError(f"Failed to generate QR code: {str(e)}")
 
-@app.get("/mbqr")
-def generate_mb_qr(amount: Optional[int] = Query(100000), 
-                   order_id: Optional[str] = Query(None)):
-    try:
-        logger.info(f"Generating MBBank QR code. Amount: {amount}, Order ID: {order_id}")
+def generate_mbbank_qr():
+    """Generate a fixed MBBank QR code"""
+    global MBBANK_QR
+    if MBBANK_QR is None:
         stk = "0982685374"
         bank = "MBBANK"
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        note = f"ThanhToan_{order_id or timestamp}"
-
+        amount = 1000000
+        note = "ThanhToan_API"
         qr_url = f"https://me.mbbank.com.vn/mbqr/transfer?account={stk}&bank={bank}&amount={amount}&note={note}"
-
-        # Generate QR code
-        img_base64 = generate_qr_code(qr_url)
-
-        response_data = {
-            "qr_image_base64": img_base64,
+        MBBANK_QR = {
+            "qr_image_base64": generate_qr_code(qr_url),
             "mb_link": qr_url,
             "note": note,
             "amount": amount
         }
-        
-        logger.info(f"Successfully generated MBBank QR. Note: {note}")
+    return MBBANK_QR
 
-        return set_cors_headers(response_data)
-    except Exception as e:
-        logger.error(f"Error generating MBBank QR: {e}")
-        logger.error(traceback.format_exc())
-        return set_cors_headers({
-            "error": str(e),
-            "message": "Không thể tạo mã QR MBBank",
-            "note": note if 'note' in locals() else None,
-            "timestamp": datetime.now().isoformat()
-        }, status_code=500)
-
-@app.get("/momoqr")
-def generate_momo_qr(amount: Optional[int] = Query(100000),
-                    order_id: Optional[str] = Query(None)):
-    try:
-        logger.info(f"Generating Momo QR code. Amount: {amount}, Order ID: {order_id}")
+def generate_momo_qr():
+    """Generate a fixed Momo QR code"""
+    global MOMO_QR
+    if MOMO_QR is None:
         phone = "0982685374"
         name = "DANG THIEN AN"
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        note = f"ThanhToan_{order_id or timestamp}"
-
+        amount = 1000000
+        note = "ThanhToan_API"
         momo_uri = f"momo://?action=pay&amount={amount}&receiver={phone}&name={name}&message={note}"
-
-        # Generate QR code
-        img_base64 = generate_qr_code(momo_uri)
-
-        response_data = {
-            "qr_image_base64": img_base64,
+        MOMO_QR = {
+            "qr_image_base64": generate_qr_code(momo_uri),
             "momo_uri": momo_uri,
             "note": note,
             "amount": amount
         }
-        
-        logger.info(f"Successfully generated Momo QR. Note: {note}")
+    return MOMO_QR
 
-        return set_cors_headers(response_data)
+@app.get("/mbqr")
+def get_mb_qr(amount: Optional[int] = Query(None)):
+    """Get MBBank QR code - amount parameter is kept for compatibility but ignored"""
+    try:
+        logger.info(f"Serving MBBank QR code. Requested amount: {amount}")
+        response = JSONResponse(content=generate_mbbank_qr())
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
     except Exception as e:
-        logger.error(f"Error generating Momo QR: {e}")
-        logger.error(traceback.format_exc())
-        return set_cors_headers({
-            "error": str(e),
-            "message": "Không thể tạo mã QR Momo",
-            "note": note if 'note' in locals() else None,
-            "timestamp": datetime.now().isoformat()
-        }, status_code=500)
+        logger.error(f"Error serving MBBank QR: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
 
-# Helper function to ensure CORS headers are set consistently
-def set_cors_headers(content, status_code=200):
-    response = JSONResponse(content=content, status_code=status_code)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Cache-Control"] = "no-cache, max-age=30"
-    return response
-
-@app.get("/")
-def read_root():
-    """Root endpoint returning server status"""
-    logger.info("Root endpoint accessed")
-    return set_cors_headers({
-        "message": "QR Code API is running", 
-        "status": "active", 
-        "version": "1.0",
-        "endpoints": {
-            "mbqr": "/mbqr?amount=1000000&order_id=ORD123456",
-            "momoqr": "/momoqr?amount=1000000&order_id=ORD123456",
-            "health": "/health"
-        },
-        "timestamp": datetime.now().isoformat()
-    })
+@app.get("/momoqr")
+def get_momo_qr(amount: Optional[int] = Query(None)):
+    """Get Momo QR code - amount parameter is kept for compatibility but ignored"""
+    try:
+        logger.info(f"Serving Momo QR code. Requested amount: {amount}")
+        response = JSONResponse(content=generate_momo_qr())
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
+    except Exception as e:
+        logger.error(f"Error serving Momo QR: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
 
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
     try:
-        # Also check if QR code generation works
-        test_qr = generate_qr_code("test")
+        # Make sure QR codes are generated
+        generate_mbbank_qr()
+        generate_momo_qr()
         
-        return set_cors_headers({
+        response = JSONResponse(content={
             "status": "healthy", 
             "timestamp": datetime.now().isoformat(),
-            "python_version": sys.version,
-            "qr_module": "working",
-            "server": "ok"
+            "qr_module": "working"
         })
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
     except Exception as e:
         logger.error(f"Health check failed: {e}")
-        logger.error(traceback.format_exc())
-        return set_cors_headers({
-            "status": "unhealthy",
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }, status_code=500)
+        return JSONResponse(
+            status_code=500,
+            content={"status": "unhealthy", "error": str(e)}
+        )
 
-@app.options("/{path:path}")
-async def options_route(request: Request, path: str):
-    """Handle OPTIONS requests for CORS preflight"""
-    return set_cors_headers({})
+@app.get("/")
+def read_root():
+    """Root endpoint returning server status"""
+    response = JSONResponse(content={
+        "message": "QR Code API is running", 
+        "status": "active", 
+        "endpoints": {
+            "mbqr": "/mbqr",
+            "momoqr": "/momoqr",
+            "health": "/health"
+        }
+    })
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
 
 @app.get("/favicon.ico")
-async def get_favicon():
-    """Endpoint to handle favicon requests from browsers to prevent 405 errors in logs"""
+async def favicon():
+    """Handle favicon requests"""
     return Response(content=b"", media_type="image/x-icon")
 
 if __name__ == "__main__":
     import uvicorn
-    # Allow overriding host and port via environment variables
-    host = os.environ.get("QR_API_HOST", "0.0.0.0")
-    port = int(os.environ.get("QR_API_PORT", "8000"))
+    # Use 0.0.0.0 to allow connections from any IP
+    host = "0.0.0.0"
+    port = 8000
     
     logger.info(f"Starting QR Code API on {host}:{port}")
-    # Use this to run directly with Python
     uvicorn.run("main:app", host=host, port=port, reload=True)
