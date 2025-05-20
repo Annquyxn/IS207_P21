@@ -1,4 +1,4 @@
-import React from 'react';
+import { FiShoppingCart, FiZap } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '@/components/features/notify/NotificationContext';
 
@@ -16,16 +16,16 @@ const ProductInfo = ({ product }) => {
           originalPrice: product.originalPrice,
           salePrice: product.salePrice,
           discount: product.discount,
-          quantity: 1
-        }
-      }
+          quantity: 1,
+        },
+      },
     });
   };
 
   const handleAddToCart = () => {
     // Gọi hàm thông báo khi thêm sản phẩm vào giỏ hàng
     addToCart({ name: product.title });
-    
+
     // Logic thêm vào giỏ hàng có thể được thêm ở đây
   };
 
@@ -33,21 +33,29 @@ const ProductInfo = ({ product }) => {
   const calculateDiscountPercentage = () => {
     try {
       // Xử lý chuỗi giá
-      const original = product.originalPrice ? parseInt(product.originalPrice.replace(/[^\d]/g, '')) : 0;
-      const sale = product.salePrice ? parseInt(product.salePrice.replace(/[^\d]/g, '')) : 0;
-      
+      const original = product.originalPrice
+        ? parseInt(product.originalPrice.replace(/[^\d]/g, ''))
+        : 0;
+      const sale = product.salePrice
+        ? parseInt(product.salePrice.replace(/[^\d]/g, ''))
+        : 0;
+
       // Kiểm tra nếu giá gốc là 0 hoặc nhỏ hơn giá bán
       if (original === 0 || original <= sale) {
-        return product.discount ? parseInt(product.discount.replace(/[^\d%]/g, '')) : 0;
+        return product.discount
+          ? parseInt(product.discount.replace(/[^\d%]/g, ''))
+          : 0;
       }
-      
+
       // Tính phần trăm giảm giá
       const percentage = Math.round(((original - sale) / original) * 100);
       return percentage > 0 ? percentage : 0;
     } catch (error) {
       // Nếu có lỗi, trả về giá trị từ prop discount nếu có
       console.error('Error calculating discount:', error);
-      return product.discount ? parseInt(product.discount.replace(/[^\d%]/g, '')) : 0;
+      return product.discount
+        ? parseInt(product.discount.replace(/[^\d%]/g, ''))
+        : 0;
     }
   };
 
@@ -55,10 +63,14 @@ const ProductInfo = ({ product }) => {
   const formatPrice = (price) => {
     if (!price) return '0₫';
     try {
-      const numericPrice = parseInt(price.replace(/[^\d]/g, ''));
+      const numericPrice =
+        typeof price === 'number'
+          ? price
+          : parseInt(price.toString().replace(/[^\d]/g, ''));
+
       return numericPrice.toLocaleString('vi-VN') + '₫';
     } catch (error) {
-      return price; // Trả về nguyên dạng nếu không thể format
+      return '0₫';
     }
   };
 
@@ -95,7 +107,9 @@ const ProductInfo = ({ product }) => {
         {/* Hiển thị discount badge luôn nếu có */}
         {(discountPercentage > 0 || product.discount) && (
           <span className='bg-red-500 text-white text-sm px-2 py-0.5 rounded-md font-medium'>
-            -{discountPercentage || product.discount?.replace(/[^\d]/g, '') || 0}%
+            -
+            {discountPercentage || product.discount?.replace(/[^\d]/g, '') || 0}
+            %
           </span>
         )}
       </div>
@@ -107,16 +121,18 @@ const ProductInfo = ({ product }) => {
 
       {/* Nút thao tác */}
       <div className='flex gap-3 mb-6'>
-        <button 
+        <button
           onClick={handleBuyNow}
-          className='bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-blue-700'
+          className='bg-red-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-red-700 hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ease-in-out'
         >
+          <FiZap className='inline-block mr-2' />
           Mua ngay
         </button>
-        <button 
+        <button
           onClick={handleAddToCart}
-          className='bg-gray-100 text-gray-700 px-6 py-2 rounded-xl font-medium hover:bg-gray-200'
+          className='bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200 hover:-translate-y-0.5 active:translate-y-0.5 ease-in-out'
         >
+          <FiShoppingCart className='inline-block mr-2' />
           Thêm vào giỏ
         </button>
       </div>
