@@ -17,7 +17,6 @@ function OrderSummary({
   onOrderError,
   showSubmitButton = false
 }) {
-  // Format giá theo định dạng VND - use external formatPrice if provided
   const formatPrice = (price) => {
     if (externalFormatPrice) return externalFormatPrice(price);
     
@@ -29,7 +28,6 @@ function OrderSummary({
     }
   };
 
-  // Tính % giảm giá
   const calculateDiscountPercentage = () => {
     if (!subtotal || subtotal === 0 || !discount || discount === 0) return 0;
     return Math.round((discount / subtotal) * 100);
@@ -37,7 +35,6 @@ function OrderSummary({
 
   const discountPercentage = calculateDiscountPercentage();
   
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -53,14 +50,12 @@ function OrderSummary({
     visible: { opacity: 1, y: 0 }
   };
 
-  // Xử lý khi đặt hàng thành công
   const handleOrderSuccess = (data) => {
     if (onOrderSuccess) {
       onOrderSuccess(data);
     }
   };
 
-  // Xử lý khi đặt hàng thất bại
   const handleOrderError = (error) => {
     if (onOrderError) {
       onOrderError(error);
