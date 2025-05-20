@@ -6,6 +6,11 @@ function PaymentMethods({ selectedMethod, setSelectedMethod }) {
       description: "Bạn chỉ thanh toán khi nhận được hàng",
     },
     {
+      id: "card",
+      name: "Thanh toán bằng thẻ ngân hàng",
+      description: "Thanh toán qua thẻ ATM/Visa/Mastercard",
+    },
+    {
       id: "momo",
       name: "Ví MoMo",
       description: "Thanh toán qua ví MoMo nhanh chóng",
