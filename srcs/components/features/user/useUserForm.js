@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useUser } from './UserContext';
+import { useEffect, useState } from "react";
+import { useUser } from "./UserContext";
 
 export function useUserForm() {
   const { userInfo, setUserInfo } = useUser();
@@ -10,13 +10,13 @@ export function useUserForm() {
   const years = Array.from({ length: currentYear - 1949 }, (_, i) => 1950 + i);
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    gender: '',
-    phone: '',
-    email: '',
-    day: '',
-    month: '',
-    year: '',
+    fullName: "",
+    gender: "",
+    phone: "",
+    email: "",
+    day: "",
+    month: "",
+    year: "",
   });
 
   const isLeapYear = (year) =>
@@ -25,13 +25,13 @@ export function useUserForm() {
   useEffect(() => {
     if (userInfo) {
       setFormData({
-        fullName: userInfo.fullName || '',
-        gender: userInfo.gender || '',
-        phone: userInfo.phone || '',
-        email: userInfo.email || '',
-        day: userInfo.dob?.day || '',
-        month: userInfo.dob?.month || '',
-        year: userInfo.dob?.year || '',
+        fullName: userInfo.fullName || "",
+        gender: userInfo.gender || "",
+        phone: userInfo.phone || "",
+        email: userInfo.email || "",
+        day: userInfo.dob?.day || "",
+        month: userInfo.dob?.month || "",
+        year: userInfo.dob?.year || "",
       });
 
       const m = Number(userInfo.dob?.month);
@@ -96,7 +96,7 @@ export function useUserForm() {
         year: formData.year,
       },
     });
-    navigate('/user');
+    navigate("/user");
   };
 
   return {
