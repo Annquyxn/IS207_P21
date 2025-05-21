@@ -1,45 +1,46 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
-import { AuthProvider } from "./components/features/auth/AuthContext";
-import { UserProvider } from "./components/features/user/UserContext";
-import { NotificationProvider } from "./components/features/notify/NotificationContext";
-import { ProtectedRoute } from "./components/features/auth/ProtectedRoute";
-import LoginForm from "./components/features/auth/LoginForm";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { AuthProvider } from './components/features/auth/AuthContext';
+import { UserProvider } from './components/features/user/UserContext';
+import { NotificationProvider } from './components/features/notify/NotificationContext';
+import { ProtectedRoute } from './components/features/auth/ProtectedRoute';
+import LoginForm from './components/features/auth/LoginForm';
 
 // import các thành phần cần thiết từ framer-motion
-import Layout from "./components/ui/Layout";
-import HomePage from "./components/pages/HomePage";
-import ProductPage from "./components/pages/ProductPage";
-import CheckoutPage from "./components/pages/CheckoutPage";
-import CompleteOrderPage from "./components/pages/CompleteOrderPage";
-import PaymentPage from "./components/pages/PaymentPage";
-import ShippingInfoPage from "./components/pages/ShippingInfoPage";
-import BuildPCPage from "./components/pages/BuildPCPage";
-import OrderPage from "./components/pages/OrderPage";
-import User from "./components/pages/User";
-import UserPage from "./components/features/user/UserPage";
-import UserAddress from "./components/features/user/UserAddress";
-import UserOrders from "./components/features/user/UserOrders";
-import AccountForm from "./components/features/user/FormAccount";
-import ShoppingCartPage from "./components/pages/ShoppingCartPage";
-import ProductDetailPage from "./components/pages/ProductDetailPage";
-import AnimatedPage from "./components/ui/AnimatedPage";
-import AboutGearVN from "./components/features/footer-components/AboutGearVN";
-import JobPage from "./components/features/footer-components/JobPage";
-import CustomerSupportForm from "./components/features/footer-components/CustomerSupportForm";
-import InstallmentPlan from "./components/features/footer-components/InstallmentPlan";
-import PaymentGuide from "./components/features/footer-components/PaymentGuide";
-import PcBuilder from "./components/features/footer-components/PcBuilder";
-import PrivacyPolicy from "./components/features/footer-components/PrivacyPolicy";
-import ShippingPolicy from "./components/features/footer-components/ShippingPolicy";
-import ShoppingGuide from "./components/features/footer-components/ShoppingGuide";
-import ShowroomSystem from "./components/features/footer-components/ShowroomSystem";
-import WarrantyLookup from "./components/features/footer-components/WarrantyLookup";
-import WarrantyPolicy from "./components/features/footer-components/WarrantyPolicy";
-import adminRoute from "./adminRoute";
-import { Toaster } from "react-hot-toast";
-import ResetPasswordForm from "@/components/features/auth/ResetPasswordForm";
-import ForgotPasswordPage from "./components/pages/ForgotPasswordPage";
+import Layout from './components/ui/Layout';
+import HomePage from './components/pages/HomePage';
+import ProductPage from './components/pages/ProductPage';
+import CheckoutPage from './components/pages/CheckoutPage';
+import CompleteOrderPage from './components/pages/CompleteOrderPage';
+import PaymentPage from './components/pages/PaymentPage';
+import ShippingInfoPage from './components/pages/ShippingInfoPage';
+import BuildPCPage from './components/pages/BuildPCPage';
+import OrderPage from './components/pages/OrderPage';
+import User from './components/pages/User';
+import UserPage from './components/features/user/UserPage';
+import UserAddress from './components/features/user/UserAddress';
+import UserOrders from './components/features/user/UserOrders';
+import AccountForm from './components/features/user/FormAccount';
+import ShoppingCartPage from './components/pages/ShoppingCartPage';
+import ProductDetailPage from './components/pages/ProductDetailPage';
+import AnimatedPage from './components/ui/AnimatedPage';
+import AboutGearVN from './components/features/footer-components/AboutGearVN';
+import JobPage from './components/features/footer-components/JobPage';
+import CustomerSupportForm from './components/features/footer-components/CustomerSupportForm';
+import InstallmentPlan from './components/features/footer-components/InstallmentPlan';
+import PaymentGuide from './components/features/footer-components/PaymentGuide';
+import PcBuilder from './components/features/footer-components/PcBuilder';
+import PrivacyPolicy from './components/features/footer-components/PrivacyPolicy';
+import ShippingPolicy from './components/features/footer-components/ShippingPolicy';
+import ShoppingGuide from './components/features/footer-components/ShoppingGuide';
+import ShowroomSystem from './components/features/footer-components/ShowroomSystem';
+import WarrantyLookup from './components/features/footer-components/WarrantyLookup';
+import WarrantyPolicy from './components/features/footer-components/WarrantyPolicy';
+import adminRoute from './adminRoute';
+import { Toaster } from 'react-hot-toast';
+import ResetPasswordForm from '@/components/features/auth/ResetPasswordForm';
+import ForgotPasswordPage from './components/pages/ForgotPasswordPage';
+import ScrollToTop from './utils/ScrollToTop';
 
 function App() {
   return (
@@ -47,16 +48,17 @@ function App() {
       <AuthProvider>
         <UserProvider>
           <NotificationProvider>
-            <main className="flex-1">
-              <AnimatePresence mode="wait">
+            <main className='flex-1'>
+              <AnimatePresence mode='wait'>
+                <ScrollToTop />
                 <Routes>
-                  <Route path="/" element={<Layout />}>
-                    <Route index element={<Navigate replace to="home" />} />
+                  <Route path='/' element={<Layout />}>
+                    <Route index element={<Navigate replace to='home' />} />
                     {adminRoute}
 
                     {/* Public routes */}
                     <Route
-                      path="home"
+                      path='home'
                       element={
                         <AnimatedPage>
                           <HomePage />
@@ -64,7 +66,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="san-pham"
+                      path='san-pham'
                       element={
                         <AnimatedPage>
                           <ProductPage />
@@ -72,7 +74,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="shopping-cart"
+                      path='shopping-cart'
                       element={
                         <AnimatedPage>
                           <ShoppingCartPage />
@@ -80,7 +82,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="/product/:id"
+                      path='/product/:id'
                       element={
                         <AnimatedPage>
                           <ProductDetailPage />
@@ -88,7 +90,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="login"
+                      path='login'
                       element={
                         <AnimatedPage>
                           <LoginForm />
@@ -98,7 +100,7 @@ function App() {
 
                     {/* Protected routes */}
                     <Route
-                      path="user/*"
+                      path='user/*'
                       element={
                         <ProtectedRoute>
                           <User />
@@ -114,7 +116,7 @@ function App() {
                         }
                       />
                       <Route
-                        path="address"
+                        path='address'
                         element={
                           <AnimatedPage>
                             <UserAddress />
@@ -122,7 +124,7 @@ function App() {
                         }
                       />
                       <Route
-                        path="orders"
+                        path='orders'
                         element={
                           <AnimatedPage>
                             <UserOrders />
@@ -130,7 +132,7 @@ function App() {
                         }
                       />
                       <Route
-                        path="update"
+                        path='update'
                         element={
                           <AnimatedPage>
                             <AccountForm />
@@ -140,7 +142,7 @@ function App() {
                     </Route>
 
                     <Route
-                      path="checkout"
+                      path='checkout'
                       element={
                         <ProtectedRoute>
                           <AnimatedPage>
@@ -151,7 +153,7 @@ function App() {
                     />
 
                     <Route
-                      path="complete"
+                      path='complete'
                       element={
                         <ProtectedRoute>
                           <AnimatedPage>
@@ -162,7 +164,7 @@ function App() {
                     />
 
                     <Route
-                      path="payment-page"
+                      path='payment-page'
                       element={
                         <ProtectedRoute>
                           <AnimatedPage>
@@ -173,7 +175,7 @@ function App() {
                     />
 
                     <Route
-                      path="ship-info"
+                      path='ship-info'
                       element={
                         <ProtectedRoute>
                           <AnimatedPage>
@@ -184,7 +186,7 @@ function App() {
                     />
 
                     <Route
-                      path="build-pc"
+                      path='build-pc'
                       element={
                         <ProtectedRoute>
                           <AnimatedPage>
@@ -195,7 +197,7 @@ function App() {
                     />
 
                     <Route
-                      path="order"
+                      path='order'
                       element={
                         <ProtectedRoute>
                           <AnimatedPage>
@@ -208,7 +210,7 @@ function App() {
 
                   {/* Other routes */}
                   <Route
-                    path="about"
+                    path='about'
                     element={
                       <AnimatedPage>
                         <AboutGearVN />
@@ -216,7 +218,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="jobs"
+                    path='jobs'
                     element={
                       <AnimatedPage>
                         <JobPage />
@@ -224,7 +226,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="contact"
+                    path='contact'
                     element={
                       <AnimatedPage>
                         <CustomerSupportForm />
@@ -232,7 +234,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="warranty-policy"
+                    path='warranty-policy'
                     element={
                       <AnimatedPage>
                         <WarrantyPolicy />
@@ -240,7 +242,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="shipping-policy"
+                    path='shipping-policy'
                     element={
                       <AnimatedPage>
                         <ShippingPolicy />
@@ -248,7 +250,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="privacy-policy"
+                    path='privacy-policy'
                     element={
                       <AnimatedPage>
                         <PrivacyPolicy />
@@ -256,7 +258,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="showrooms"
+                    path='showrooms'
                     element={
                       <AnimatedPage>
                         <ShowroomSystem />
@@ -264,7 +266,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="shopping-guide"
+                    path='shopping-guide'
                     element={
                       <AnimatedPage>
                         <ShoppingGuide />
@@ -272,7 +274,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="payment-guide"
+                    path='payment-guide'
                     element={
                       <AnimatedPage>
                         <PaymentGuide />
@@ -280,7 +282,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="installment"
+                    path='installment'
                     element={
                       <AnimatedPage>
                         <InstallmentPlan />
@@ -288,7 +290,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="warranty-lookup"
+                    path='warranty-lookup'
                     element={
                       <AnimatedPage>
                         <WarrantyLookup />
@@ -296,7 +298,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="forgot-password"
+                    path='forgot-password'
                     element={
                       <AnimatedPage>
                         <ForgotPasswordPage />
@@ -304,24 +306,24 @@ function App() {
                     }
                   />
                   <Route
-                    path="/reset-password"
+                    path='/reset-password'
                     element={<ResetPasswordForm />}
                   />
                 </Routes>
               </AnimatePresence>
               <Toaster
-                position="top-center"
+                position='top-center'
                 gutter={12}
-                containerStyle={{ margin: "8px" }}
+                containerStyle={{ margin: '8px' }}
                 toastOptions={{
                   success: { duration: 3000 },
                   error: { duration: 5000 },
                   style: {
-                    fontSize: "16px",
-                    maxWidth: "500px",
-                    padding: "16px 24px",
-                    backgroundColor: "var(--color-grey-0)",
-                    color: "var(--color-grey-700)",
+                    fontSize: '16px',
+                    maxWidth: '500px',
+                    padding: '16px 24px',
+                    backgroundColor: 'var(--color-grey-0)',
+                    color: 'var(--color-grey-700)',
                   },
                 }}
               />

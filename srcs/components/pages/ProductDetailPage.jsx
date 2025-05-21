@@ -5,7 +5,7 @@ import ProductGallery from '@/components/features/detail/ProductGallery';
 import ProductDetails from '@/components/features/detail/ProductDetails';
 import ExpandSection from '@/components/features/detail/ExpandSection';
 import Spinner from '@/components/ui/Spinner';
-import { getProduct } from '../services/apiProduct';
+import { getProductById } from '../services/apiProduct';
 import { convertKeysToCamelCase } from '../../utils/caseConverter';
 
 const ProductDetailPage = () => {
@@ -18,13 +18,12 @@ const ProductDetailPage = () => {
     const getProductData = async () => {
       setLoading(true);
       try {
-        const data = await getProduct();
+        const data = await getProductById(id); // ✅ gọi đúng 1 sản phẩm
         const camelized = convertKeysToCamelCase(data);
-        const foundProduct = camelized.find((p) => String(p.id) === id);
-        setProduct(foundProduct || null);
+        setProduct(camelized);
       } catch (err) {
         console.error('Error fetching product:', err);
-        setError('Failed to load product details.');
+        setError('Không tìm thấy sản phẩm.');
       } finally {
         setLoading(false);
       }
@@ -50,9 +49,6 @@ const ProductDetailPage = () => {
       </main>
     );
   }
-
-  if (!product)
-    return <p className='text-center py-10'>Không tìm thấy sản phẩm</p>;
 
   return (
     <main className='bg-white w-full max-w-[1200px] mx-auto px-4 py-6'>

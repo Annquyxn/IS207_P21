@@ -65,3 +65,18 @@ export const getFeaturedProducts = async (category) => {
 
   return data;
 };
+
+export async function getProductById(id) {
+  const { data, error } = await supabase
+    .from('product')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Lỗi khi lấy chi tiết sản phẩm:', error.message);
+    throw new Error('Không tìm thấy sản phẩm');
+  }
+
+  return data;
+}

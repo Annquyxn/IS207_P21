@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -93,4 +93,4 @@ if (($httpCode === 200 || $httpCode === 201) && isset($responseData['user']) && 
     "details" => $responseData,
     "curl_error" => $error
   ]);
-}
+} -->
