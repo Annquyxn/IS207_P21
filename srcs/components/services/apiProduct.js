@@ -53,10 +53,7 @@ export const getFeaturedProducts = async (category) => {
   let query = supabase.from('product').select('*');
 
   if (category) {
-    query = query
-      .eq('category', category)
-      .order('rating', { ascending: false })
-      .limit(10);
+    query = query.eq('category', category);
   }
 
   const { data, error } = await query;
