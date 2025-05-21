@@ -117,3 +117,47 @@ async def direct_query(query: str = Form(...), model: str = Form("deepseek")):
     except Exception as e:
         logger.error(f"Error in direct query: {str(e)}")
         return {"response": [{"message": f"Error: {str(e)}"}]}
+
+@router.get("/debug")
+async def debug_search(query: str = Query(None)):
+    """Debug endpoint to test search functionality"""
+    if not query:
+        return {
+            "status": "error",
+            "message": "Missing query parameter",
+            "example": "/debug?query=laptop gaming dưới 20 triệu"
+        }
+    
+    logger.info(f"Debug search with query: {query}")
+    
+    # Extract search parameters
+    keyword = extract_keyword(query)
+    price_limit = extract_price_limit(query)
+    
+    logger.info(f"Extracted keyword: '{keyword}', price_limit: {price_limit}")
+    
+    try:
+        response = query_sqlite_db(
+            db_path=DB_PATH,
+            keyword=keyword,
+            price_limit=price_limit
+        )
+        
+        # Add debug info to response
+        return {
+            "status": "success",
+            "query": query,
+            "parsed": {
+                "keyword": keyword,
+                "price_limit": price_limit,
+                "price_formatted": f"{price_limit:,}đ" if price_limit else "None"
+            },
+            "result_count": len(response),
+            "results": response
+        }
+    except Exception as e:
+        logger.error(f"Error in debug search: {str(e)}")
+        return {
+            "status": "error",
+            "message": str(e)
+        }
