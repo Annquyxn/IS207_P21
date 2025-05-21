@@ -49,7 +49,7 @@ function FormAccount() {
     // Cập nhật lên Supabase
     const { error } = await supabase.auth.updateUser({
       data: {
-        fullName: form.fullName,
+        full_name: form.fullName,
         gender: form.gender,
         phone: form.phone,
         dob: form.dob,
