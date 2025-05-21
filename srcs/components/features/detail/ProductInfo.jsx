@@ -1,10 +1,13 @@
 import { FiShoppingCart, FiZap } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '@/components/features/notify/NotificationContext';
+import { useCart } from '@/utils/CartContext';
+import toast from 'react-hot-toast';
 
 const ProductInfo = ({ product }) => {
   const navigate = useNavigate();
   const { addToCart } = useNotifications();
+  const { addToCart: addToCartReal } = useCart();
 
   const handleBuyNow = () => {
     navigate('/order', {
@@ -23,9 +26,18 @@ const ProductInfo = ({ product }) => {
   };
 
   const handleAddToCart = () => {
-    // Gọi hàm thông báo khi thêm sản phẩm vào giỏ hàng
-    addToCart({ name: product.title });
+    const productToAdd = {
+      id: product.id,
+      name: product.title,
+      image: product.image,
+      price: product.salePrice,
+      originalPrice: product.originalPrice,
+      quantity: 1,
+    };
 
+    addToCartReal(productToAdd);
+    addToCart({ name: product.title });
+    toast.success('🛒 Đã thêm vào giỏ hàng');
     // Logic thêm vào giỏ hàng có thể được thêm ở đây
   };
 

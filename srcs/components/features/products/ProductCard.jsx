@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart, FiZap, FiStar } from 'react-icons/fi';
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
-import { useCart } from '@/components/hooks/useCart';
+import { useCart } from '@/utils/CartContext';
 
 const ProductCard = ({
   id,
@@ -84,7 +84,7 @@ const ProductCard = ({
 
         // Set state outside of render
         setIsAddedToCart(true);
-        setShowCheckoutOptions(true);
+        // setShowCheckoutOptions(true);
       });
     },
     [id, title, salePrice, originalPrice, image, brand, addToCart]
@@ -181,7 +181,7 @@ const ProductCard = ({
   return (
     <div
       onClick={handleNavigate}
-      className='bg-white p-4 rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 cursor-pointer shadow hover:shadow-lg'
+      className='relative bg-white p-4 rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 cursor-pointer shadow hover:shadow-lg'
     >
       <div className='relative'>
         <img
