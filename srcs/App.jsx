@@ -6,7 +6,6 @@ import { NotificationProvider } from "./components/features/notify/NotificationC
 import { ProtectedRoute } from "./components/features/auth/ProtectedRoute";
 import LoginForm from "./components/features/auth/LoginForm";
 
-// import các thành phần cần thiết từ framer-motion
 import Layout from "./components/ui/Layout";
 import HomePage from "./components/pages/HomePage";
 import ProductPage from "./components/pages/ProductPage";
