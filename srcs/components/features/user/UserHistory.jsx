@@ -2,20 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/components/services/supabase";
 import Spinner from "@/components/ui/Spinner";
 import { formatCurrency } from "@/utils/format";
-import { useState } from "react";
 
-const STATUS_LABELS = {
-  all: "Tất cả",
-  pending: "Chờ xác nhận",
-  processing: "Đang xử lý",
-  completed: "Hoàn thành",
-  cancelled: "Đã hủy",
-};
-
-function UserOrders() {
-  const [status, setStatus] = useState("all");
+function UserHistory() {
   const { data: orders, isLoading } = useQuery({
-    queryKey: ["user-orders"],
+    queryKey: ["user-history"],
     queryFn: async () => {
       const {
         data: { user },
@@ -24,47 +14,27 @@ function UserOrders() {
         .from("orders")
         .select("*")
         .eq("user_id", user.id)
+        .eq("status", "completed")
         .order("created_at", { ascending: false });
-
       if (error) throw error;
       return data;
     },
   });
-
-  const filteredOrders =
-    status === "all"
-      ? orders
-      : orders?.filter((order) => order.status === status);
 
   if (isLoading) return <Spinner />;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-6">
-        Quản lý đơn hàng
+        Lịch sử mua hàng
       </h2>
-      <div className="flex gap-3 mb-6">
-        {Object.entries(STATUS_LABELS).map(([key, label]) => (
-          <button
-            key={key}
-            className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${
-              status === key
-                ? "bg-red-600 text-white border-red-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            }`}
-            onClick={() => setStatus(key)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      {filteredOrders?.length === 0 ? (
+      {orders?.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500">Không có đơn hàng nào</p>
+          <p className="text-gray-500">Bạn chưa có đơn hàng hoàn thành nào</p>
         </div>
       ) : (
         <div className="space-y-6">
-          {filteredOrders?.map((order) => (
+          {orders?.map((order) => (
             <div key={order.id} className="border rounded-lg p-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
@@ -76,20 +46,8 @@ function UserOrders() {
                     {new Date(order.created_at).toLocaleDateString("vi-VN")}
                   </p>
                 </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    order.status === "completed"
-                      ? "bg-green-100 text-green-800"
-                      : order.status === "processing"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : order.status === "pending"
-                      ? "bg-gray-100 text-gray-800"
-                      : order.status === "cancelled"
-                      ? "bg-gray-200 text-gray-500"
-                      : ""
-                  }`}
-                >
-                  {STATUS_LABELS[order.status] || order.status}
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  Hoàn thành
                 </span>
               </div>
               <div className="flex justify-between items-center mt-2">
@@ -119,4 +77,4 @@ function UserOrders() {
   );
 }
 
-export default UserOrders;
+export default UserHistory;
