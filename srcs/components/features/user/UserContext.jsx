@@ -10,7 +10,7 @@ export function UserProvider({ children }) {
   useEffect(() => {
     if (user) {
       setUserInfo({
-        fullName: user.user_metadata?.fullName || "",
+        fullName: user.user_metadata?.full_name || "",
         gender: user.user_metadata?.gender || "",
         phone: user.user_metadata?.phone || "",
         email: user.email,
