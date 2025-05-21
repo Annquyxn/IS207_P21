@@ -5,18 +5,8 @@ import { ChatHeader } from "./ChatHeader";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-// Direct API URL to FastAPI backend
-const API_URL = "/api/direct-query";
-const TEST_API_URL = "/api/test";
-
-// Create an axios instance with default config
-const api = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 10000,
-  headers: {
-    "Content-Type": "multipart/form-data",
-  }
-});
+// API configuration constants
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 export default function ChatTab({ onClose }) {
   const [messages, setMessages] = useState([
@@ -51,10 +41,12 @@ export default function ChatTab({ onClose }) {
 
   useEffect(() => {
     scrollToBottom();
+    console.log("Messages updated:", messages); // Debug messages state
   }, [messages]);
 
   const checkApiConnection = () => {
-    api.get("/products")
+    // Use test endpoint for API connection check
+    axios.get(`${API_BASE_URL}/test`)
       .then(response => {
         console.log("API test response:", response.data);
         setApiStatus("connected");
@@ -90,7 +82,7 @@ export default function ChatTab({ onClose }) {
     setInputValue("");
     setLoading(true);
 
-    console.log("Sending request to API");
+    console.log("Sending query to chatbot API");
     
     try {
       // Use FormData for the request
@@ -103,8 +95,13 @@ export default function ChatTab({ onClose }) {
         model: mapModelName(model)
       });
       
-      // Make the axios request
-      const response = await api.post(API_URL, formData);
+      // Make a direct POST request to the direct-query endpoint
+      const response = await axios({
+        method: 'post',
+        url: `${API_BASE_URL}/direct-query`,
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       
       // Log the response
       console.log("API response:", response);
@@ -113,17 +110,50 @@ export default function ChatTab({ onClose }) {
       console.log("Response data:", data);
 
       const responseData = data?.response || [];
+      console.log("Processing responseData:", responseData); // Added debug
+      
+      // Create detailed consultation message based on query and products
+      let consultationText = "";
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        const priceRange = inputValue.toLowerCase().includes("dưới") ? "trong tầm giá phù hợp" : "với nhiều mức giá khác nhau";
+        
+        // Check if query is about laptops
+        if (inputValue.toLowerCase().includes("laptop")) {
+          consultationText = `Dạ, về laptop ${priceRange} thì em xin tư vấn cho anh/chị một số sản phẩm phù hợp với nhu cầu. ` +
+          `Hiện tại cửa hàng đang có ${responseData.length} mẫu laptop đang được ưa chuộng, với cấu hình và thiết kế đa dạng. ` +
+          `Anh/chị có thể tham khảo các sản phẩm bên dưới ạ:`;
+        } 
+        // Check if query is about PC components
+        else if (inputValue.toLowerCase().includes("pc") || inputValue.toLowerCase().includes("máy tính")) {
+          consultationText = `Về máy tính ${priceRange}, em xin giới thiệu một số sản phẩm phù hợp với nhu cầu của anh/chị. ` +
+          `Cửa hàng có nhiều cấu hình PC với hiệu năng khác nhau phù hợp cho cả công việc và giải trí. ` +
+          `Dưới đây là một số gợi ý mà em nghĩ sẽ phù hợp:`;
+        }
+        // Generic response for other product categories
+        else {
+          consultationText = `Dạ, theo yêu cầu của anh/chị, em xin tư vấn một số sản phẩm ${priceRange}. ` +
+          `Các sản phẩm này đều được nhiều khách hàng đánh giá cao về chất lượng và hiệu năng. ` +
+          `Anh/chị có thể tham khảo thông tin chi tiết bên dưới:`;
+        }
+      } else {
+        consultationText = "Xin lỗi, em không tìm thấy sản phẩm nào phù hợp với yêu cầu của anh/chị. " + 
+          "Anh/chị có thể mô tả lại nhu cầu cụ thể hơn được không ạ? Ví dụ như tầm giá, thương hiệu ưa thích, " +
+          "hoặc mục đích sử dụng để em có thể tư vấn tốt hơn.";
+      }
+      
       const botMsg = {
         id: uuidv4(),
         from: "bot",
-        text:
-          Array.isArray(responseData) && responseData.length > 0
-            ? "Dưới đây là sản phẩm phù hợp với yêu cầu của bạn:"
-            : "Xin lỗi, không tìm thấy sản phẩm phù hợp!",
+        text: consultationText,
         products: Array.isArray(responseData) ? responseData : null,
       };
 
-      setMessages((prev) => [...prev, botMsg]);
+      console.log("Adding bot message:", botMsg); // Added debug
+      setMessages((prev) => {
+        const newMessages = [...prev, botMsg];
+        console.log("New messages state:", newMessages); // Added debug
+        return newMessages;
+      });
       setApiStatus("connected");
     } catch (error) {
       console.error("API Error:", error);
@@ -146,6 +176,7 @@ export default function ChatTab({ onClose }) {
         from: "bot",
         text: errorMessage,
       };
+      console.log("Adding error message:", errorMsg); // Added debug
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
       setLoading(false);
@@ -227,12 +258,16 @@ export default function ChatTab({ onClose }) {
         className="flex-1 overflow-y-auto space-y-3 py-4 px-2 bg-gray-50 rounded-xl border border-gray-200 mt-3 mb-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
         style={{ scrollbarWidth: "thin" }}
       >
-        {messages.map((msg) =>
-          msg.from === "bot" ? (
-            <BotMessage key={msg.id} text={msg.text} products={msg.products} />
-          ) : (
-            <UserMessage key={msg.id} text={msg.text} />
+        {messages.length > 0 ? (
+          messages.map((msg) =>
+            msg.from === "bot" ? (
+              <BotMessage key={msg.id} text={msg.text} products={msg.products} />
+            ) : (
+              <UserMessage key={msg.id} text={msg.text} />
+            )
           )
+        ) : (
+          <div className="text-center text-gray-500 py-4">Không có tin nhắn</div>
         )}
         {loading && <BotMessage text="Đang tìm kiếm sản phẩm phù hợp..." />}
         <div ref={messagesEndRef} />

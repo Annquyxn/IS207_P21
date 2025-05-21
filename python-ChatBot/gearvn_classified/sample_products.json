@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Laptop Gaming ASUS TUF A15 FA507NU LP031W",
+    "price": 18990000,
+    "product_type": "Laptop Gaming",
+    "vendor": "ASUS",
+    "link": "https://gearvn.com/products/laptop-asus-tuf-a15-fa507nu-lp031w",
+    "image": "https://product.hstatic.net/1000026716/product/fa507nu-lp031w_fc63f814a829468c89bc3e5a0557f2d3.png"
+  },
+  {
+    "title": "Laptop Gaming Dell G15 5530 i5 13450HX/RTX 4050",
+    "price": 24990000,
+    "product_type": "Laptop Gaming",
+    "vendor": "Dell",
+    "link": "https://gearvn.com/products/laptop-dell-g15-5530",
+    "image": "https://product.hstatic.net/1000026716/product/g15-5530-i5-13450hx_961ccefd2ff5481e96f4975e2c36b8ad.jpg"
+  },
+  {
+    "title": "PC Gaming ASUS ROG STRIX G15CF i5 13400F/16GB/512GB/RTX 3060",
+    "price": 19990000,
+    "product_type": "PC Gaming",
+    "vendor": "ASUS",
+    "link": "https://gearvn.com/products/pc-gaming-asus-rog-strix-g15cf",
+    "image": "https://product.hstatic.net/1000026716/product/g15cf-i5-13400f-rtx-3060_791c5ba7f3fa4fc68100c1e7198f1677.jpg"
+  },
+  {
+    "title": "PC Gaming GVN MINION i5 12400F/B660/16GB/512GB/RTX 3060",
+    "price": 18490000,
+    "product_type": "PC Gaming",
+    "vendor": "GVN",
+    "link": "https://gearvn.com/products/pc-gaming-gvn-minion-i5",
+    "image": "https://product.hstatic.net/1000026716/product/minion-i5_5a5461e547c34a6a88a171c1df4489b2.jpg"
+  },
+  {
+    "title": "Màn hình ASUS TUF GAMING VG247Q1A 23.8\" IPS 180Hz 1ms FreeSync",
+    "price": 3790000,
+    "product_type": "Màn hình",
+    "vendor": "ASUS",
+    "link": "https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg247q1a",
+    "image": "https://product.hstatic.net/1000026716/product/vg247q1a_cd1aacfe979645c880e5a8462aff4a83.jpg"
+  },
+  {
+    "title": "Bàn phím cơ AKKO 3068B Plus Black & Gold",
+    "price": 1390000,
+    "product_type": "Bàn phím",
+    "vendor": "AKKO",
+    "link": "https://gearvn.com/products/ban-phim-co-akko-3068b-plus-black-gold",
+    "image": "https://product.hstatic.net/1000026716/product/3068b-plus-black-gold_3be819c6cb574760a53d6485f33b8983.jpg"
+  },
+  {
+    "title": "Tai nghe Gaming Razer Blackshark V2 X",
+    "price": 1290000,
+    "product_type": "Tai nghe",
+    "vendor": "Razer",
+    "link": "https://gearvn.com/products/tai-nghe-gaming-razer-blackshark-v2-x",
+    "image": "https://product.hstatic.net/1000026716/product/blackshark-v2-x_3c9dd2add2ea40ba8666c49e53d7482f.jpg"
+  },
+  {
+    "title": "Chuột Gaming Logitech G502 X",
+    "price": 1790000,
+    "product_type": "Chuột",
+    "vendor": "Logitech",
+    "link": "https://gearvn.com/products/chuot-gaming-logitech-g502-x",
+    "image": "https://product.hstatic.net/1000026716/product/g502x-black_bc07877b16b64ce7a38fbb7a5a3e01bb.jpg"
+  },
+  {
+    "title": "SSD Samsung 980 Pro 1TB PCIe 4.0 NVMe M.2",
+    "price": 2190000,
+    "product_type": "SSD",
+    "vendor": "Samsung",
+    "link": "https://gearvn.com/products/ssd-samsung-980-pro-1tb",
+    "image": "https://product.hstatic.net/1000026716/product/980-pro-1tb_2f8288fd2e3641f9852e3ffa1398d2aa.jpg"
+  }
+] 
