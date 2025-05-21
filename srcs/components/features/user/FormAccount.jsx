@@ -1,144 +1,172 @@
-import { useNavigate } from 'react-router-dom';
-import { useUserForm } from './useUserForm';
+import { useState, useEffect } from "react";
+import { useUser } from "./UserContext";
+import { supabase } from "@/components/services/supabase";
 
-function AccountForm() {
-  const navigate = useNavigate();
-  const { formData, handleChange, handleSubmit, days, months, years } =
-    useUserForm();
+function FormAccount() {
+  const { userInfo, setUserInfo } = useUser();
+  const [form, setForm] = useState({
+    fullName: "",
+    gender: "",
+    phone: "",
+    dob: { day: "", month: "", year: "" },
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (userInfo) {
+      setForm({
+        fullName: userInfo.fullName || "",
+        gender: userInfo.gender || "",
+        phone: userInfo.phone || "",
+        dob: userInfo.dob || { day: "", month: "", year: "" },
+      });
+    }
+  }, [userInfo]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (["day", "month", "year"].includes(name)) {
+      setForm((prev) => ({
+        ...prev,
+        dob: { ...prev.dob, [name]: value },
+      }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    // Validate
+    if (!form.fullName || !form.phone || !form.gender) {
+      setMessage("Vui lòng điền đầy đủ thông tin bắt buộc.");
+      setLoading(false);
+      return;
+    }
+    // Cập nhật lên Supabase
+    const { error } = await supabase.auth.updateUser({
+      data: {
+        full_name: form.fullName,
+        gender: form.gender,
+        phone: form.phone,
+        dob: form.dob,
+      },
+    });
+    if (error) {
+      setMessage("Cập nhật thất bại: " + error.message);
+    } else {
+      setMessage("Cập nhật thành công!");
+      setUserInfo((prev) => ({
+        ...prev,
+        ...form,
+      }));
+    }
+    setLoading(false);
+  };
+
   return (
-    <div className='bg-white rounded-xl shadow p-6 w-full'>
-      <h2 className='text-lg font-semibold mb-4'>Cập nhật thông tin</h2>
-
-      <form className='space-y-4' onSubmit={(e) => handleSubmit(e, navigate)}>
+    <div className="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg mt-10">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">
+        Cập nhật thông tin tài khoản
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className='block text-sm font-medium mb-1'>Họ tên:</label>
+          <label className="block font-medium mb-1">Họ tên *</label>
           <input
-            type='text'
-            name='fullName'
-            value={formData.fullName}
+            type="text"
+            name="fullName"
+            value={form.fullName}
             onChange={handleChange}
-            placeholder='Nhập họ và tên'
-            className='w-full border border-gray-300 rounded-md px-4 py-2 outline-none focus:ring-2 focus:ring-red-500'
+            className="w-full px-4 py-2 border rounded-lg"
+            required
           />
         </div>
-
         <div>
-          <label className='block text-sm font-medium mb-1'>Giới tính:</label>
-          <div className='flex gap-4 items-center'>
-            <label className='flex items-center gap-1'>
-              <input
-                type='radio'
-                name='gender'
-                value='Nam'
-                checked={formData.gender === 'Nam'}
-                onChange={handleChange}
-              />
-              Nam
-            </label>
-            <label className='flex items-center gap-1'>
-              <input
-                type='radio'
-                name='gender'
-                value='Nữ'
-                checked={formData.gender === 'Nữ'}
-                onChange={handleChange}
-              />
-              Nữ
-            </label>
+          <label className="block font-medium mb-1">Giới tính *</label>
+          <select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg"
+            required
+          >
+            <option value="">Chọn giới tính</option>
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </div>
+        <div>
+          <label className="block font-medium mb-1">Số điện thoại *</label>
+          <input
+            type="tel"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg"
+            required
+          />
+        </div>
+        <div>
+          <label className="block font-medium mb-1">Email</label>
+          <input
+            type="email"
+            value={userInfo?.email || ""}
+            disabled
+            className="w-full px-4 py-2 border rounded-lg bg-gray-100"
+          />
+        </div>
+        <div>
+          <label className="block font-medium mb-1">Ngày sinh</label>
+          <div className="flex gap-2">
+            <input
+              type="number"
+              name="day"
+              value={form.dob.day}
+              onChange={handleChange}
+              placeholder="Ngày"
+              min="1"
+              max="31"
+              className="w-1/3 px-2 py-2 border rounded-lg"
+            />
+            <input
+              type="number"
+              name="month"
+              value={form.dob.month}
+              onChange={handleChange}
+              placeholder="Tháng"
+              min="1"
+              max="12"
+              className="w-1/3 px-2 py-2 border rounded-lg"
+            />
+            <input
+              type="number"
+              name="year"
+              value={form.dob.year}
+              onChange={handleChange}
+              placeholder="Năm"
+              min="1900"
+              max={new Date().getFullYear()}
+              className="w-1/3 px-2 py-2 border rounded-lg"
+            />
           </div>
         </div>
-
-        <div>
-          <label className='block text-sm font-medium mb-1'>
-            Số điện thoại:
-          </label>
-          <input
-            type='tel'
-            name='phone'
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder='Nhập số điện thoại'
-            className='w-full border border-gray-300 rounded-md px-4 py-2 outline-none focus:ring-2 focus:ring-red-500'
-          />
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium mb-1'>Email:</label>
-          <input
-            type='email'
-            name='email'
-            value={formData.email}
-            onChange={handleChange}
-            placeholder='Nhập email'
-            className='w-full border border-gray-300 rounded-md px-4 py-2 outline-none focus:ring-2 focus:ring-red-500'
-          />
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium mb-1'>Ngày sinh:</label>
-          <div className='flex gap-4'>
-            <select
-              name='day'
-              className='w-full border border-gray-300 rounded-md px-2 py-2'
-              value={formData.day}
-              onChange={handleChange}
-            >
-              <option value=''>Ngày</option>
-              {days.map((day) => (
-                <option key={day} value={day.toString()}>
-                  {day}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name='month'
-              className='w-full border border-gray-300 rounded-md px-2 py-2'
-              value={formData.month}
-              onChange={handleChange}
-            >
-              <option value=''>Tháng</option>
-              {months.map((month) => (
-                <option key={month} value={month.toString()}>
-                  {month}
-                </option>
-              ))}
-            </select>
-
-            <select
-              name='year'
-              className='w-full border border-gray-300 rounded-md px-2 py-2'
-              value={formData.year}
-              onChange={handleChange}
-            >
-              <option value=''>Năm</option>
-              {years.map((year) => (
-                <option key={year} value={year.toString()}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className='flex justify-end gap-4 mt-4'>
-          <button
-            onClick={() => navigate('/user')}
-            type='button'
-            className='px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300'
-          >
-            Hủy
-          </button>
-          <button
-            type='submit'
-            className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700'
-          >
-            Lưu thông tin
-          </button>
-        </div>
+        {message && (
+          <div className="text-center text-red-600 font-medium">{message}</div>
+        )}
+        <button
+          type="submit"
+          className="w-full py-3 bg-red-600 text-white text-lg font-semibold rounded-lg hover:bg-red-700"
+          disabled={loading}
+        >
+          {loading ? "Đang cập nhật..." : "Lưu thông tin"}
+        </button>
       </form>
     </div>
   );
 }
 
-export default AccountForm;
+export default FormAccount;
