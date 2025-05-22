@@ -17,32 +17,40 @@ export function useLoginFormLogic() {
 
   const mutation = useMutation({
     mutationFn: apiLogin,
-    onSuccess: async (user) => {
-      setLoginError("");
-      // Lưu thông tin user vào localStorage
-      localStorage.setItem("user", JSON.stringify(user));
+    onSuccess: async (data) => {
+      try {
+        setLoginError("");
 
-      // Cập nhật session trong Supabase
-      const { error } = await supabase.auth.getSession();
-      if (error) {
-        setLoginError("Lỗi khi cập nhật phiên đăng nhập");
-        return;
-      }
+        // Lưu thông tin user vào localStorage
+        localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Kiểm tra role của người dùng
-      const {
-        data: { user: userData },
-      } = await supabase.auth.getUser();
-      const isAdmin = userData?.user_metadata?.role === "admin";
+        // Kiểm tra role của người dùng
+        const {
+          data: { user: userData },
+          error: userError,
+        } = await supabase.auth.getUser();
 
-      // Chuyển hướng dựa vào role
-      if (isAdmin) {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/user", { replace: true });
+        if (userError) {
+          console.error("Error getting user data:", userError);
+          setLoginError("Lỗi khi lấy thông tin người dùng");
+          return;
+        }
+
+        const isAdmin = userData?.user_metadata?.role === "admin";
+
+        // Chuyển hướng dựa vào role
+        if (isAdmin) {
+          navigate("/admin", { replace: true });
+        } else {
+          navigate("/user", { replace: true });
+        }
+      } catch (error) {
+        console.error("Error in login success handler:", error);
+        setLoginError("Có lỗi xảy ra sau khi đăng nhập");
       }
     },
     onError: (error) => {
+      console.error("Login error:", error);
       setLoginError(error.message || "Đăng nhập thất bại");
     },
   });

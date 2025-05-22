@@ -6,11 +6,50 @@ import { BiTime } from "react-icons/bi";
 import { FiLogOut } from "react-icons/fi";
 import { useAuth } from "../auth/AuthContext";
 
+function SidebarItem({ to, icon, label, active, onClick }) {
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        className={`flex items-center gap-3 px-4 py-2 w-full text-left hover:bg-gray-100 transition-colors ${
+          active ? "text-red-600" : "text-gray-700"
+        }`}
+      >
+        {icon}
+        <span>{label}</span>
+      </button>
+    );
+  }
+
+  return (
+    <Link
+      to={to}
+      className={`flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors ${
+        active ? "text-red-600" : "text-gray-700"
+      }`}
+    >
+      {icon}
+      <span>{label}</span>
+    </Link>
+  );
+}
+
 function Sidebar() {
   const { userInfo } = useUser();
   const location = useLocation();
   const path = location.pathname;
   const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // No need to navigate here since signOut function handles it
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // Force reload on error
+      window.location.href = "/home";
+    }
+  };
 
   return (
     <div className="bg-white border rounded-xl w-full shadow p-4">
@@ -56,31 +95,12 @@ function Sidebar() {
           active={path === "/user/history"}
         />
         <SidebarItem
-          to="/"
           icon={<FiLogOut />}
           label="Đăng xuất"
-          onClick={signOut}
+          onClick={handleSignOut}
         />
       </nav>
     </div>
-  );
-}
-
-function SidebarItem({ icon, label, to, active, onClick }) {
-  return (
-    <Link
-      to={to}
-      className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer
-        ${
-          active
-            ? "text-red-600 font-semibold"
-            : "text-gray-800 hover:bg-gray-100"
-        }`}
-      onClick={onClick}
-    >
-      <div className="text-xl">{icon}</div>
-      <span className="text-sm">{label}</span>
-    </Link>
   );
 }
 
