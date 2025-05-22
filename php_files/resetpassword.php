@@ -12,46 +12,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Supabase config
-$SUPABASE_URL = 'https://yqbaaipksxorhlynhmfd.supabase.co';
-$SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxYmFhaXBrc3hvcmhseW5obWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDA3NDAsImV4cCI6MjA2MzExNjc0MH0.W7bgKUJmSuMS9YcmQlLK8Ol1ZOSeRcaHICECY6HWk1k';
+require_once 'supabase_config.php';
 
-// Nhận dữ liệu từ POST
-$body = json_decode(file_get_contents('php://input'), true);
-$password = $body['password'] ?? '';
-$token = $body['token'] ?? '';
+try {
+    $body = json_decode(file_get_contents('php://input'), true);
+    
+    if (!isset($body['token']) || !isset($body['password'])) {
+        throw new Exception('Thiếu thông tin cần thiết');
+    }
 
-// Gửi yêu cầu đến Supabase Auth để đặt lại mật khẩu
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "$SUPABASE_URL/auth/v1/user");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "apikey: $SUPABASE_KEY",
-    "Content-Type: application/json",
-    "Authorization: Bearer $token"
-]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'password' => $password
-]));
+    $token = $body['token'];
+    $password = $body['password'];
 
-$response = curl_exec($ch);
-$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    // Kiểm tra độ dài mật khẩu
+    if (strlen($password) < 6) {
+        throw new Exception('Mật khẩu phải có ít nhất 6 ký tự');
+    }
 
-if (curl_errno($ch)) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Lỗi cURL: ' . curl_error($ch)]);
-} elseif ($http_code >= 400) {
-    http_response_code($http_code);
-    echo json_encode([
-        'error' => "Lỗi từ Supabase (HTTP $http_code)",
-        'response' => json_decode($response, true)
-    ]);
-} else {
+    // Gọi API Supabase để đặt lại mật khẩu
+    $response = makeSupabaseRequest('/auth/v1/user', 'PUT', [
+        'password' => $password
+    ], $token);
+
+    if ($response['status'] >= 400) {
+        throw new Exception($response['data']['message'] ?? 'Không thể đặt lại mật khẩu');
+    }
+
+    // Set cache headers to prevent caching of this response
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
+    
+    http_response_code(200);
     echo json_encode([
         'ok' => true,
-        'message' => 'Mật khẩu đã được đặt lại thành công'
+        'message' => 'Đặt lại mật khẩu thành công'
     ]);
-}
-
-curl_close($ch); 
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode([
+        'error' => $e->getMessage()
+    ]);
+} 
