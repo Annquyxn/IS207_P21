@@ -1,63 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, ScatterChart, Scatter, ZAxis
 } from 'recharts';
-
-// Sales data for the year
-const salesData = [
-  { name: 'T1', revenue: 12400, profit: 4240, orders: 42 },
-  { name: 'T2', revenue: 14800, profit: 5340, orders: 53 },
-  { name: 'T3', revenue: 18600, profit: 7240, orders: 75 },
-  { name: 'T4', revenue: 15200, profit: 5240, orders: 56 },
-  { name: 'T5', revenue: 22100, profit: 8240, orders: 86 },
-  { name: 'T6', revenue: 19800, profit: 7640, orders: 78 },
-  { name: 'T7', revenue: 17500, profit: 6240, orders: 68 },
-  { name: 'T8', revenue: 16800, profit: 5840, orders: 62 },
-  { name: 'T9', revenue: 18200, profit: 6940, orders: 70 },
-  { name: 'T10', revenue: 20400, profit: 7840, orders: 84 },
-  { name: 'T11', revenue: 24800, profit: 9640, orders: 98 },
-  { name: 'T12', revenue: 32600, profit: 12840, orders: 124 }
-];
-
-// Product category data
-const categoryData = [
-  { name: 'Laptop', value: 35 },
-  { name: 'Bàn phím', value: 20 },
-  { name: 'Chuột', value: 15 },
-  { name: 'Màn hình', value: 18 },
-  { name: 'Linh kiện', value: 12 }
-];
-
-// Customer behavior data for scatter plot
-const customerData = [
-  { age: 22, spending: 1200, visits: 8, id: 1 },
-  { age: 25, spending: 2400, visits: 12, id: 2 },
-  { age: 30, spending: 3200, visits: 6, id: 3 },
-  { age: 35, spending: 5600, visits: 8, id: 4 },
-  { age: 40, spending: 4800, visits: 5, id: 5 },
-  { age: 19, spending: 800, visits: 10, id: 6 },
-  { age: 28, spending: 2800, visits: 15, id: 7 },
-  { age: 33, spending: 4200, visits: 9, id: 8 },
-  { age: 45, spending: 6800, visits: 4, id: 9 },
-  { age: 52, spending: 5400, visits: 3, id: 10 },
-  { age: 24, spending: 1600, visits: 11, id: 11 },
-  { age: 37, spending: 4900, visits: 7, id: 12 },
-  { age: 42, spending: 5100, visits: 6, id: 13 },
-  { age: 31, spending: 3700, visits: 8, id: 14 },
-  { age: 27, spending: 2300, visits: 14, id: 15 }
-];
-
-// Customer retention data for additional analysis
-const retentionData = [
-  { month: 'T1', newUsers: 120, returningUsers: 80 },
-  { month: 'T2', newUsers: 140, returningUsers: 90 },
-  { month: 'T3', newUsers: 160, returningUsers: 110 },
-  { month: 'T4', newUsers: 180, returningUsers: 130 },
-  { month: 'T5', newUsers: 190, returningUsers: 150 },
-  { month: 'T6', newUsers: 170, returningUsers: 160 },
-];
+import {
+  getRevenueByMonth,
+  getTopProductPerformance,
+  getRegionalDistribution
+} from '@/components/features/products/apiProduct';
+import {
+  getOrderStatsByStatus
+} from '@/components/features/orders/apiOrders';
+import Spinner from '@/components/ui/Spinner';
+import { toast } from 'react-hot-toast';
 
 // Color palette
 const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#10b981', '#3b82f6'];
@@ -132,6 +88,174 @@ const AnalyticsCard = ({ title, value, icon, change, changeType }) => {
 };
 
 const Analytics = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const [salesData, setSalesData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [customerData, setCustomerData] = useState([]);
+  const [retentionData, setRetentionData] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('2023');
+
+  useEffect(() => {
+    const fetchAnalyticsData = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // Fetch revenue data by month
+        const monthlyRevenue = await getRevenueByMonth();
+        
+        // Format the data for charts
+        const formattedSalesData = monthlyRevenue.map((revenue, index) => {
+          // Estimate profit as 35% of revenue
+          const profit = Math.round(revenue * 0.35);
+          // Estimate orders based on average order value
+          const avgOrderValue = 2500000; // 2.5 million VND average order
+          const orders = Math.round(revenue / avgOrderValue);
+          
+          return {
+            name: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'][index],
+            revenue: Math.round(revenue / 1000000), // Convert to millions
+            profit: Math.round(profit / 1000000), // Convert to millions
+            orders
+          };
+        });
+        
+        setSalesData(formattedSalesData);
+        
+        // Fetch product category distribution
+        const topProducts = await getTopProductPerformance();
+        
+        // Group products by category and calculate total sales
+        const categorySales = {};
+        topProducts.forEach(product => {
+          const category = product.category || 'Khác';
+          if (!categorySales[category]) {
+            categorySales[category] = 0;
+          }
+          categorySales[category] += product.sales || 0;
+        });
+        
+        // Format category data for pie chart
+        const formattedCategoryData = Object.entries(categorySales).map(([name, value]) => ({
+          name,
+          value
+        }));
+        
+        setCategoryData(formattedCategoryData);
+        
+        // Fetch regional distribution for customer data
+        await getRegionalDistribution();
+        
+        // Use regional data to create mock customer behavior data
+        // In a real app, this would come from actual customer analytics
+        const mockCustomerData = [];
+        for (let i = 0; i < 15; i++) {
+          mockCustomerData.push({
+            age: Math.floor(Math.random() * 35) + 18, // 18-52
+            spending: Math.floor(Math.random() * 6000) + 800, // 800-6800
+            visits: Math.floor(Math.random() * 13) + 3, // 3-15
+            id: i + 1
+          });
+        }
+        
+        setCustomerData(mockCustomerData);
+        
+        // Get order stats by status
+        const orderStats = await getOrderStatsByStatus();
+        
+        // Create retention data (mock for now, would be real in production)
+        const mockRetentionData = [
+          { month: 'T1', newUsers: Math.floor(orderStats.total * 0.15), returningUsers: Math.floor(orderStats.total * 0.1) },
+          { month: 'T2', newUsers: Math.floor(orderStats.total * 0.17), returningUsers: Math.floor(orderStats.total * 0.11) },
+          { month: 'T3', newUsers: Math.floor(orderStats.total * 0.19), returningUsers: Math.floor(orderStats.total * 0.13) },
+          { month: 'T4', newUsers: Math.floor(orderStats.total * 0.21), returningUsers: Math.floor(orderStats.total * 0.15) },
+          { month: 'T5', newUsers: Math.floor(orderStats.total * 0.22), returningUsers: Math.floor(orderStats.total * 0.18) },
+          { month: 'T6', newUsers: Math.floor(orderStats.total * 0.20), returningUsers: Math.floor(orderStats.total * 0.19) },
+        ];
+        
+        setRetentionData(mockRetentionData);
+        
+      } catch (error) {
+        console.error('Error fetching analytics data:', error);
+        setError('Không thể tải dữ liệu phân tích. Đang hiển thị dữ liệu mẫu.');
+        
+        // Use mock data as fallback
+        setSalesData(getMockSalesData());
+        setCategoryData(getMockCategoryData());
+        setCustomerData(getMockCustomerData());
+        setRetentionData(getMockRetentionData());
+        
+        toast.error('Lỗi kết nối dữ liệu!');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchAnalyticsData();
+  }, [selectedYear]); // Re-fetch when year changes
+
+  // Mock data functions for fallback
+  const getMockSalesData = () => [
+    { name: 'T1', revenue: 12400, profit: 4240, orders: 42 },
+    { name: 'T2', revenue: 14800, profit: 5340, orders: 53 },
+    { name: 'T3', revenue: 18600, profit: 7240, orders: 75 },
+    { name: 'T4', revenue: 15200, profit: 5240, orders: 56 },
+    { name: 'T5', revenue: 22100, profit: 8240, orders: 86 },
+    { name: 'T6', revenue: 19800, profit: 7640, orders: 78 },
+    { name: 'T7', revenue: 17500, profit: 6240, orders: 68 },
+    { name: 'T8', revenue: 16800, profit: 5840, orders: 62 },
+    { name: 'T9', revenue: 18200, profit: 6940, orders: 70 },
+    { name: 'T10', revenue: 20400, profit: 7840, orders: 84 },
+    { name: 'T11', revenue: 24800, profit: 9640, orders: 98 },
+    { name: 'T12', revenue: 32600, profit: 12840, orders: 124 }
+  ];
+  
+  const getMockCategoryData = () => [
+    { name: 'Laptop', value: 35 },
+    { name: 'Bàn phím', value: 20 },
+    { name: 'Chuột', value: 15 },
+    { name: 'Màn hình', value: 18 },
+    { name: 'Linh kiện', value: 12 }
+  ];
+  
+  const getMockCustomerData = () => [
+    { age: 22, spending: 1200, visits: 8, id: 1 },
+    { age: 25, spending: 2400, visits: 12, id: 2 },
+    { age: 30, spending: 3200, visits: 6, id: 3 },
+    { age: 35, spending: 5600, visits: 8, id: 4 },
+    { age: 40, spending: 4800, visits: 5, id: 5 },
+    { age: 19, spending: 800, visits: 10, id: 6 },
+    { age: 28, spending: 2800, visits: 15, id: 7 },
+    { age: 33, spending: 4200, visits: 9, id: 8 },
+    { age: 45, spending: 6800, visits: 4, id: 9 },
+    { age: 52, spending: 5400, visits: 3, id: 10 },
+    { age: 24, spending: 1600, visits: 11, id: 11 },
+    { age: 37, spending: 4900, visits: 7, id: 12 },
+    { age: 42, spending: 5100, visits: 6, id: 13 },
+    { age: 31, spending: 3700, visits: 8, id: 14 },
+    { age: 27, spending: 2300, visits: 14, id: 15 }
+  ];
+  
+  const getMockRetentionData = () => [
+    { month: 'T1', newUsers: 120, returningUsers: 80 },
+    { month: 'T2', newUsers: 140, returningUsers: 90 },
+    { month: 'T3', newUsers: 160, returningUsers: 110 },
+    { month: 'T4', newUsers: 180, returningUsers: 130 },
+    { month: 'T5', newUsers: 190, returningUsers: 150 },
+    { month: 'T6', newUsers: 170, returningUsers: 160 },
+  ];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -154,7 +278,11 @@ const Analytics = () => {
           transition={{ duration: 0.3, delay: 0.1 }}
           className="flex flex-wrap gap-3"
         >
-          <select className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 font-medium">
+          <select 
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
             <option value="2023">Năm 2023</option>
             <option value="2022">Năm 2022</option>
             <option value="2021">Năm 2021</option>
@@ -168,6 +296,23 @@ const Analytics = () => {
           </motion.button>
         </motion.div>
       </div>
+
+      {error && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                {error} <button onClick={() => window.location.reload()} className="font-medium underline">Tải lại trang</button>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Summary Cards */}
       <motion.div

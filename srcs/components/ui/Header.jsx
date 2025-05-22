@@ -14,13 +14,16 @@ import { useNotifications } from '../features/notify/NotificationContext';
 import { useAuth } from '../features/auth/AuthContext';
 import { useUser } from '../features/user/UserContext';
 import { useCart } from '@/utils/CartContext';
+import MapComponent from '../features/map/MapComponent';
 
 function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const notificationRef = useRef(null);
   const userMenuRef = useRef(null);
+  const mapRef = useRef(null);
   const navigate = useNavigate();
   const { newCount: notificationCount /*addToCart*/ } = useNotifications();
   const { user, signOut } = useAuth();
@@ -39,6 +42,9 @@ function Header() {
       }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
+      }
+      if (mapRef.current && !mapRef.current.contains(event.target)) {
+        setShowMap(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -76,6 +82,10 @@ function Header() {
     signOut();
     setShowUserMenu(false);
     navigate('/home');
+  };
+
+  const handleToggleMap = () => {
+    setShowMap((prev) => !prev);
   };
 
   return (
@@ -134,9 +144,19 @@ function Header() {
         </div>
 
         <div className='flex items-center gap-4'>
-          <div className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'>
-            <IoLocationOutline className='text-xl' />
-            <span className='text-base font-medium'>Địa chỉ</span>
+          <div className='relative' ref={mapRef}>
+            <div
+              className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
+              onClick={handleToggleMap}
+            >
+              <IoLocationOutline className='text-xl' />
+              <span className='text-base font-medium'>Địa chỉ</span>
+            </div>
+            {showMap && (
+              <div className='absolute left-0 mt-2 w-[500px] bg-white p-4 rounded-lg shadow-lg z-50'>
+                <MapComponent />
+              </div>
+            )}
           </div>
 
           <div className='relative' ref={notificationRef}>
