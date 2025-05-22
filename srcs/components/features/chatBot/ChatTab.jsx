@@ -5,7 +5,7 @@ import { ChatHeader } from "./ChatHeader";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-// API configuration constants
+// API configuration constants - ensure it points to localhost
 const API_BASE_URL = "http://127.0.0.1:8000";
 
 export default function ChatTab({ onClose }) {
