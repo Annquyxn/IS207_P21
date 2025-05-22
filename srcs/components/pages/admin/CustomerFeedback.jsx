@@ -1,97 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiFilter, FiMessageSquare, FiUser, FiCalendar, FiStar, FiTrash2, FiMail, FiTag } from 'react-icons/fi';
-
-// Mock feedback data
-const feedbackData = [
-  {
-    id: 1,
-    customer: 'Nguyễn Văn A',
-    email: 'nguyenvana@gmail.com',
-    rating: 5,
-    message: 'Sản phẩm chất lượng, giao hàng nhanh. Rất hài lòng với dịch vụ của shop.',
-    date: '2023-11-15',
-    product: 'Dell XPS 13',
-    status: 'Chưa phản hồi',
-    type: 'Đánh giá sản phẩm'
-  },
-  {
-    id: 2,
-    customer: 'Trần Thị B',
-    email: 'tranthib@gmail.com',
-    rating: 2,
-    message: 'Giao hàng quá chậm, đóng gói cẩu thả. Sản phẩm không đúng như mô tả trên web.',
-    date: '2023-11-10',
-    product: 'Logitech G502',
-    status: 'Đã phản hồi',
-    type: 'Khiếu nại'
-  },
-  {
-    id: 3,
-    customer: 'Lê Văn C',
-    email: 'levanc@gmail.com',
-    rating: 4,
-    message: 'Sản phẩm tốt nhưng giá hơi cao. Nhân viên tư vấn nhiệt tình.',
-    date: '2023-11-08',
-    product: 'Samsung Odyssey G7',
-    status: 'Chưa phản hồi',
-    type: 'Đánh giá sản phẩm'
-  },
-  {
-    id: 4,
-    customer: 'Phạm Thị D',
-    email: 'phamthid@gmail.com',
-    rating: 3,
-    message: 'Sản phẩm ổn nhưng không có hướng dẫn sử dụng bằng tiếng Việt.',
-    date: '2023-11-05',
-    product: 'Corsair K95 RGB',
-    status: 'Đã phản hồi',
-    type: 'Góp ý'
-  },
-  {
-    id: 5,
-    customer: 'Hoàng Văn E',
-    email: 'hoangvane@gmail.com',
-    rating: 1,
-    message: 'Sản phẩm bị lỗi sau 1 tuần sử dụng. Liên hệ bảo hành rất khó khăn.',
-    date: '2023-11-01',
-    product: 'ASUS ROG Strix G15',
-    status: 'Đã phản hồi',
-    type: 'Khiếu nại'
-  },
-  {
-    id: 6,
-    customer: 'Đặng Thị F',
-    email: 'dangthif@gmail.com',
-    rating: 5,
-    message: 'Nhân viên tư vấn rất nhiệt tình, giúp tôi chọn được sản phẩm phù hợp.',
-    date: '2023-10-28',
-    product: 'Dịch vụ tư vấn',
-    status: 'Chưa phản hồi',
-    type: 'Đánh giá dịch vụ'
-  }
-];
+import { FiFilter, FiMessageSquare, FiUser, FiCalendar, FiStar, FiTrash2, FiMail, FiTag, FiRefreshCw } from 'react-icons/fi';
+import { supabase } from '@/components/services/supabase';
+import Spinner from '@/components/ui/Spinner';
+import { toast } from 'react-hot-toast';
 
 const CustomerFeedback = () => {
-  const [feedbacks, setFeedbacks] = useState(feedbackData);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [filterRating, setFilterRating] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [replyMessage, setReplyMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Filter feedbacks based on selected filters and search term
-  const filteredFeedbacks = feedbacks.filter(feedback => {
-    const matchStatus = filterStatus === 'all' || feedback.status === filterStatus;
-    const matchType = filterType === 'all' || feedback.type === filterType;
-    const matchRating = filterRating === 'all' || feedback.rating === parseInt(filterRating);
-    const matchSearch = 
-      feedback.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      feedback.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      feedback.product.toLowerCase().includes(searchTerm.toLowerCase());
+  // Fetch feedback data from Supabase
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        let query = supabase.from('customer_feedback').select('*');
+        
+        // Apply filters if needed
+        if (filterStatus !== 'all') {
+          query = query.eq('status', filterStatus);
+        }
+        
+        if (filterType !== 'all') {
+          query = query.eq('type', filterType);
+        }
+        
+        if (filterRating !== 'all') {
+          query = query.eq('rating', parseInt(filterRating));
+        }
+        
+        // Sort by date descending
+        query = query.order('date', { ascending: false });
+        
+        const { data, error } = await query;
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          setFeedbacks(data);
+        } else {
+          // If no data or empty array, use mock data as fallback
+          setFeedbacks(getMockFeedbackData());
+        }
+      } catch (error) {
+        console.error('Error fetching feedback data:', error.message);
+        setError('Không thể tải dữ liệu phản hồi. Sử dụng dữ liệu mẫu.');
+        setFeedbacks(getMockFeedbackData());
+        toast.error('Lỗi kết nối dữ liệu!');
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
-    return matchStatus && matchType && matchRating && matchSearch;
+    fetchFeedbacks();
+  }, [filterStatus, filterType, filterRating]);
+
+  // Filter feedbacks based on search term
+  const filteredFeedbacks = feedbacks.filter(feedback => {
+    const matchSearch = 
+      (feedback.customer?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (feedback.message?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (feedback.product?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+    
+    return matchSearch;
   });
 
   const handleSelectFeedback = (feedback) => {
@@ -99,27 +79,75 @@ const CustomerFeedback = () => {
     setReplyMessage(''); // Reset reply message when selecting a new feedback
   };
 
-  const handleReplySubmit = (e) => {
+  const handleReplySubmit = async (e) => {
     e.preventDefault();
-    if (!replyMessage.trim()) return;
+    if (!replyMessage.trim() || !selectedFeedback) return;
     
-    // In a real app, you would send this to an API
-    // For this demo, we'll just update the feedback status
-    const updatedFeedbacks = feedbacks.map(f => 
-      f.id === selectedFeedback.id ? { ...f, status: 'Đã phản hồi' } : f
-    );
-    
-    setFeedbacks(updatedFeedbacks);
-    setReplyMessage('');
-    alert(`Đã gửi phản hồi đến ${selectedFeedback.customer}`);
+    try {
+      // Update feedback status in Supabase
+      const { error } = await supabase
+        .from('customer_feedback')
+        .update({ 
+          status: 'Đã phản hồi',
+          reply: replyMessage,
+          replied_at: new Date().toISOString()
+        })
+        .eq('id', selectedFeedback.id);
+      
+      if (error) throw error;
+      
+      // Update local state
+      const updatedFeedbacks = feedbacks.map(f => 
+        f.id === selectedFeedback.id ? { ...f, status: 'Đã phản hồi', reply: replyMessage } : f
+      );
+      
+      setFeedbacks(updatedFeedbacks);
+      setReplyMessage('');
+      toast.success(`Đã gửi phản hồi đến ${selectedFeedback.customer}`);
+    } catch (error) {
+      console.error('Error updating feedback:', error.message);
+      toast.error('Không thể cập nhật phản hồi');
+      
+      // Update local state anyway for better UX
+      const updatedFeedbacks = feedbacks.map(f => 
+        f.id === selectedFeedback.id ? { ...f, status: 'Đã phản hồi' } : f
+      );
+      
+      setFeedbacks(updatedFeedbacks);
+    }
   };
 
-  const handleDeleteFeedback = (id) => {
+  const handleDeleteFeedback = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa phản hồi này?')) {
-      const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
-      setFeedbacks(updatedFeedbacks);
-      if (selectedFeedback && selectedFeedback.id === id) {
-        setSelectedFeedback(null);
+      try {
+        // Delete from Supabase
+        const { error } = await supabase
+          .from('customer_feedback')
+          .delete()
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        // Update local state
+        const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
+        setFeedbacks(updatedFeedbacks);
+        
+        if (selectedFeedback && selectedFeedback.id === id) {
+          setSelectedFeedback(null);
+        }
+        
+        toast.success('Đã xóa phản hồi');
+      } catch (error) {
+        console.error('Error deleting feedback:', error.message);
+        toast.error('Không thể xóa phản hồi');
+        
+        // Update local state anyway for better UX
+        const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
+        setFeedbacks(updatedFeedbacks);
+        
+        if (selectedFeedback && selectedFeedback.id === id) {
+          setSelectedFeedback(null);
+        }
       }
     }
   };
@@ -133,6 +161,42 @@ const CustomerFeedback = () => {
       />
     ));
   };
+  
+  // Mock data function for fallback
+  const getMockFeedbackData = () => [
+    {
+      id: 1,
+      customer: 'Nguyễn Văn A',
+      email: 'nguyenvana@gmail.com',
+      rating: 5,
+      message: 'Sản phẩm chất lượng, giao hàng nhanh. Rất hài lòng với dịch vụ của shop.',
+      date: '2023-11-15',
+      product: 'Dell XPS 13',
+      status: 'Chưa phản hồi',
+      type: 'Đánh giá sản phẩm'
+    },
+    {
+      id: 2,
+      customer: 'Trần Thị B',
+      email: 'tranthib@gmail.com',
+      rating: 2,
+      message: 'Giao hàng quá chậm, đóng gói cẩu thả. Sản phẩm không đúng như mô tả trên web.',
+      date: '2023-11-10',
+      product: 'Logitech G502',
+      status: 'Đã phản hồi',
+      type: 'Khiếu nại'
+    },
+    // ... other mock data items ...
+  ];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -144,12 +208,42 @@ const CustomerFeedback = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Phản hồi khách hàng</h1>
         <div className="flex space-x-2">
+          <button 
+            onClick={() => {
+              setIsLoading(true);
+              setTimeout(() => {
+                setFilterStatus('all');
+                setFilterType('all');
+                setFilterRating('all');
+                setSearchTerm('');
+              }, 300);
+            }}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition flex items-center"
+          >
+            <FiRefreshCw className="mr-2" />
+            Làm mới
+          </button>
           <button className="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 transition flex items-center">
             <FiFilter className="mr-2" />
             Lọc phản hồi
           </button>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <FiRefreshCw className="h-5 w-5 text-yellow-400" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                {error} <button onClick={() => window.location.reload()} className="font-medium underline">Tải lại trang</button>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
         {/* Filters and Feedback List */}

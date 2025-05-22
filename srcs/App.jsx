@@ -41,6 +41,7 @@ import { Toaster } from 'react-hot-toast';
 import ResetPasswordForm from '@/components/features/auth/ResetPasswordForm';
 import ForgotPasswordPage from './components/pages/ForgotPasswordPage';
 import ScrollToTop from './utils/ScrollToTop';
+import MapComponent from './components/features/map/MapComponent';
 
 function App() {
   return (
