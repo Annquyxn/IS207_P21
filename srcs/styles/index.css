@@ -9,6 +9,12 @@
   scrollbar-width: none; /* Firefox */
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 :root {
   /* Indigo */
   --color-brand-50: #eef2ff;

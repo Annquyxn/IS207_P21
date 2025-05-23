@@ -1,7 +1,8 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../features/auth/AuthContext";
-import { useEffect, useState } from "react";
-import { supabase } from "@/components/services/supabase";
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../features/auth/AuthContext';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/components/services/supabase';
+import Spinner from '../ui/Spinner';
 
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ const AdminRoute = ({ children }) => {
         const {
           data: { user: userData },
         } = await supabase.auth.getUser();
-        setIsAdmin(userData?.user_metadata?.role === "admin");
+        setIsAdmin(userData?.user_metadata?.role === 'admin');
       }
       setLoading(false);
     };
@@ -23,11 +24,11 @@ const AdminRoute = ({ children }) => {
   }, [user]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner className='w-10 h-10' />;
   }
 
   if (!user || !isAdmin) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to='/login' replace />;
   }
 
   return children;

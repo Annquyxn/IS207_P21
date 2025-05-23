@@ -1,27 +1,11 @@
-import { useEffect, useState } from "react";
-import { fetchPCComponents } from "@/components/services/buildpcService";
-import Breadcrumb from "@/components/features/buildPC/Breadcrumb";
-import ConfigurationArea from "@/components/features/buildPC/ConfigurationArea";
+import BuildPC from '../features/buildPC/BuildPC';
 
-function BuildPCPage() {
-  const [components, setComponents] = useState([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchPCComponents();
-      setComponents(data);
-    };
-    loadData();
-  }, []);
-
+const BuildPCPage = () => {
   return (
-    <div className="font-sans bg-gray-50 min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-        <Breadcrumb />
-        <ConfigurationArea components={components} />
-      </div>
-    </div>
+    <>
+      <BuildPC />
+    </>
   );
-}
+};
 
 export default BuildPCPage;

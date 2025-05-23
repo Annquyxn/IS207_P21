@@ -29,7 +29,7 @@ import JobPage from './components/features/footer-components/JobPage';
 import CustomerSupportForm from './components/features/footer-components/CustomerSupportForm';
 import InstallmentPlan from './components/features/footer-components/InstallmentPlan';
 import PaymentGuide from './components/features/footer-components/PaymentGuide';
-import PcBuilder from './components/features/footer-components/PcBuilder';
+// import PcBuilder from './components/features/footer-components/PcBuilder';
 import PrivacyPolicy from './components/features/footer-components/PrivacyPolicy';
 import ShippingPolicy from './components/features/footer-components/ShippingPolicy';
 import ShoppingGuide from './components/features/footer-components/ShoppingGuide';
@@ -49,7 +49,7 @@ function App() {
         <UserProvider>
           <NotificationProvider>
             <main className='flex-1'>
-              <AnimatePresence mode='wait'>
+              <AnimatePresence /*mode='wait'*/>
                 <ScrollToTop />
                 <Routes>
                   <Route path='/' element={<Layout />}>

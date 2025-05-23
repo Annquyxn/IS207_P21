@@ -11,8 +11,8 @@ const adminRoute = (
     path='/admin'
     element={
       // <AdminRoute>
-        <AdminLayout />
-      // </AdminRoute>
+      <AdminLayout />
+      /* </AdminRoute> */
     }
   >
     <Route index element={<Dashboard />} />
@@ -20,7 +20,6 @@ const adminRoute = (
     <Route path='user' element={<UserManager />} />
     <Route path='order' element={<OrderManager />} />
     <Route path='oder' element={<OrderManager />} />
-    {/* <Route path="reset-password" element={<ResetPasswordForm />} /> */}
   </Route>
 );
 
