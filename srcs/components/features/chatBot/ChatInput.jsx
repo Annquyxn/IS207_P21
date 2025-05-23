@@ -11,10 +11,10 @@ export function ChatInput({
   return (
     <div className="px-3 py-3 border-t border-gray-200 bg-white rounded-b-2xl">
       <div className="relative flex items-center">
-        <textarea
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={onKeyPress}
+      <textarea
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={onKeyPress}
           placeholder="Nhập câu hỏi của bạn..."
           disabled={disabled || loading}
           className={`
@@ -26,9 +26,9 @@ export function ChatInput({
           `}
           style={{ minHeight: "60px", maxHeight: "120px" }}
           rows={2}
-        />
-        <button
-          onClick={onSend}
+      />
+      <button
+        onClick={onSend}
           disabled={disabled || loading || !inputValue.trim()}
           className={`
             absolute right-2 p-2 rounded-full 
@@ -78,7 +78,7 @@ export function ChatInput({
               />
             </svg>
           )}
-        </button>
+      </button>
       </div>
 
       {disabled && (

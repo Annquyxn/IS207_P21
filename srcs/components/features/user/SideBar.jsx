@@ -11,12 +11,16 @@ function SidebarItem({ to, icon, label, active, onClick }) {
     return (
       <button
         onClick={onClick}
-        className={`flex items-center gap-3 px-4 py-2 w-full text-left hover:bg-gray-100 transition-colors ${
-          active ? "text-red-600" : "text-gray-700"
+        className={`flex items-center gap-3 px-5 py-3 w-full text-left rounded-lg transition-all duration-200 ${
+          active 
+            ? "bg-gradient-to-r from-red-50 to-red-100 text-red-600 font-medium shadow-sm" 
+            : "text-gray-700 hover:bg-gray-100"
         }`}
       >
-        {icon}
-        <span>{label}</span>
+        <span className={`text-lg ${active ? "text-red-500" : "text-gray-500"}`}>
+          {icon}
+        </span>
+        <span className="transition-all duration-200">{label}</span>
       </button>
     );
   }
@@ -24,12 +28,16 @@ function SidebarItem({ to, icon, label, active, onClick }) {
   return (
     <Link
       to={to}
-      className={`flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors ${
-        active ? "text-red-600" : "text-gray-700"
+      className={`flex items-center gap-3 px-5 py-3 rounded-lg transition-all duration-200 ${
+        active 
+          ? "bg-gradient-to-r from-red-50 to-red-100 text-red-600 font-medium shadow-sm" 
+          : "text-gray-700 hover:bg-gray-100"
       }`}
     >
-      {icon}
-      <span>{label}</span>
+      <span className={`text-lg ${active ? "text-red-500" : "text-gray-500"}`}>
+        {icon}
+      </span>
+      <span className="transition-all duration-200">{label}</span>
     </Link>
   );
 }
@@ -52,9 +60,9 @@ function Sidebar() {
   };
 
   return (
-    <div className="bg-white border rounded-xl w-full shadow p-4">
-      <div className="text-center mb-4">
-        <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-2 border-2 border-gray-300">
+    <div className="bg-white border-0 rounded-2xl w-full shadow-lg p-5 transition-all duration-300 hover:shadow-xl">
+      <div className="text-center mb-6">
+        <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-red-100 shadow-md transform hover:scale-105 transition-transform duration-300">
           <img
             src="/public/default-user.jpg"
             alt="avatar"
@@ -62,14 +70,15 @@ function Sidebar() {
           />
         </div>
 
-        <h2 className="font-semibold text-lg">
+        <h2 className="font-bold text-xl text-gray-800">
           {userInfo?.fullName || "Người dùng"}
         </h2>
+        <p className="text-gray-500 text-sm mt-1">{userInfo?.email || "Chưa có email"}</p>
       </div>
 
-      <hr className="my-3" />
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-4"></div>
 
-      <nav className="flex flex-col gap-3">
+      <nav className="flex flex-col gap-2">
         <SidebarItem
           to="/user"
           icon={<FaRegUser />}
@@ -94,6 +103,9 @@ function Sidebar() {
           label="Lịch sử mua hàng"
           active={path === "/user/history"}
         />
+        
+        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2"></div>
+        
         <SidebarItem
           icon={<FiLogOut />}
           label="Đăng xuất"

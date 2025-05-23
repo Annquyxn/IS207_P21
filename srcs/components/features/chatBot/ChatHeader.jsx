@@ -21,8 +21,8 @@ export function ChatHeader() {
       </div>
       <div>
         <h1 className="text-white text-lg font-semibold tracking-wide font-sans">
-          TECHBOT TƯ VẤN
-        </h1>
+        TECHBOT TƯ VẤN
+      </h1>
         <p className="text-red-100 text-xs">Hỗ trợ tư vấn sản phẩm công nghệ 24/7</p>
       </div>
     </header>

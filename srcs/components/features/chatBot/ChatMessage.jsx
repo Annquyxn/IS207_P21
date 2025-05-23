@@ -73,50 +73,50 @@ export function BotMessage({ text, products }) {
                   )}
                   
                   <div className="flex-1">
-                    {product.name && (
+                {product.name && (
                       <h4 className="font-medium text-gray-800 text-sm mb-1">{product.name}</h4>
-                    )}
+                )}
                     
                     <div className="flex flex-wrap items-center gap-2 mt-1">
-                      {product.price && (
+                {product.price && (
                         <p className="text-red-600 font-semibold text-base">
-                          {formatPrice(product.price)}
-                        </p>
-                      )}
+                    {formatPrice(product.price)}
+                  </p>
+                )}
                       
-                      {product.type && (
+                {product.type && (
                         <span className="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">
                           {product.type}
                         </span>
-                      )}
+                )}
                       
-                      {product.vendor && (
+                {product.vendor && (
                         <span className="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">
                           {product.vendor}
                         </span>
-                      )}
+                )}
                     </div>
-                    
-                    {/* Product advice */}
+                
+                {/* Product advice */}
                     <p className="text-red-700 text-xs mt-2 italic border-l-2 border-red-300 pl-2">
-                      {generateProductAdvice(product)}
-                    </p>
-                    
+                  {generateProductAdvice(product)}
+                </p>
+                
                     <div className="mt-3 flex items-center gap-2">
-                      {product.link && (
-                        <a 
-                          href={product.link} 
-                          target="_blank"
-                          rel="noopener noreferrer"
+                  {product.link && (
+                    <a 
+                      href={product.link} 
+                      target="_blank"
+                      rel="noopener noreferrer"
                           className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs px-3 py-1.5 rounded-full shadow-sm hover:shadow transition-all flex items-center"
-                        >
+                    >
                           <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                           </svg>
-                          Xem chi tiết
-                        </a>
-                      )}
-                    </div>
+                      Xem chi tiết
+                    </a>
+                  )}
+                </div>
                   </div>
                 </div>
               </div>
