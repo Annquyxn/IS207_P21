@@ -1,59 +1,54 @@
-# Product Consultation Chatbot
+# TechBot API
 
-This project contains a chatbot system that provides product recommendations from the GearVN dataset.
+This is a FastAPI backend for the TechBot product recommendation system. It uses a CSV database of products to provide recommendations based on user queries.
 
-## Requirements
+## Setup
 
-To run the chatbot backend, you need:
+1. Install the required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
 
-- Python 3.8+ 
-- FastAPI
-- LangChain
-- Ollama (local LLM server)
+2. Create a `.env` file with your GROQ API key:
+   ```
+   GROQ_API_KEY=your_api_key_here
+   ```
+   
+   If you don't have a GROQ API key, you can get one from [https://console.groq.com/](https://console.groq.com/).
 
-For the frontend:
-- Node.js 14+
-- React
-- Axios
+3. Ensure the CSV file `gearvn_products_transformed.csv` is in the same directory as `main.py`.
 
-## Installation
+## Running the API
 
-### Backend Setup
-
-1. Install the required Python packages:
-
-```bash
-pip install fastapi uvicorn langchain langchain-community pydantic python-multipart python-dotenv
+Run the FastAPI server:
 ```
-
-2. Ensure you have Ollama installed and running: https://ollama.ai/
-
-3. Make sure you have the following models available in Ollama:
-   - gemma
-   - llama
-   - deepseek
-   - moondream
-
-   You can install these models using: `ollama pull modelname`
-
-### Running the Backend
-
-From the project directory, run:
-
-```bash
-cd IS207_P21/python-ChatBot/pycode
-uvicorn app:app --reload
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
-
-The backend will start running on http://127.0.0.1:8000
 
 ## API Endpoints
 
 - `GET /test` - Test if the API is running
-- `POST /direct-query` - Send a product query to get recommendations
+- `POST /direct-query` - Send a product query (form data with fields: query, model)
 
-## Usage with React Frontend
+## Frontend Integration
 
-The React frontend in `IS207_P21/srcs/components/features/chatBot/ChatTab.jsx` is already configured to connect to the Python backend via Axios.
+The React frontend should send requests to the API at `http://127.0.0.1:8000`.
 
-Make sure the backend is running when you start your React app. 
+Example query:
+```javascript
+const formData = new FormData();
+formData.append("query", "Laptop dưới 15 triệu");
+formData.append("model", "deepseek");
+
+axios.post("http://127.0.0.1:8000/direct-query", formData)
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+```
+
+## Customization
+
+You can modify the product search algorithm in the `search_products` function in `main.py`. 
