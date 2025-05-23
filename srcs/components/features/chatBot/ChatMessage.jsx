@@ -43,68 +43,87 @@ const generateProductAdvice = (product) => {
 
 export function BotMessage({ text, products }) {
   return (
-    <article className="flex gap-3 items-start mt-4">
-      <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-sm">
+    <article className="flex gap-3 items-start mt-4 animate-fadeIn">
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
         B
       </div>
-      <div className="bg-pink-100 rounded-2xl px-4 py-2 text-base font-sans leading-relaxed shadow-md max-w-[75%]">
-        <p>{text}</p>
+      <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl px-4 py-3 text-base font-sans leading-relaxed shadow-sm max-w-[80%] border border-red-100/50">
+        <p className="text-gray-700">{text}</p>
         
         {products && products.length > 0 && (
-          <div className="mt-2">
+          <div className="mt-3 space-y-3">
             {products.map((product, index) => (
-              <div key={index} className="border-t border-pink-200 pt-2 mt-2">
-                {product.name && (
-                  <p className="font-medium text-sm">{product.name}</p>
-                )}
-                {product.price && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {formatPrice(product.price)}
-                  </p>
-                )}
-                {product.type && (
-                  <p className="text-gray-600 text-xs">Loại: {product.type}</p>
-                )}
-                {product.vendor && (
-                  <p className="text-gray-600 text-xs">Hãng: {product.vendor}</p>
-                )}
-                
-                {/* Product advice */}
-                <p className="text-blue-600 text-xs mt-2 italic">
-                  {generateProductAdvice(product)}
-                </p>
-                
-                <div className="mt-2 flex items-center gap-2">
-                  {product.link && (
-                    <a 
-                      href={product.link} 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded transition-colors"
-                    >
-                      Xem chi tiết
-                    </a>
+              <div 
+                key={index} 
+                className="border border-red-100 bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex flex-wrap md:flex-nowrap">
+                  {product.image && (
+                    <div className="w-full md:w-1/3 mb-2 md:mb-0 md:mr-3">
+                      <img 
+                        src={product.image} 
+                        alt={product.name || "Product"} 
+                        className="w-full h-24 object-contain rounded-lg"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://via.placeholder.com/150?text=No+Image";
+                        }}
+                      />
+                    </div>
                   )}
-                </div>
-                
-                {product.image && (
-                  <div className="mt-2">
-                    <img 
-                      src={product.image} 
-                      alt={product.name || "Product"} 
-                      className="w-full max-h-32 object-contain rounded"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/150?text=No+Image";
-                      }}
-                    />
+                  
+                  <div className="flex-1">
+                    {product.name && (
+                      <h4 className="font-medium text-gray-800 text-sm mb-1">{product.name}</h4>
+                    )}
+                    
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                      {product.price && (
+                        <p className="text-red-600 font-semibold text-base">
+                          {formatPrice(product.price)}
+                        </p>
+                      )}
+                      
+                      {product.type && (
+                        <span className="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">
+                          {product.type}
+                        </span>
+                      )}
+                      
+                      {product.vendor && (
+                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">
+                          {product.vendor}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Product advice */}
+                    <p className="text-red-700 text-xs mt-2 italic border-l-2 border-red-300 pl-2">
+                      {generateProductAdvice(product)}
+                    </p>
+                    
+                    <div className="mt-3 flex items-center gap-2">
+                      {product.link && (
+                        <a 
+                          href={product.link} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs px-3 py-1.5 rounded-full shadow-sm hover:shadow transition-all flex items-center"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                          </svg>
+                          Xem chi tiết
+                        </a>
+                      )}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             ))}
 
-            <div className="mt-4 pt-3 border-t border-pink-200 text-sm">
-              <p className="font-medium">Quý khách cần tư vấn thêm?</p>
+            <div className="mt-4 pt-3 border-t border-red-100">
+              <p className="font-medium text-red-800 text-sm">Quý khách cần tư vấn thêm?</p>
               <p className="text-xs text-gray-600 mt-1">
                 Em có thể giúp anh/chị so sánh các sản phẩm, tư vấn thêm về cấu hình hoặc tìm sản phẩm phù hợp hơn với nhu cầu của anh/chị.
               </p>
@@ -122,15 +141,32 @@ export function BotMessage({ text, products }) {
 
 export function UserMessage({ text }) {
   return (
-    <article className="flex justify-end mt-6">
+    <article className="flex justify-end mt-6 animate-fadeIn">
       <div className="flex items-end gap-3 max-w-[75%]">
-        <div className="bg-gray-200 px-4 py-2 rounded-2xl text-base font-sans leading-relaxed shadow">
+        <div className="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-3 rounded-2xl text-base font-sans leading-relaxed shadow-md">
           {text}
         </div>
-        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold text-sm">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
           U
         </div>
       </div>
     </article>
   );
+}
+
+// Add this to your CSS (tailwind.css) or use a style tag if needed
+const animationStyles = `
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+`;
+
+// You can add this to your component if needed
+function StyleTag() {
+  return <style dangerouslySetInnerHTML={{ __html: animationStyles }} />;
 }

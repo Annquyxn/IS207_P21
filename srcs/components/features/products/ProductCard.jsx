@@ -181,7 +181,7 @@ const ProductCard = ({
   return (
     <div
       onClick={handleNavigate}
-      className='relative bg-white p-4 rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 cursor-pointer shadow hover:shadow-lg'
+      className='relative bg-white p-4 rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 cursor-pointer shadow hover:shadow-lg hover:scale-107 active:scale-95 ring-2 ring-transparent hover:ring-red-300 focus:ring-red-400'
     >
       <div className='relative'>
         <img
