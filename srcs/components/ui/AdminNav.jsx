@@ -68,7 +68,7 @@ function AdminNav() {
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/admin/oder'>
+          <StyledNavLink to='/admin/order'>
             <HiOutlineClipboardDocumentList />
             <span>Đơn hàng</span>
           </StyledNavLink>

@@ -1,17 +1,22 @@
 import LeftColumn from '@/components/features/columns/LeftColumn';
 import CenterColumn from '@/components/features/columns/CenterColumn';
 import RightColumn from '@/components/features/columns/RightColumn';
-import ProductPage from '@/components/pages/ProductPage';
 import ChatBotContainer from '@/components/features/chatBot/ChatBotContainer';
 import LoginModal from './LoginModal';
 import RegistrationModal from './RegistrationModal';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import ProductFeatured from './ProductFeatured';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function HomePage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const modalType = location.state?.modal;
+
+  const handleCloseModal = () => {
+    navigate('/home', { replace: true });
+  };
+
   return (
     <main className='bg-white max-w-[1200px] mx-auto px-4 py-12'>
       <div className='grid grid-cols-12 gap-5' style={{ height: 'auto' }}>
@@ -37,10 +42,11 @@ function HomePage() {
         <ChatBotContainer />
       </div>
 
-      {/* Temporarily hidden login functionality  */}
       {modalType === 'login' && <LoginModal />}
       {modalType === 'register' && <RegistrationModal />}
-      {modalType === 'forgot-password' && <ForgotPasswordModal />}
+      {modalType === 'forgot-password' && (
+        <ForgotPasswordModal onClose={handleCloseModal} />
+      )}
     </main>
   );
 }

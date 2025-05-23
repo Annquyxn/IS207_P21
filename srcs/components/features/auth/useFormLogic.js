@@ -17,27 +17,27 @@ export function useLoginFormLogic() {
 
   const mutation = useMutation({
     mutationFn: apiLogin,
+
     onSuccess: async (user) => {
-      setLoginError('');
-      // Lưu thông tin user vào localStorage
-      localStorage.setItem('user', JSON.stringify(user));
+      try {
+        setLoginError('');
+        localStorage.setItem('user', JSON.stringify(user));
 
-      // Cập nhật session trong Supabase
-      const { error } = await supabase.auth.getSession();
-      if (error) {
-        setLoginError('Lỗi khi cập nhật phiên đăng nhập');
-        return;
+        const { error } = await supabase.auth.getSession();
+        if (error) {
+          setLoginError('Lỗi khi cập nhật phiên đăng nhập');
+          return;
+        }
+
+        navigate('/home', { replace: true });
+      } catch (error) {
+        console.error('Error in login success handler:', error);
+        setLoginError('Có lỗi xảy ra sau khi đăng nhập');
       }
-
-      // Kiểm tra role của người dùng
-      const {
-        data: { user: userData },
-      } = await supabase.auth.getUser();
-      const isAdmin = userData?.user_metadata?.role === 'admin';
-
-      navigate('/home', { replace: true });
     },
+
     onError: (error) => {
+      console.error('Login error:', error);
       setLoginError(error.message || 'Đăng nhập thất bại');
     },
   });
