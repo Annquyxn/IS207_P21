@@ -111,48 +111,41 @@ export default function ChatTab({ onClose }) {
       const responseData = data?.response || [];
       console.log("Processing responseData:", responseData); // Added debug
       
-      // Create detailed consultation message based on query and products
-      let consultationText = "";
+      // Process the API response
       if (Array.isArray(responseData) && responseData.length > 0) {
-        const priceRange = inputValue.toLowerCase().includes("dưới") ? "trong tầm giá phù hợp" : "với nhiều mức giá khác nhau";
+        // Extract text and product items
+        const textItems = responseData.filter(item => item.type === "text");
+        const productItems = responseData.filter(item => item.type === "product");
         
-        // Check if query is about laptops
-        if (inputValue.toLowerCase().includes("laptop")) {
-          consultationText = `Dạ, về laptop ${priceRange} thì em xin tư vấn cho anh/chị một số sản phẩm phù hợp với nhu cầu. ` +
-          `Hiện tại cửa hàng đang có ${responseData.length} mẫu laptop đang được ưa chuộng, với cấu hình và thiết kế đa dạng. ` +
-          `Anh/chị có thể tham khảo các sản phẩm bên dưới ạ:`;
-        } 
-        // Check if query is about PC components
-        else if (inputValue.toLowerCase().includes("pc") || inputValue.toLowerCase().includes("máy tính")) {
-          consultationText = `Về máy tính ${priceRange}, em xin giới thiệu một số sản phẩm phù hợp với nhu cầu của anh/chị. ` +
-          `Cửa hàng có nhiều cấu hình PC với hiệu năng khác nhau phù hợp cho cả công việc và giải trí. ` +
-          `Dưới đây là một số gợi ý mà em nghĩ sẽ phù hợp:`;
-        }
-        // Generic response for other product categories
-        else {
-          consultationText = `Dạ, theo yêu cầu của anh/chị, em xin tư vấn một số sản phẩm ${priceRange}. ` +
-          `Các sản phẩm này đều được nhiều khách hàng đánh giá cao về chất lượng và hiệu năng. ` +
-          `Anh/chị có thể tham khảo thông tin chi tiết bên dưới:`;
-        }
+        // Get AI-generated text message from the backend
+        const aiMessage = textItems.length > 0 ? textItems[0].message : 
+          "Xin lỗi, em không tìm thấy sản phẩm nào phù hợp với yêu cầu của anh/chị.";
+        
+        const botMsg = {
+          id: uuidv4(),
+          from: "bot",
+          text: aiMessage,
+          products: productItems.length > 0 ? productItems : null,
+        };
+
+        console.log("Adding bot message:", botMsg);
+        setMessages((prev) => {
+          const newMessages = [...prev, botMsg];
+          console.log("New messages state:", newMessages);
+          return newMessages;
+        });
       } else {
-        consultationText = "Xin lỗi, em không tìm thấy sản phẩm nào phù hợp với yêu cầu của anh/chị. " + 
-          "Anh/chị có thể mô tả lại nhu cầu cụ thể hơn được không ạ? Ví dụ như tầm giá, thương hiệu ưa thích, " +
-          "hoặc mục đích sử dụng để em có thể tư vấn tốt hơn.";
+        // Fallback message if response format is unexpected
+        const botMsg = {
+          id: uuidv4(),
+          from: "bot",
+          text: "Xin lỗi, em không thể tìm thấy thông tin phù hợp với yêu cầu của anh/chị.",
+          products: null,
+        };
+        
+        setMessages((prev) => [...prev, botMsg]);
       }
       
-      const botMsg = {
-        id: uuidv4(),
-        from: "bot",
-        text: consultationText,
-        products: Array.isArray(responseData) ? responseData : null,
-      };
-
-      console.log("Adding bot message:", botMsg); // Added debug
-      setMessages((prev) => {
-        const newMessages = [...prev, botMsg];
-        console.log("New messages state:", newMessages); // Added debug
-        return newMessages;
-      });
       setApiStatus("connected");
     } catch (error) {
       console.error("API Error:", error);

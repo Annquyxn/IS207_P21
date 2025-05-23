@@ -384,7 +384,7 @@ export async function getRegionalDistribution() {
     // Thử lấy dữ liệu từ bảng orders
     const { data, error } = await supabase
       .from('orders')
-      .select('shipping_region, total');
+      .select('address, total');
       
     if (error || !data || data.length === 0) {
       console.error('Lỗi khi lấy phân bố khu vực từ orders:', error);
@@ -406,7 +406,10 @@ export async function getRegionalDistribution() {
     };
     
     data.forEach(order => {
-      const region = order.shipping_region || 'Bắc'; // Mặc định là miền Bắc nếu không có
+      // Extract city from address object and map to region
+      const city = order.address?.city || '';
+      const region = mapCityToRegion(city);
+      
       if (Object.prototype.hasOwnProperty.call(regionMap, region)) {
         regionMap[region] += parseFloat(order.total) || 0;
       } else {
@@ -432,5 +435,42 @@ export async function getRegionalDistribution() {
       { region: 'Trung', percentage: 20 },
       { region: 'Tây', percentage: 10 }
     ];
+  }
+}
+
+// Helper function to map city to region
+function mapCityToRegion(city) {
+  const northCities = ['Hà Nội', 'Hải Phòng', 'Quảng Ninh', 'Bắc Ninh', 'Hải Dương', 'Nam Định', 'Thái Bình'];
+  const centralCities = ['Đà Nẵng', 'Huế', 'Quảng Nam', 'Quảng Ngãi', 'Bình Định', 'Phú Yên', 'Khánh Hòa'];
+  const southCities = ['Hồ Chí Minh', 'Bình Dương', 'Đồng Nai', 'Bà Rịa - Vũng Tàu', 'Long An', 'Tiền Giang', 'Cần Thơ'];
+  const westCities = ['An Giang', 'Kiên Giang', 'Cà Mau', 'Bạc Liêu', 'Sóc Trăng', 'Trà Vinh', 'Bến Tre'];
+
+  if (!city) return 'Bắc';
+  
+  const normalizedCity = city.toLowerCase();
+  
+  if (northCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Bắc';
+  if (centralCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Trung';
+  if (southCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Nam';
+  if (westCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Tây';
+  
+  // Default to North if no match
+  return 'Bắc';
+}
+
+// Get current logged in user ID
+export async function getUserId() {
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    
+    if (error) {
+      console.error('Error fetching user:', error.message);
+      return null;
+    }
+    
+    return user?.id || null;
+  } catch (error) {
+    console.error('Error in getUserId:', error);
+    return null;
   }
 }

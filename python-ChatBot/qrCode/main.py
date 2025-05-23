@@ -31,10 +31,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Pre-generated QR codes to avoid regenerating them each time
-MBBANK_QR = None
-MOMO_QR = None
-
 def generate_qr_code(content):
     """Generate a QR code from content and return base64 encoded image"""
     try:
@@ -48,46 +44,40 @@ def generate_qr_code(content):
         logger.error(traceback.format_exc())
         raise RuntimeError(f"Failed to generate QR code: {str(e)}")
 
-def generate_mbbank_qr():
-    """Generate a fixed MBBank QR code"""
-    global MBBANK_QR
-    if MBBANK_QR is None:
-        stk = "0982685374"
-        bank = "MBBANK"
-        amount = 1000000
-        note = "ThanhToan_API"
-        qr_url = f"https://me.mbbank.com.vn/mbqr/transfer?account={stk}&bank={bank}&amount={amount}&note={note}"
-        MBBANK_QR = {
-            "qr_image_base64": generate_qr_code(qr_url),
-            "mb_link": qr_url,
-            "note": note,
-            "amount": amount
-        }
-    return MBBANK_QR
+def generate_mbbank_qr(amount=1000000):
+    """Generate an MBBank QR code with the specified amount"""
+    stk = "0982685374"
+    bank = "MBBANK"
+    note = "ThanhToan_API"
+    qr_url = f"https://me.mbbank.com.vn/mbqr/transfer?account={stk}&bank={bank}&amount={amount}&note={note}"
+    return {
+        "qr_image_base64": generate_qr_code(qr_url),
+        "mb_link": qr_url,
+        "note": note,
+        "amount": amount
+    }
 
-def generate_momo_qr():
-    """Generate a fixed Momo QR code"""
-    global MOMO_QR
-    if MOMO_QR is None:
-        phone = "0982685374"
-        name = "DANG THIEN AN"
-        amount = 1000000
-        note = "ThanhToan_API"
-        momo_uri = f"momo://?action=pay&amount={amount}&receiver={phone}&name={name}&message={note}"
-        MOMO_QR = {
-            "qr_image_base64": generate_qr_code(momo_uri),
-            "momo_uri": momo_uri,
-            "note": note,
-            "amount": amount
-        }
-    return MOMO_QR
+def generate_momo_qr(amount=1000000):
+    """Generate a Momo QR code with the specified amount"""
+    phone = "0982685374"
+    name = "DANG THIEN AN"
+    note = "ThanhToan_API"
+    momo_uri = f"momo://?action=pay&amount={amount}&receiver={phone}&name={name}&message={note}"
+    return {
+        "qr_image_base64": generate_qr_code(momo_uri),
+        "momo_uri": momo_uri,
+        "note": note,
+        "amount": amount
+    }
 
 @app.get("/mbqr")
 def get_mb_qr(amount: Optional[int] = Query(None)):
-    """Get MBBank QR code - amount parameter is kept for compatibility but ignored"""
+    """Get MBBank QR code with the specified amount"""
     try:
-        logger.info(f"Serving MBBank QR code. Requested amount: {amount}")
-        response = JSONResponse(content=generate_mbbank_qr())
+        # Use the provided amount or default to 1000000 if not specified
+        payment_amount = amount if amount is not None else 1000000
+        logger.info(f"Serving MBBank QR code with amount: {payment_amount}")
+        response = JSONResponse(content=generate_mbbank_qr(payment_amount))
         response.headers["Access-Control-Allow-Origin"] = "*"
         return response
     except Exception as e:
@@ -99,10 +89,12 @@ def get_mb_qr(amount: Optional[int] = Query(None)):
 
 @app.get("/momoqr")
 def get_momo_qr(amount: Optional[int] = Query(None)):
-    """Get Momo QR code - amount parameter is kept for compatibility but ignored"""
+    """Get Momo QR code with the specified amount"""
     try:
-        logger.info(f"Serving Momo QR code. Requested amount: {amount}")
-        response = JSONResponse(content=generate_momo_qr())
+        # Use the provided amount or default to 1000000 if not specified
+        payment_amount = amount if amount is not None else 1000000
+        logger.info(f"Serving Momo QR code with amount: {payment_amount}")
+        response = JSONResponse(content=generate_momo_qr(payment_amount))
         response.headers["Access-Control-Allow-Origin"] = "*"
         return response
     except Exception as e:
@@ -116,7 +108,7 @@ def get_momo_qr(amount: Optional[int] = Query(None)):
 def health_check():
     """Health check endpoint"""
     try:
-        # Make sure QR codes are generated
+        # Just generate test QR codes to check functionality
         generate_mbbank_qr()
         generate_momo_qr()
         
@@ -141,8 +133,8 @@ def read_root():
         "message": "QR Code API is running", 
         "status": "active", 
         "endpoints": {
-            "mbqr": "/mbqr",
-            "momoqr": "/momoqr",
+            "mbqr": "/mbqr?amount=PRICE_IN_VND",
+            "momoqr": "/momoqr?amount=PRICE_IN_VND",
             "health": "/health"
         }
     })

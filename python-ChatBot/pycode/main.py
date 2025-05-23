@@ -104,9 +104,9 @@ class GroqAPI:
             raise ValueError("API key is missing. Please set the GROQ_API_KEY environment variable.")
         self.client = Groq(api_key=api_key)
         self.model_name = model_name
-        self.system_prompt = """Bạn là một trợ lý tư vấn mua sắm chuyên nghiệp tại cửa hàng máy tính.
-        Hãy trả lời một cách thân thiện, chuyên nghiệp và tự nhiên bằng tiếng Việt.
-        Khi tư vấn sản phẩm:
+        self.system_prompt = """Bạn là một trợ lý AI đa năng, có thể trò chuyện và tư vấn sản phẩm.
+        
+        Khi người dùng hỏi về sản phẩm hoặc mua sắm:
         1. Luôn chào hỏi khách hàng một cách lịch sự
         2. Phân tích nhu cầu của khách từ câu hỏi
         3. Đưa ra gợi ý phù hợp dựa trên các sản phẩm có sẵn
@@ -116,10 +116,16 @@ class GroqAPI:
         Khi không tìm thấy sản phẩm phù hợp:
         1. Xin lỗi khách hàng một cách chân thành
         2. Đề xuất tìm kiếm với từ khóa khác
-        3. Hoặc đề xuất các sản phẩm thay thế tương tự"""
+        3. Hoặc đề xuất các sản phẩm thay thế tương tự
+        
+        Khi người dùng trò chuyện về các chủ đề không liên quan đến sản phẩm:
+        1. Trả lời một cách tự nhiên, thân thiện và hữu ích
+        2. Cung cấp thông tin hoặc ý kiến nếu được hỏi
+        3. Luôn trả lời bằng tiếng Việt một cách lịch sự
+        4. Sẵn sàng chuyển hướng sang tư vấn sản phẩm nếu người dùng cần"""
 
-    def get_response(self, user_query: str, products: List[Product] = None) -> str:
-        if products:
+    def get_response(self, user_query: str, products: List[Product] = None, is_product_query: bool = True) -> str:
+        if is_product_query and products:
             product_info = "\n".join([
                 f"- {p.name} ({p.type}): {p.price:,}đ" +
                 (f"\n  Thương hiệu: {p.vendor}" if p.vendor else "") +
@@ -134,11 +140,17 @@ Các sản phẩm phù hợp:
 
 Hãy tư vấn cho khách hàng về các sản phẩm trên một cách tự nhiên, thân thiện và chuyên nghiệp. 
 Phân tích ưu điểm của từng sản phẩm và đề xuất sản phẩm phù hợp nhất với nhu cầu của khách."""
-        else:
+        elif is_product_query:
             prompt = f"""Query của khách hàng: {user_query}
 
 Hiện tại không tìm thấy sản phẩm phù hợp với yêu cầu này.
 Hãy đưa ra phản hồi thân thiện và gợi ý cách tìm kiếm khác hoặc sản phẩm thay thế."""
+        else:
+            # Handle general conversation
+            prompt = f"""Câu hỏi của người dùng: {user_query}
+
+Đây không phải là câu hỏi về sản phẩm mà là một câu hỏi thông thường.
+Hãy trả lời một cách tự nhiên, thân thiện và hữu ích bằng tiếng Việt."""
 
         messages = [
             {"role": "system", "content": self.system_prompt},
@@ -153,6 +165,57 @@ Hãy đưa ra phản hồi thân thiện và gợi ý cách tìm kiếm khác ho
             stop=None,
         )
         return response.choices[0].message.content
+
+def is_product_query(query: str) -> bool:
+    """Determine if the query is about products or general conversation."""
+    # List of common Vietnamese greetings and general phrases that are not product-related
+    general_phrases = [
+        'chào', 'xin chào', 'hello', 'hi', 'hey', 'chào buổi sáng', 'chào buổi chiều', 'chào buổi tối', 
+        'tạm biệt', 'bye', 'gặp lại sau', 'cảm ơn', 'khỏe không', 'khỏe không?', 'thế nào', 'thế nào?',
+        'bạn tên gì', 'bạn là ai', 'ai vậy', 'được làm bằng gì', 'làm thế nào', 'như thế nào', 
+        'giúp tôi', 'giúp đỡ', 'trợ giúp', 'tư vấn', 'giới thiệu', 'kể cho tôi', 'thời tiết', 
+        'dự báo', 'hôm nay', 'ngày mai', 'hôm qua', 'cuối tuần'
+    ]
+    
+    query_lower = query.lower().strip()
+    
+    # Check if query is just a greeting or general conversation
+    for phrase in general_phrases:
+        if query_lower == phrase or query_lower.startswith(phrase + ' ') or query_lower.endswith(' ' + phrase):
+            return False
+    
+    # If the query is very short (less than 3 words) and doesn't contain product terms, 
+    # it's likely a general conversation
+    if len(query_lower.split()) < 3:
+        product_found = False
+        for keyword in ['mua', 'giá', 'sản phẩm', 'laptop', 'máy tính']:
+            if keyword in query_lower:
+                product_found = True
+                break
+        if not product_found:
+            return False
+    
+    # List of product-related keywords
+    product_keywords = [
+        'mua', 'giá', 'bao nhiêu', 'sản phẩm', 'laptop', 'máy tính', 'pc', 
+        'card', 'màn hình', 'tai nghe', 'bàn phím', 'chuột', 'ram', 'ssd', 
+        'ổ cứng', 'mainboard', 'cpu', 'amd', 'intel', 'nvidia', 'geforce', 
+        'radeon', 'gaming', 'asus', 'acer', 'dell', 'hp', 'lenovo', 'msi',
+        'gigabyte', 'corsair', 'logitech', 'razer', 'cooler master', 'kingston',
+        'western digital', 'seagate', 'samsung', 'apple', 'macbook'
+    ]
+    
+    # Check for product-related keywords
+    for keyword in product_keywords:
+        if keyword in query_lower:
+            return True
+            
+    # Check for price inquiries
+    if re.search(r'\d+(?:[,.]\d+)?\s*(?:đồng|vnd|triệu|tr|k|nghìn)?', query_lower):
+        return True
+        
+    # If no product keywords are found, it's probably a general conversation
+    return False
 
 def search_products(query: str, price_range: Optional[tuple] = None, limit: int = 5) -> List[Product]:
     global products_df
@@ -268,8 +331,14 @@ async def query_endpoint(
     if not query:
         raise HTTPException(status_code=400, detail="Query parameter is required")
     
-    products = search_products(query)
-    logger.info(f"Found {len(products)} matching products")
+    # Determine if this is a product query or general conversation
+    product_related = is_product_query(query)
+    logger.info(f"Query classified as {'product-related' if product_related else 'general conversation'}")
+    
+    # Only search for products if it's a product query
+    products = search_products(query) if product_related else []
+    if product_related:
+        logger.info(f"Found {len(products)} matching products")
     
     try:
         if not GROQ_API_KEY:
@@ -278,48 +347,48 @@ async def query_endpoint(
         groq_api = GroqAPI(model)
         logger.info("Successfully initialized Groq API")
         
-        if products:
-            logger.info("Generating response with products")
-            response_text = groq_api.get_response(query, products)
-            logger.info("Generated response text")
-            return JSONResponse(
-                content={
-                    "response": [
-                        {"message": response_text, "type": "text"},
-                        *[{**p.dict(), "type": "product"} for p in products]
-                    ]
-                },
-                headers={
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type",
-                }
-            )
+        if product_related:
+            if products:
+                logger.info("Generating response with products")
+                response_text = groq_api.get_response(query, products, is_product_query=True)
+            else:
+                logger.info("No products found, generating fallback response")
+                response_text = groq_api.get_response(query, is_product_query=True)
         else:
-            logger.info("No products found, generating fallback response")
-            response_text = groq_api.get_response(query)
-            return JSONResponse(
-                content={
-                    "response": [
-                        {"message": response_text, "type": "text"}
-                    ]
-                },
-                headers={
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type",
-                }
-            )
+            # Handle general conversation
+            logger.info("Generating response for general conversation")
+            response_text = groq_api.get_response(query, is_product_query=False)
+        
+        logger.info("Generated response text")
+        
+        response_content = {
+            "response": [
+                {"message": response_text, "type": "text"}
+            ]
+        }
+        
+        # Add product information if this is a product query and products were found
+        if product_related and products:
+            response_content["response"].extend([{**p.dict(), "type": "product"} for p in products])
+        
+        return JSONResponse(
+            content=response_content,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            }
+        )
             
     except ValueError as ve:
         logger.error(f"Configuration error: {str(ve)}")
         return JSONResponse(
             content={
                 "response": [
-                    {"message": "Xin chào! Dưới đây là một số sản phẩm phù hợp với yêu cầu của bạn:", "type": "text"},
-                    *[{**p.dict(), "type": "product"} for p in products]
-                ] if products else [
-                    {"message": "Không tìm thấy sản phẩm phù hợp. Vui lòng thử lại với từ khóa khác.", "type": "text"}
+                    {"message": "Xin chào! Dưới đây là một số sản phẩm phù hợp với yêu cầu của bạn:" if product_related else "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau.", "type": "text"},
+                    *([{**p.dict(), "type": "product"} for p in products] if product_related and products else [])
+                ] if product_related and products else [
+                    {"message": "Không tìm thấy sản phẩm phù hợp. Vui lòng thử lại với từ khóa khác." if product_related else "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau.", "type": "text"}
                 ]
             },
             headers={
@@ -333,10 +402,10 @@ async def query_endpoint(
         return JSONResponse(
             content={
                 "response": [
-                    {"message": "Xin chào! Dưới đây là một số sản phẩm phù hợp với yêu cầu của bạn:", "type": "text"},
-                    *[{**p.dict(), "type": "product"} for p in products]
-                ] if products else [
-                    {"message": "Không tìm thấy sản phẩm phù hợp. Vui lòng thử lại với từ khóa khác.", "type": "text"}
+                    {"message": "Xin chào! Dưới đây là một số sản phẩm phù hợp với yêu cầu của bạn:" if product_related else "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau.", "type": "text"},
+                    *([{**p.dict(), "type": "product"} for p in products] if product_related and products else [])
+                ] if product_related and products else [
+                    {"message": "Không tìm thấy sản phẩm phù hợp. Vui lòng thử lại với từ khóa khác." if product_related else "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau.", "type": "text"}
                 ]
             },
             headers={

@@ -45,7 +45,6 @@ export async function insertOrder({
       discount_code: discount ? discount.code : '',
       status: 'pending', // Trạng thái mặc định khi tạo đơn hàng
       order_date: new Date().toISOString(),
-      shipping_region: mapCityToRegion(addressData.city),
     };
 
     // Tính tổng tiền
