@@ -14,6 +14,7 @@ import { useNotifications } from '../features/notify/NotificationContext';
 import { useAuth } from '../features/auth/AuthContext';
 import { useUser } from '../features/user/UserContext';
 import { useCart } from '@/utils/CartContext';
+import UserDropdownMenu from './UserDropdownMenu';
 
 function Header() {
   const [showCategories, setShowCategories] = useState(false);
@@ -22,12 +23,12 @@ function Header() {
   const notificationRef = useRef(null);
   const userMenuRef = useRef(null);
   const navigate = useNavigate();
-  const { newCount: notificationCount /*addToCart*/ } = useNotifications();
+  const { newCount: notificationCount } = useNotifications();
   const { user, signOut } = useAuth();
   const { userInfo } = useUser();
   const { cart } = useCart();
 
-  const handleCloseCategories = () => setShowCategories(false);
+  const isAdmin = userInfo?.role === 'admin';
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -44,11 +45,6 @@ function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  // const handleAddToCart = () => {
-  //   addToCart({ name: 'Sản phẩm' });
-  //   // alert('Đã thêm sản phẩm vào giỏ hàng!');
-  // };
 
   const handleLoginClick = () => {
     navigate('/home', { state: { modal: 'login' } });
@@ -102,9 +98,7 @@ function Header() {
             onMouseLeave={() => setShowCategories(false)}
           >
             <div
-              className='flex items-center gap-2 bg-red-700 px-4 py-2 rounded-lg cursor-pointer 
-                hover:bg-red-800 hover:scale-105 hover:shadow-lg 
-                transition-all duration-300 ease-in-out'
+              className='flex items-center gap-2 bg-red-700 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-800 hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out'
               onClick={() => setShowCategories(!showCategories)}
             >
               <span className='text-base font-semibold tracking-wide'>
@@ -117,7 +111,7 @@ function Header() {
               />
             </div>
             {showCategories && (
-              <LaptopCategories onClose={handleCloseCategories} />
+              <LaptopCategories onClose={() => setShowCategories(false)} />
             )}
           </div>
 
@@ -159,9 +153,7 @@ function Header() {
 
           <div
             className='relative flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
-            onClick={() => {
-              handleShoppingClick();
-            }}
+            onClick={handleShoppingClick}
           >
             <div className='relative'>
               <IoCartOutline className='text-xl' />
@@ -191,26 +183,13 @@ function Header() {
                 <IoChevronDownOutline className='text-lg' />
               </div>
               {showUserMenu && (
-                <div className='absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50'>
-                  <button
-                    className='w-full text-left px-4 py-2 hover:bg-gray-100'
-                    onClick={handleGoToUser}
-                  >
-                    Thông tin tài khoản
-                  </button>
-                  <button
-                    className='w-full text-left px-4 py-2 hover:bg-gray-100'
-                    onClick={handleGoToOrders}
-                  >
-                    Đơn hàng của tôi
-                  </button>
-                  <button
-                    className='w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600'
-                    onClick={handleSignOut}
-                  >
-                    Đăng xuất
-                  </button>
-                </div>
+                <UserDropdownMenu
+                  isAdmin={isAdmin}
+                  onClose={() => setShowUserMenu(false)}
+                  onGoToUser={handleGoToUser}
+                  onGoToOrders={handleGoToOrders}
+                  onSignOut={handleSignOut}
+                />
               )}
             </div>
           ) : (

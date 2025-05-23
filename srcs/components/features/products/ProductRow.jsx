@@ -95,7 +95,7 @@ function ProductRow({
               >
                 {items.map((product, index) => (
                   <div
-                    key={index}
+                    key={product.id || `${category}-${index}`}
                     className='min-w-[250px] max-w-[250px] flex-shrink-0'
                   >
                     <ProductCard {...product} />
