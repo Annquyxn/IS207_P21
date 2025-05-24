@@ -76,6 +76,7 @@ function BuildPartRow({ partKey, name, image, selected, onSelect }) {
                   return (
                     <ProductMiniCard
                       key={camelItem.id}
+                      id={camelItem.id}
                       title={camelItem.title}
                       image={camelItem.image}
                       salePrice={camelItem.salePrice}
@@ -92,7 +93,7 @@ function BuildPartRow({ partKey, name, image, selected, onSelect }) {
                 <div className='text-center mt-4'>
                   <button
                     onClick={() => setShowAll(!showAll)}
-                    className='text-sm text-red-600 hover:underline'
+                    className='mt-4 mx-auto text-sm text-red-600 border border-red-500 px-4 py-1.5 rounded hover:bg-red-50 transition'
                   >
                     {showAll ? 'Thu gọn' : 'Xem thêm'}
                   </button>

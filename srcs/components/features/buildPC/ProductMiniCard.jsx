@@ -1,50 +1,66 @@
 function ProductMiniCard({
+  id,
   title,
   image,
   salePrice,
   originalPrice,
   onSelect,
-  onViewDetail,
   className,
 }) {
   return (
     <div
-      className={`min-w-[160px] max-w-full border rounded-lg bg-white p-3 flex flex-col justify-between shadow hover:shadow-md transition ${className}`}
+      className={`min-w-[160px] max-w-full bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200 overflow-hidden ${className}`}
     >
-      <img
-        src={image}
-        alt={title}
-        className='h-[90px] object-contain mb-2 mx-auto'
-      />
-
-      <h3 className='text-sm font-medium text-gray-800 line-clamp-2 h-[3em] mb-1'>
-        {title}
-      </h3>
-
-      <div className='flex items-center justify-center gap-2 text-sm'>
-        <span className='text-gray-400 line-through'>
-          {originalPrice
-            ? Number(originalPrice).toLocaleString('vi-VN') + 'đ'
-            : ''}
-        </span>
-        <span className='text-red-600 font-semibold'>
-          {salePrice ? Number(salePrice).toLocaleString('vi-VN') + 'đ' : ''}
-        </span>
+      {/* Image */}
+      <div className='p-3 flex items-center justify-center h-24 bg-gray-50'>
+        <img
+          src={image}
+          alt={title}
+          className='max-h-full max-w-full object-contain'
+        />
       </div>
 
-      <div className='flex justify-between mt-3 gap-2'>
-        <button
-          onClick={onViewDetail}
-          className='text-blue-600 text-xs hover:underline'
-        >
-          Xem chi tiết
-        </button>
-        <button
-          onClick={onSelect}
-          className='bg-red-500 text-white text-x px-3 py-2 rounded hover:bg-red-600'
-        >
-          Chọn
-        </button>
+      {/* Content */}
+      <div className='p-3 border-t border-gray-100'>
+        {/* Title */}
+        <h3 className='text-sm text-gray-700 line-clamp-2 mb-2 h-10 leading-5'>
+          {title}
+        </h3>
+
+        {/* Price */}
+        <div className='mb-3'>
+          <div className='flex items-baseline gap-2'>
+            {salePrice && (
+              <span className='text-base font-semibold text-gray-900'>
+                {Number(salePrice).toLocaleString('vi-VN')}đ
+              </span>
+            )}
+            {originalPrice && originalPrice !== salePrice && (
+              <span className='text-xs text-gray-400 line-through'>
+                {Number(originalPrice).toLocaleString('vi-VN')}đ
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className='flex items-center justify-between'>
+          <a
+            href={`/product/${id}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-xs text-gray-500 hover:text-gray-700 underline underline-offset-2'
+          >
+            Chi tiết
+          </a>
+
+          <button
+            onClick={onSelect}
+            className='bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded transition-colors'
+          >
+            Chọn
+          </button>
+        </div>
       </div>
     </div>
   );

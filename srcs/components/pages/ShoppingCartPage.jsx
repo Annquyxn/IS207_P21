@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import CartHeader from '@/components/cart/CartHeader';
 import CheckoutProgress from '@/components/cart/CheckoutProgress';
 import EmptyCart from '@/components/cart/EmptyCart';
@@ -75,8 +75,6 @@ const ShoppingCartPage = () => {
       return;
     }
 
-    // Always go directly to order page with a properly formatted single product
-    // Regardless of how many items, we format it as a single product for OrderPage compatibility
     const singleProduct =
       cart.length === 1
         ? prepareProductForOrder(cart[0])
@@ -127,7 +125,7 @@ const ShoppingCartPage = () => {
   };
 
   return (
-    <motion.main
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -175,7 +173,7 @@ const ShoppingCartPage = () => {
                     <div className='absolute right-3 -bottom-4 z-10 flex gap-2'>
                       <button
                         onClick={() => handleOrderNow(item.id)}
-                        className='text-xs bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-blue-600 transition shadow-sm'
+                        className='text-xs bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600 transition shadow-sm'
                       >
                         Mua ngay
                       </button>
@@ -241,7 +239,7 @@ const ShoppingCartPage = () => {
           </motion.div>
         )}
       </section>
-    </motion.main>
+    </motion.div>
   );
 };
 
