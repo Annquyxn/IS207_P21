@@ -19,7 +19,7 @@ function Modal({ isOpen, onClose, title, children }) {
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className='bg-white w-[1000px] h-[650px] rounded shadow-lg border border-gray-200 flex flex-col overflow-hidden relative'
+          className='bg-white w-[1000px] h-[670px] rounded shadow-lg border border-gray-200 flex flex-col overflow-hidden relative'
         >
           <button
             onClick={onClose}
