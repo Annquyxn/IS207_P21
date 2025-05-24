@@ -53,279 +53,281 @@ function App() {
           <NotificationProvider>
             <main className='flex-1'>
               <AnimatePresence mode='wait'>
-                <ScrollToTop />
-                <Routes>
-                  <Route path='/' element={<Layout />}>
-                    <Route index element={<Navigate replace to='home' />} />
-                    {adminRoute}
+                <div>
+                  <ScrollToTop />
+                  <Routes>
+                    <Route path='/' element={<Layout />}>
+                      <Route index element={<Navigate replace to='home' />} />
+                      {adminRoute}
 
-                    {/* Public routes */}
-                    <Route
-                      path='home'
-                      element={
-                        <AnimatedPage>
-                          <HomePage />
-                        </AnimatedPage>
-                      }
-                    />
-                    <Route
-                      path='san-pham'
-                      element={
-                        <AnimatedPage>
-                          <ProductPage />
-                        </AnimatedPage>
-                      }
-                    />
-                    <Route
-                      path='shopping-cart'
-                      element={
-                        <AnimatedPage>
-                          <ShoppingCartPage />
-                        </AnimatedPage>
-                      }
-                    />
-                    <Route
-                      path='/product/:id'
-                      element={
-                        <AnimatedPage>
-                          <ProductDetailPage />
-                        </AnimatedPage>
-                      }
-                    />
-                    <Route
-                      path='login'
-                      element={
-                        <AnimatedPage>
-                          <LoginForm />
-                        </AnimatedPage>
-                      }
-                    />
-
-                    <Route
-                      path='reset-password'
-                      element={
-                        <AnimatedPage>
-                          <ResetPassword />
-                        </AnimatedPage>
-                      }
-                    />
-
-                    {/* Protected routes */}
-                    <Route
-                      path='user/*'
-                      element={
-                        <ProtectedRoute>
-                          <User />
-                        </ProtectedRoute>
-                      }
-                    >
+                      {/* Public routes */}
                       <Route
-                        index
+                        path='home'
                         element={
                           <AnimatedPage>
-                            <UserPage />
+                            <HomePage />
                           </AnimatedPage>
                         }
                       />
                       <Route
-                        path='address'
+                        path='san-pham'
                         element={
                           <AnimatedPage>
-                            <UserAddress />
+                            <ProductPage />
                           </AnimatedPage>
                         }
                       />
                       <Route
-                        path='orders'
+                        path='shopping-cart'
                         element={
                           <AnimatedPage>
-                            <UserOrders />
+                            <ShoppingCartPage />
                           </AnimatedPage>
                         }
                       />
                       <Route
-                        path='update'
+                        path='/product/:id'
                         element={
                           <AnimatedPage>
-                            <AccountForm />
+                            <ProductDetailPage />
                           </AnimatedPage>
+                        }
+                      />
+                      <Route
+                        path='login'
+                        element={
+                          <AnimatedPage>
+                            <LoginForm />
+                          </AnimatedPage>
+                        }
+                      />
+
+                      <Route
+                        path='reset-password'
+                        element={
+                          <AnimatedPage>
+                            <ResetPassword />
+                          </AnimatedPage>
+                        }
+                      />
+
+                      {/* Protected routes */}
+                      <Route
+                        path='user/*'
+                        element={
+                          <ProtectedRoute>
+                            <User />
+                          </ProtectedRoute>
+                        }
+                      >
+                        <Route
+                          index
+                          element={
+                            <AnimatedPage>
+                              <UserPage />
+                            </AnimatedPage>
+                          }
+                        />
+                        <Route
+                          path='address'
+                          element={
+                            <AnimatedPage>
+                              <UserAddress />
+                            </AnimatedPage>
+                          }
+                        />
+                        <Route
+                          path='orders'
+                          element={
+                            <AnimatedPage>
+                              <UserOrders />
+                            </AnimatedPage>
+                          }
+                        />
+                        <Route
+                          path='update'
+                          element={
+                            <AnimatedPage>
+                              <AccountForm />
+                            </AnimatedPage>
+                          }
+                        />
+                      </Route>
+
+                      <Route
+                        path='checkout'
+                        element={
+                          <ProtectedRoute>
+                            <AnimatedPage>
+                              <CheckoutPage />
+                            </AnimatedPage>
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      <Route
+                        path='complete'
+                        element={
+                          <ProtectedRoute>
+                            <AnimatedPage>
+                              <CompleteOrderPage />
+                            </AnimatedPage>
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      <Route
+                        path='payment-page'
+                        element={
+                          <ProtectedRoute>
+                            <AnimatedPage>
+                              <PaymentPage />
+                            </AnimatedPage>
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      <Route
+                        path='ship-info'
+                        element={
+                          <ProtectedRoute>
+                            <AnimatedPage>
+                              <ShippingInfoPage />
+                            </AnimatedPage>
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      <Route
+                        path='build-pc'
+                        element={
+                          <ProtectedRoute>
+                            <AnimatedPage>
+                              <BuildPCPage />
+                            </AnimatedPage>
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      <Route
+                        path='order'
+                        element={
+                          <ProtectedRoute>
+                            <AnimatedPage>
+                              <OrderPage />
+                            </AnimatedPage>
+                          </ProtectedRoute>
                         }
                       />
                     </Route>
 
+                    {/* Other routes */}
                     <Route
-                      path='checkout'
+                      path='about'
                       element={
-                        <ProtectedRoute>
-                          <AnimatedPage>
-                            <CheckoutPage />
-                          </AnimatedPage>
-                        </ProtectedRoute>
+                        <AnimatedPage>
+                          <AboutGearVN />
+                        </AnimatedPage>
                       }
                     />
-
                     <Route
-                      path='complete'
+                      path='jobs'
                       element={
-                        <ProtectedRoute>
-                          <AnimatedPage>
-                            <CompleteOrderPage />
-                          </AnimatedPage>
-                        </ProtectedRoute>
+                        <AnimatedPage>
+                          <JobPage />
+                        </AnimatedPage>
                       }
                     />
-
                     <Route
-                      path='payment-page'
+                      path='contact'
                       element={
-                        <ProtectedRoute>
-                          <AnimatedPage>
-                            <PaymentPage />
-                          </AnimatedPage>
-                        </ProtectedRoute>
+                        <AnimatedPage>
+                          <CustomerSupportForm />
+                        </AnimatedPage>
                       }
                     />
-
                     <Route
-                      path='ship-info'
+                      path='warranty-policy'
                       element={
-                        <ProtectedRoute>
-                          <AnimatedPage>
-                            <ShippingInfoPage />
-                          </AnimatedPage>
-                        </ProtectedRoute>
+                        <AnimatedPage>
+                          <WarrantyPolicy />
+                        </AnimatedPage>
                       }
                     />
-
                     <Route
-                      path='build-pc'
+                      path='shipping-policy'
                       element={
-                        <ProtectedRoute>
-                          <AnimatedPage>
-                            <BuildPCPage />
-                          </AnimatedPage>
-                        </ProtectedRoute>
+                        <AnimatedPage>
+                          <ShippingPolicy />
+                        </AnimatedPage>
                       }
                     />
-
                     <Route
-                      path='order'
+                      path='privacy-policy'
                       element={
-                        <ProtectedRoute>
-                          <AnimatedPage>
-                            <OrderPage />
-                          </AnimatedPage>
-                        </ProtectedRoute>
+                        <AnimatedPage>
+                          <PrivacyPolicy />
+                        </AnimatedPage>
                       }
                     />
-                  </Route>
-
-                  {/* Other routes */}
-                  <Route
-                    path='about'
-                    element={
-                      <AnimatedPage>
-                        <AboutGearVN />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='jobs'
-                    element={
-                      <AnimatedPage>
-                        <JobPage />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='contact'
-                    element={
-                      <AnimatedPage>
-                        <CustomerSupportForm />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='warranty-policy'
-                    element={
-                      <AnimatedPage>
-                        <WarrantyPolicy />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='shipping-policy'
-                    element={
-                      <AnimatedPage>
-                        <ShippingPolicy />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='privacy-policy'
-                    element={
-                      <AnimatedPage>
-                        <PrivacyPolicy />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='showrooms'
-                    element={
-                      <AnimatedPage>
-                        <ShowroomSystem />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='shopping-guide'
-                    element={
-                      <AnimatedPage>
-                        <ShoppingGuide />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='payment-guide'
-                    element={
-                      <AnimatedPage>
-                        <PaymentGuide />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='installment'
-                    element={
-                      <AnimatedPage>
-                        <InstallmentPlan />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='warranty-lookup'
-                    element={
-                      <AnimatedPage>
-                        <WarrantyLookup />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='forgot-password'
-                    element={
-                      <AnimatedPage>
-                        <ForgotPasswordPage />
-                      </AnimatedPage>
-                    }
-                  />
-                  <Route
-                    path='reset-password-notice'
-                    element={
-                      <AnimatedPage>
-                        <ResetPasswordNotice />
-                      </AnimatedPage>
-                    }
-                  />
-                </Routes>
+                    <Route
+                      path='showrooms'
+                      element={
+                        <AnimatedPage>
+                          <ShowroomSystem />
+                        </AnimatedPage>
+                      }
+                    />
+                    <Route
+                      path='shopping-guide'
+                      element={
+                        <AnimatedPage>
+                          <ShoppingGuide />
+                        </AnimatedPage>
+                      }
+                    />
+                    <Route
+                      path='payment-guide'
+                      element={
+                        <AnimatedPage>
+                          <PaymentGuide />
+                        </AnimatedPage>
+                      }
+                    />
+                    <Route
+                      path='installment'
+                      element={
+                        <AnimatedPage>
+                          <InstallmentPlan />
+                        </AnimatedPage>
+                      }
+                    />
+                    <Route
+                      path='warranty-lookup'
+                      element={
+                        <AnimatedPage>
+                          <WarrantyLookup />
+                        </AnimatedPage>
+                      }
+                    />
+                    <Route
+                      path='forgot-password'
+                      element={
+                        <AnimatedPage>
+                          <ForgotPasswordPage />
+                        </AnimatedPage>
+                      }
+                    />
+                    <Route
+                      path='reset-password-notice'
+                      element={
+                        <AnimatedPage>
+                          <ResetPasswordNotice />
+                        </AnimatedPage>
+                      }
+                    />
+                  </Routes>
+                </div>
               </AnimatePresence>
               <Toaster
                 position='top-center'
