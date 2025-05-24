@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../features/auth/AuthContext';
+import { Link } from 'react-router-dom';
 import {
   FiMenu,
   FiX,
@@ -24,21 +25,18 @@ const AdminLayout = ({ routes }) => {
 
   const location = useLocation();
 
-  // Find the current route to display its name in the header
   const currentRoute = routes?.find(
     (route) =>
       location.pathname === `/admin/${route.path}` ||
       (location.pathname === '/admin' && route.path === '')
   );
 
-  // Close mobile sidebar when route changes
   useEffect(() => {
     setIsMobileSidebarOpen(false);
   }, [location.pathname]);
 
   return (
     <div className='flex h-screen bg-gray-100 overflow-hidden font-sans'>
-      {/* Mobile sidebar backdrop */}
       {isMobileSidebarOpen && (
         <div
           className='fixed inset-0 bg-gray-900 bg-opacity-50 z-20 lg:hidden'
@@ -51,7 +49,6 @@ const AdminLayout = ({ routes }) => {
           fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transition duration-300 transform lg:translate-x-0 lg:static lg:z-auto
         `}
       >
-        {/* Sidebar Header */}
         <div className='flex items-center justify-between h-16 px-6 bg-red-600 text-white'>
           <div className='flex items-center space-x-2'>
             <img src='/public/logo-1.png' alt='Logo' className='w-8 h-8' />
@@ -70,8 +67,8 @@ const AdminLayout = ({ routes }) => {
           <ul className='space-y-1'>
             {routes?.map((route) => (
               <li key={route.path}>
-                <a
-                  href={`/admin/${route.path}`}
+                <Link
+                  to={`/admin/${route.path}`}
                   className={`
                     flex items-center px-4 py-3 text-gray-700 rounded-lg transition-colors
                     ${
@@ -84,7 +81,7 @@ const AdminLayout = ({ routes }) => {
                 >
                   <span className='text-xl mr-3'>{route.icon}</span>
                   <span>{route.name}</span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -193,12 +190,12 @@ const AdminLayout = ({ routes }) => {
                     className='absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-50'
                   >
                     <div className='py-2'>
-                      <a
-                        href='/admin/settings'
+                      <Link
+                        to='/admin/settings'
                         className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
                       >
                         Cài đặt tài khoản
-                      </a>
+                      </Link>
                       <button
                         onClick={signOut}
                         className='block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100'

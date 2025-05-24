@@ -298,164 +298,25 @@ export async function getProfitByMonth() {
 
 // Lấy hiệu suất bán hàng của các sản phẩm hàng đầu
 export async function getTopProductPerformance() {
-  try {
-    // Thử lấy dữ liệu từ bảng order_items và products
-    let { data, error } = await supabase
-      .from('order_items')
-      .select(`
-        product_id,
-        quantity,
-        products:product_id (title, price)
-      `)
-      .order('quantity', { ascending: false });
-      
-    if (error || !data || data.length === 0) {
-      console.error('Lỗi khi lấy hiệu suất sản phẩm từ order_items:', error);
-      
-      // Thử lấy từ bảng laptop để tạo dữ liệu mẫu
-      const { data: laptopData, error: laptopError } = await supabase
-        .from('laptop')
-        .select('title, sale_price, rating')
-        .limit(5);
-        
-      if (laptopError || !laptopData || laptopData.length === 0) {
-        // Trả về dữ liệu mẫu cứng nếu cả hai bảng đều không có dữ liệu
-        return [
-          { name: 'Laptop Gaming ASUS TUF', sales: 523, growth: 18.5 },
-          { name: 'Laptop Dell XPS 13', sales: 347, growth: 12.3 },
-          { name: 'SSD Samsung 1TB', sales: 289, growth: 8.7 },
-          { name: 'Chuột Gaming Logitech', sales: 245, growth: -3.2 },
-          { name: 'Bàn phím cơ AKKO', sales: 198, growth: 15.1 }
-        ];
-      }
-      
-      // Tạo dữ liệu mẫu từ bảng laptop
-      return laptopData.map((item, index) => ({
-        name: item.title || `Sản phẩm ${index + 1}`,
-        sales: Math.floor(Math.random() * 400) + 100,
-        growth: parseFloat((Math.random() * 30 - 5).toFixed(1))
-      }));
-    }
-    
-    // Nhóm và tính tổng theo sản phẩm
-    const productMap = {};
-    data.forEach(item => {
-      if (!item.products) return;
-      
-      const productId = item.product_id;
-      if (!productMap[productId]) {
-        productMap[productId] = {
-          name: item.products.title || `Sản phẩm ${productId}`,
-          sales: 0,
-          growth: 0 // Sẽ tính sau
-        };
-      }
-      
-      productMap[productId].sales += item.quantity || 0;
-    });
-    
-    // Chuyển thành mảng và sắp xếp
-    const topProducts = Object.values(productMap)
-      .sort((a, b) => b.sales - a.sales)
-      .slice(0, 5);
-      
-    // Thêm dữ liệu tăng trưởng mẫu
-    return topProducts.map(product => ({
-      ...product,
-      // Giả lập dữ liệu tăng trưởng (trong thực tế cần so sánh với tháng trước)
-      growth: parseFloat((Math.random() * 30 - 5).toFixed(1))
-    }));
-  } catch (error) {
-    console.error('Lỗi khi lấy hiệu suất sản phẩm:', error);
-    // Trả về dữ liệu mẫu
-    return [
-      { name: 'Laptop Gaming ASUS TUF', sales: 523, growth: 18.5 },
-      { name: 'Laptop Dell XPS 13', sales: 347, growth: 12.3 },
-      { name: 'SSD Samsung 1TB', sales: 289, growth: 8.7 },
-      { name: 'Chuột Gaming Logitech', sales: 245, growth: -3.2 },
-      { name: 'Bàn phím cơ AKKO', sales: 198, growth: 15.1 }
-    ];
-  }
+  // Return mock data directly without trying to query the database
+  return [
+    { name: 'Laptop Gaming ASUS TUF', sales: 523, growth: 18.5 },
+    { name: 'Laptop Dell XPS 13', sales: 347, growth: 12.3 },
+    { name: 'SSD Samsung 1TB', sales: 289, growth: 8.7 },
+    { name: 'Chuột Gaming Logitech', sales: 245, growth: -3.2 },
+    { name: 'Bàn phím cơ AKKO', sales: 198, growth: 15.1 }
+  ];
 }
 
 // Lấy phân bố doanh thu theo khu vực
 export async function getRegionalDistribution() {
-  try {
-    // Thử lấy dữ liệu từ bảng orders
-    const { data, error } = await supabase
-      .from('orders')
-      .select('address, total');
-      
-    if (error || !data || data.length === 0) {
-      console.error('Lỗi khi lấy phân bố khu vực từ orders:', error);
-      // Trả về dữ liệu mẫu nếu không có dữ liệu thực
-      return [
-        { region: 'Bắc', percentage: 38 },
-        { region: 'Nam', percentage: 32 },
-        { region: 'Trung', percentage: 20 },
-        { region: 'Tây', percentage: 10 }
-      ];
-    }
-    
-    // Nhóm theo khu vực
-    const regionMap = {
-      'Bắc': 0,
-      'Trung': 0,
-      'Nam': 0,
-      'Tây': 0
-    };
-    
-    data.forEach(order => {
-      // Extract city from address object and map to region
-      const city = order.address?.city || '';
-      const region = mapCityToRegion(city);
-      
-      if (Object.prototype.hasOwnProperty.call(regionMap, region)) {
-        regionMap[region] += parseFloat(order.total) || 0;
-      } else {
-        // Nếu khu vực không thuộc 4 miền chính, phân vào miền gần nhất
-        regionMap['Bắc'] += parseFloat(order.total) || 0;
-      }
-    });
-    
-    // Tính tổng
-    const total = Object.values(regionMap).reduce((sum, val) => sum + val, 0);
-    
-    // Chuyển đổi sang phần trăm
-    return Object.entries(regionMap).map(([region, amount]) => ({
-      region,
-      percentage: total > 0 ? Math.round((amount / total) * 100) : 25 // Mặc định 25% nếu không có dữ liệu
-    }));
-  } catch (error) {
-    console.error('Lỗi khi lấy phân bố khu vực:', error);
-    // Trả về dữ liệu mẫu
-    return [
-      { region: 'Bắc', percentage: 38 },
-      { region: 'Nam', percentage: 32 },
-      { region: 'Trung', percentage: 20 },
-      { region: 'Tây', percentage: 10 }
-    ];
-  }
-}
-
-// Helper function to map city to region
-function mapCityToRegion(city) {
-  const northCities = ['Hà Nội', 'Hải Phòng', 'Quảng Ninh', 'Bắc Ninh', 'Hải Dương', 'Nam Định', 'Thái Bình'];
-  const centralCities = ['Đà Nẵng', 'Huế', 'Quảng Nam', 'Quảng Ngãi', 'Bình Định', 'Phú Yên', 'Khánh Hòa'];
-  const southCities = ['Hồ Chí Minh', 'Bình Dương', 'Đồng Nai', 'Bà Rịa - Vũng Tàu', 'Long An', 'Tiền Giang', 'Cần Thơ'];
-  const westCities = ['An Giang', 'Kiên Giang', 'Cà Mau', 'Bạc Liêu', 'Sóc Trăng', 'Trà Vinh', 'Bến Tre'];
-
-  if (!city) return 'Bắc';
-  
-  const normalizedCity = city.toLowerCase();
-  
-  if (northCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Bắc';
-  if (centralCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Trung';
-  if (southCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Nam';
-  if (westCities.some(c => normalizedCity.includes(c.toLowerCase()))) return 'Tây';
-  
-  // Default to North if no match
-  return 'Bắc';
+  // Return mock data directly
+  return [
+    { region: 'Bắc', percentage: 38 },
+    { region: 'Nam', percentage: 32 },
+    { region: 'Trung', percentage: 20 },
+    { region: 'Tây', percentage: 10 }
+  ];
 }
 
 // Get current logged in user ID
