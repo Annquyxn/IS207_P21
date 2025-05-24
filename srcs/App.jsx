@@ -53,7 +53,7 @@ function App() {
           <NotificationProvider>
             <main className='flex-1'>
               <AnimatePresence /*mode='wait'*/>
-                <ScrollToTop />
+                <ScrollToTop key="scroll-to-top" />
                 <Routes>
                   <Route path="/" element={<Layout />}>
                     <Route index element={<Navigate replace to="home" />} />

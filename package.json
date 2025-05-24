@@ -1,14 +1,20 @@
 {
-  "name": "package",
+  "name": "education-platform",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Education Platform with Frontend and Backend Services",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "services": "cd scripts && run_all_services.bat",
+    "service:invoice": "cd scripts && start_invoice_service.bat",
+    "service:qrcode": "cd scripts && start_qr_service.bat",
+    "server": "concurrently \"npm run dev\" \"npm run services\""
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
@@ -46,6 +52,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.1.2",
     "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react-hooks": "^5.2.0",

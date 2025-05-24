@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/components/services/supabase';
@@ -7,7 +7,7 @@ import Spinner from '../ui/Spinner';
 // DEVELOPMENT MODE - Authentication Bypass
 const BYPASS_AUTH = true; // Set to false to re-enable authentication
 
-const AdminRoute = ({ children }) => {
+const AdminRoute = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -36,10 +36,10 @@ const AdminRoute = ({ children }) => {
     return <Spinner className='w-10 h-10' />;
   }
 
-  // If bypassing auth, always render children
+  // If bypassing auth, always render the outlet
   if (BYPASS_AUTH) {
     console.log("DEVELOPMENT MODE: Authentication bypassed for admin routes");
-    return children;
+    return <Outlet />;
   }
 
   // Otherwise, check if user is admin
@@ -47,7 +47,7 @@ const AdminRoute = ({ children }) => {
     return <Navigate to='/login' replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default AdminRoute;

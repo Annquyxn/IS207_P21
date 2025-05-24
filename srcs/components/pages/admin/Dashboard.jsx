@@ -59,11 +59,6 @@ const chartVariants = {
   }
 };
 
-// Format currency to Vietnamese format
-function formatCurrency(amount) {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-}
-
 // Dashboard Card Component
 const DashboardCard = ({ title, value, icon, change, changeType }) => {
   return (
@@ -166,23 +161,10 @@ const Dashboard = () => {
     fetchDashboardStats();
   }, []);
 
-  // Format currency helper
+  // Format currency helper with simple string formatting
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value).replace(/\s/g, '');
-  };
-
-  // Format date helper
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('vi-VN', {
-      day: 'numeric',
-      month: 'numeric',
-      year: 'numeric'
-    });
+    // Format as Vietnamese currency without using Intl
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
   };
 
   // Mock recent orders - in a real app, these would come from an API
@@ -415,7 +397,7 @@ const Dashboard = () => {
                 <AnimatePresence mode="sync">
                   {recentOrders.map((order, index) => (
                     <motion.div 
-                      key={`order-${order.id}`}
+                      key={`order-${order.id}-${index}`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, height: 0 }}
@@ -467,7 +449,7 @@ const Dashboard = () => {
                 <AnimatePresence mode="sync">
                   {dashboardStats.topProducts.map((product, index) => (
                     <motion.div 
-                      key={`product-${index}`}
+                      key={`product-${product.id || index}-${index}`}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
@@ -514,7 +496,7 @@ const Dashboard = () => {
                 <AnimatePresence mode="sync">
                   {recentReviews.map((review, index) => (
                     <motion.div 
-                      key={`review-${review.id}`}
+                      key={`review-${review.id}-${index}`}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, height: 0 }}
