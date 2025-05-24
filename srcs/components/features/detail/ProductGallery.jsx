@@ -20,18 +20,19 @@ const ProductGallery = ({ image, thumbnails = [] }) => {
       <div className='border border-gray-200  bg-white  p-1 space-y-4'>
         {/* Ảnh lớn */}
         <div className='relative aspect-video overflow-hidden  bg-gray-50'>
-          <AnimatePresence mode='wait'>
-            <motion.img
-              key={images[index]}
+          <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            className='w-full h-full absolute'
+          >
+            <img
               src={images[index]}
               alt={`Ảnh ${index + 1}`}
-              initial={{ opacity: 0.5, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.3 }}
               className='w-full h-full object-contain'
             />
-          </AnimatePresence>
+          </motion.div>
 
           {/* Nút chuyển ảnh lớn */}
           <button
@@ -61,7 +62,7 @@ const ProductGallery = ({ image, thumbnails = [] }) => {
           <div ref={scrollRef} className='flex gap-3 overflow-x-auto px-8'>
             {images.map((img, i) => (
               <button
-                key={i}
+                key={`thumb-${i}-${img || 'noimg'}`}
                 onClick={() => setIndex(i)}
                 className={`min-w-[70px] h-[70px] overflow-hidden border transition-all duration-200 ${
                   i === index

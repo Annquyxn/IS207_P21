@@ -162,17 +162,14 @@ const ProductCard = ({
           duration: 2000,
         });
       } else {
-        // If there are multiple items, go to shopping cart
         navigate('/shopping-cart');
       }
 
-      // Hide checkout options
       setShowCheckoutOptions(false);
     },
     [navigate]
   );
 
-  // Handle continue shopping
   const handleContinueShopping = useCallback((e) => {
     e.stopPropagation();
     setShowCheckoutOptions(false);
@@ -181,7 +178,7 @@ const ProductCard = ({
   return (
     <div
       onClick={handleNavigate}
-      className='relative bg-white p-4 rounded-2xl flex flex-col justify-between h-full transition-transform duration-300 cursor-pointer shadow hover:shadow-lg hover:scale-107 active:scale-95 ring-2 ring-transparent hover:ring-red-300 focus:ring-red-400'
+      className='relative bg-white p-4 rounded-xs flex flex-col justify-between h-full shadow transition-all duration-300 transform  hover:shadow-xl hover:ring-2 hover:ring-red-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-400'
     >
       <div className='relative'>
         <img
@@ -234,7 +231,7 @@ const ProductCard = ({
             <div className='flex flex-col gap-2'>
               <button
                 onClick={handleDirectCheckout}
-                className='w-full py-2 rounded-xl bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition duration-300'
+                className='w-full py-2 rounded-xl bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition duration-300'
               >
                 <FiZap className='inline mr-2 w-3 h-3' /> Thanh toán ngay
               </button>

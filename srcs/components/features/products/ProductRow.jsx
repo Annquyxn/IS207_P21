@@ -41,7 +41,7 @@ function ProductRow({
   return (
     <div className='space-y-12'>
       {Object.entries(grouped).map(([category, items]) => (
-        <section key={category} className='relative'>
+        <section key={category} className='relative overflow-visible z-10'>
           {!hideTitle && (
             <h2 className='text-xl font-bold mb-4'>
               {CATEGORY_LABELS[category] || category}
@@ -64,7 +64,6 @@ function ProductRow({
                   {loadingMore ? (
                     <>
                       <Spinner className='w-5 h-5 text-white' />
-                      Đang tải...
                     </>
                   ) : (
                     'Xem thêm'
@@ -91,12 +90,12 @@ function ProductRow({
               {/* Dòng sản phẩm dạng slider */}
               <div
                 ref={(el) => (scrollRefs.current[category] = el)}
-                className='flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth scroll-hidden pr-6'
+                className='flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth scroll-hidden pr-6 px-2 py-[2px]'
               >
                 {items.map((product, index) => (
                   <div
                     key={product.id || `${category}-${index}`}
-                    className='min-w-[250px] max-w-[250px] flex-shrink-0'
+                    className='min-w-[250px] max-w-[250px] flex-shrink-0 '
                   >
                     <ProductCard {...product} />
                   </div>

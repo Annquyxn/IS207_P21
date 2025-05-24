@@ -45,7 +45,7 @@ function ProductFeatured() {
           if (error || !products || !products.length) return null;
 
           return (
-            <section key={key} className='mb-12'>
+            <section key={key} className='mb-8 overflow-visible'>
               <h2 className='text-xl font-bold mb-4'>{label}</h2>
               <ProductRow
                 products={products}
