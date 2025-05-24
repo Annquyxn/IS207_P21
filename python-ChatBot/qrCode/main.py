@@ -25,10 +25,11 @@ app = FastAPI(
 # Add CORS middleware - allow all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
-    allow_methods=["*"], 
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+    expose_headers=["*"],  # Expose all headers
 )
 
 def generate_qr_code(content):
@@ -94,9 +95,7 @@ async def generate_qr_code_endpoint(
                 content={"success": False, "error": f"Unsupported bank type: {bankType}"}
             )
         
-        response = JSONResponse(content=result)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        return response
+        return result
         
     except Exception as e:
         logger.error(f"Error generating QR code: {e}")
@@ -113,13 +112,11 @@ def health_check():
         # Just generate a test QR code to check functionality
         test_qr = generate_qr_code("Test QR code")
         
-        response = JSONResponse(content={
+        return {
             "status": "healthy", 
             "timestamp": datetime.now().isoformat(),
             "qr_module": "working"
-        })
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        return response
+        }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         return JSONResponse(
@@ -130,16 +127,14 @@ def health_check():
 @app.get("/")
 def read_root():
     """Root endpoint returning server status"""
-    response = JSONResponse(content={
+    return {
         "message": "QR Code API is running", 
         "status": "active", 
         "endpoints": {
             "generate": "/generate?amount=PRICE_IN_VND&bankType=mbbank&order_id=ORDER_ID",
             "health": "/health"
         }
-    })
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
+    }
 
 @app.get("/favicon.ico")
 async def favicon():
@@ -171,9 +166,7 @@ async def get_mb_qr(amount: Optional[int] = Query(None), order_id: Optional[str]
             }
         }
         
-        response = JSONResponse(content=result)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        return response
+        return result
     except Exception as e:
         logger.error(f"Error serving MBBank QR: {e}")
         return JSONResponse(
@@ -201,9 +194,7 @@ async def get_momo_qr(amount: Optional[int] = Query(None), order_id: Optional[st
             "amount": payment_amount
         }
         
-        response = JSONResponse(content=result)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        return response
+        return result
     except Exception as e:
         logger.error(f"Error serving Momo QR: {e}")
         return JSONResponse(

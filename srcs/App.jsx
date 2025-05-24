@@ -52,14 +52,6 @@ function App() {
         <UserProvider>
           <NotificationProvider>
             <main className='flex-1'>
-<<<<<<< HEAD
-              <AnimatePresence /*mode='wait'*/>
-                <ScrollToTop key="scroll-to-top" />
-                <Routes>
-                  <Route path="/" element={<Layout />}>
-                    <Route index element={<Navigate replace to="home" />} />
-                    {adminRoute}
-=======
               <AnimatePresence mode='wait'>
                 <div>
                   <ScrollToTop />
@@ -67,7 +59,6 @@ function App() {
                     <Route path='/' element={<Layout />}>
                       <Route index element={<Navigate replace to='home' />} />
                       {adminRoute}
->>>>>>> 2350772c7a1fcfc995e9441c7cd6dbbd9cae4132
 
                       {/* Public routes */}
                       <Route

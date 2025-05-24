@@ -6,7 +6,22 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 // API configuration constants - ensure it points to localhost
+// Sử dụng cổng 8000 cho dịch vụ ChatBot
 const API_BASE_URL = "http://127.0.0.1:8000";
+// Fallback URL nếu cổng chính không hoạt động
+const FALLBACK_API_URL = "http://localhost:8000";
+
+// Create a function to check if ChatBot service is running
+const testChatbotConnection = async (url) => {
+  try {
+    await axios.get(`${url}/test`);
+    console.log("Connection successful to:", url);
+    return true;
+  } catch (error) {
+    console.error(`Connection failed to: ${url}`, error);
+    return false;
+  }
+};
 
 export default function ChatTab({ onClose }) {
   const [messages, setMessages] = useState([
@@ -22,6 +37,7 @@ export default function ChatTab({ onClose }) {
   const [apiStatus, setApiStatus] = useState("checking");
   const messagesEndRef = useRef(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [activeApiUrl, setActiveApiUrl] = useState(API_BASE_URL);
 
   useEffect(() => {
     console.log("ChatTab mounted, testing API connection...");
@@ -44,18 +60,32 @@ export default function ChatTab({ onClose }) {
     console.log("Messages updated:", messages); // Debug messages state
   }, [messages]);
 
-  const checkApiConnection = () => {
-    // Use test endpoint for API connection check
-    axios.get(`${API_BASE_URL}/test`)
-      .then(response => {
-        console.log("API test response:", response.data);
-        setApiStatus("connected");
-        setRetryCount(0);
-      })
-      .catch(err => {
-        console.error("API test error:", err);
-        setApiStatus("error");
-      });
+  const checkApiConnection = async () => {
+    // Thử kết nối đến URL mặc định trước
+    const mainConnected = await testChatbotConnection(API_BASE_URL);
+    
+    if (mainConnected) {
+      console.log("Using primary API URL:", API_BASE_URL);
+      setActiveApiUrl(API_BASE_URL);
+      setApiStatus("connected");
+      setRetryCount(0);
+      return;
+    }
+    
+    // Nếu URL mặc định không hoạt động, thử URL fallback
+    const fallbackConnected = await testChatbotConnection(FALLBACK_API_URL);
+    
+    if (fallbackConnected) {
+      console.log("Using fallback API URL:", FALLBACK_API_URL);
+      setActiveApiUrl(FALLBACK_API_URL);
+      setApiStatus("connected");
+      setRetryCount(0);
+      return;
+    }
+    
+    // Nếu cả hai đều không hoạt động
+    console.error("All API connections failed");
+    setApiStatus("error");
   };
 
   const scrollToBottom = () => {
@@ -82,7 +112,7 @@ export default function ChatTab({ onClose }) {
     setInputValue("");
     setLoading(true);
 
-    console.log("Sending query to chatbot API");
+    console.log(`Sending query to chatbot API at ${activeApiUrl}`);
     
     try {
       // Use FormData for the request
@@ -97,9 +127,10 @@ export default function ChatTab({ onClose }) {
       
       const response = await axios({
         method: 'post',
-        url: `${API_BASE_URL}/direct-query`,
+        url: `${activeApiUrl}/direct-query`,
         data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 30000 // Timeout sau 30 giây
       });
       
       // Log the response
@@ -158,6 +189,9 @@ export default function ChatTab({ onClose }) {
         // The request was made but no response was received
         errorMessage = "Không nhận được phản hồi từ máy chủ. Vui lòng kiểm tra kết nối mạng và đảm bảo máy chủ đang chạy.";
         setApiStatus("error");
+        
+        // Thử kết nối lại
+        checkApiConnection();
       } else {
         // Something happened in setting up the request
         errorMessage = `Lỗi: ${error.message}`;

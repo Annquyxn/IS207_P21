@@ -43,58 +43,65 @@
 ## GIAO DIỆN
 -   **Link:** [Figma](https://www.figma.com/design/incT5SSdbOWXhxuuGioBsx/Untitled?node-id=0-1&p=f&t=wQqMVH9YtCWGE9EN-0)
 
-# GEARVN Clone - Full Stack Shop Application
+# Education Platform
 
-## Hướng dẫn cài đặt và chạy dự án
+Ứng dụng web giáo dục với frontend React và các dịch vụ backend Python.
 
-### Yêu cầu hệ thống
-- Node.js 16+ (để chạy React frontend)
-- Python 3.7+ (cho các dịch vụ backend như QR Code Server)
-- Browser hiện đại (Chrome, Firefox, Edge)
+## Cài đặt
 
-### Cài đặt và chạy
+```bash
+# Cài đặt dependencies
+npm install
+```
 
-1. **Cài đặt các thư viện JavaScript**
-   ```bash
-   npm install
-   ```
+## Khởi động ứng dụng
 
-2. **Chạy ứng dụng frontend**
-   ```bash
-   npm run dev
-   ```
+```bash
+# Chạy frontend và tất cả các dịch vụ backend (bao gồm ChatBot)
+npm run server
 
-3. **Chạy QR Code Server** (cần thiết cho tính năng thanh toán)
-   
-   Có 2 cách:
-   - **Cách 1**: Double-click vào file `run_qr_server.bat` trong thư mục gốc của dự án
-   - **Cách 2**: Mở terminal và chạy:
-     ```bash
-     cd python-ChatBot/qrCode
-     python -m uvicorn main:app --host 0.0.0.0 --port 8000
-     ```
+# Chạy chỉ frontend
+npm run dev
 
-## Cấu trúc dự án
+# Chạy chỉ các dịch vụ backend
+npm run services
+```
 
-- `/srcs`: Mã nguồn frontend
-  - `/components`: Các thành phần UI
-  - `/services`: Kết nối API và các dịch vụ
-  - `/features`: Chức năng theo từng module nghiệp vụ
-- `/python-ChatBot`: Mã nguồn backend Python
-  - `/qrCode`: Server tạo mã QR cho thanh toán MBBank và Momo
+## Cấu trúc dịch vụ backend
 
-## Xử lý lỗi phổ biến
+Ứng dụng sử dụng 3 dịch vụ backend riêng biệt:
 
-### Lỗi khi thanh toán với mã QR
+### 1. Dịch vụ ChatBot (port 8000)
 
-Nếu bạn gặp lỗi `"Không thể kết nối với máy chủ QR"`, hãy chắc chắn rằng:
-1. QR Server đang chạy (file `run_qr_server.bat`)
-2. Cổng 8000 không bị sử dụng bởi ứng dụng khác
+- **Đường dẫn:** `/python-ChatBot/pycode`
+- **Endpoint:** `http://127.0.0.1:8000/test`
+- **Chức năng:** Cung cấp trợ lý AI tư vấn sản phẩm
+- **Khởi động riêng:** `npm run service:chatbot`
+- **Kiểm tra:** `npm run test:chatbot`
 
-### Lỗi khi lưu địa chỉ giao hàng
+### 2. Dịch vụ Invoice (port 8002)
 
-Hệ thống sẽ tự động lưu địa chỉ vào localStorage nếu không kết nối được với Supabase.
-Bạn vẫn có thể sử dụng hệ thống mà không bị gián đoạn.
+- **Đường dẫn:** `/python-ChatBot/exportInvoice`
+- **Endpoint:** `http://127.0.0.1:8002/generate-invoice`
+- **Chức năng:** Tạo hóa đơn PDF cho đơn hàng
+- **Khởi động riêng:** `npm run service:invoice`
+
+### 3. Dịch vụ QR Code (port 8003)
+
+- **Đường dẫn:** `/python-ChatBot/qrCode`
+- **Endpoint:** `http://127.0.0.1:8003/generate`
+- **Chức năng:** Tạo mã QR cho thanh toán
+- **Khởi động riêng:** `npm run service:qrcode`
+
+## Xử lý lỗi
+
+Nếu gặp lỗi kết nối đến các dịch vụ, vui lòng tham khảo:
+- Hướng dẫn: `CHATBOT_HƯỚNG_DẪN.md`
+
+Các vấn đề thường gặp:
+1. Xung đột cổng (port conflicts)
+2. Dịch vụ chưa được khởi động
+3. Thiếu thư viện Python
 
 ## Liên hệ hỗ trợ
 
