@@ -20,6 +20,8 @@ import {
   FaExclamationCircle,
 } from 'react-icons/fa';
 import { useNotifications } from '@/components/features/notify/NotificationContext';
+import { FiMapPin, FiUser, FiPhone, FiHome, FiMessageSquare } from 'react-icons/fi';
+import MapComponent from '@/components/features/map/MapComponent';
 
 // Format price to VND
 const formatPrice = (price) => {
@@ -163,6 +165,7 @@ function CompleteOrderPage() {
           }, ${
             orderInfo.addressData?.cityName || orderInfo.addressData?.city || ''
           }`,
+        note: orderInfo.addressData?.note || orderInfo.note || '',
         productPrice:
           parsePrice(orderInfo.product?.salePrice) *
           (orderInfo.product?.quantity || 1),
@@ -194,6 +197,7 @@ function CompleteOrderPage() {
         paymentIcon: orderInfo.paymentMethod || 'cod',
         discountCode: orderInfo.discount?.code || '',
         productInfo: orderInfo.product || {},
+        addressData: orderInfo.addressData || {},
       }
     : null;
 
@@ -668,7 +672,61 @@ function CompleteOrderPage() {
                 <p className='text-sm font-medium text-gray-800'>
                   {orderDetails.address}
                 </p>
+                
+                {/* Hiển thị ghi chú nếu có */}
+                {orderDetails.note && (
+                  <div className="mt-2 p-2 bg-gray-50 border border-gray-200 rounded-md">
+                    <p className='text-xs text-gray-500 mb-1'>Ghi chú:</p>
+                    <p className='text-sm text-gray-700'>{orderDetails.note}</p>
+                  </div>
+                )}
               </div>
+            </div>
+
+            {/* Hiển thị thông tin địa chỉ */}
+            <div className="border-b pb-4">
+              <h3 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
+                <FiMapPin className="text-blue-500" /> Địa chỉ giao hàng:
+              </h3>
+              <div className="pl-6 space-y-1">
+                <div className="flex items-center gap-2">
+                  <FiUser className="text-gray-400" />
+                  <p className="text-gray-800">{orderDetails.addressData?.fullName}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FiPhone className="text-gray-400" />
+                  <p className="text-gray-800">{orderDetails.addressData?.phone}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FiHome className="text-gray-400" />
+                  <p className="text-gray-800">
+                    {orderDetails.addressData?.fullAddress || 
+                     `${orderDetails.addressData?.street || ''}, ${orderDetails.addressData?.wardName || orderDetails.addressData?.ward || ''}, ${orderDetails.addressData?.districtName || orderDetails.addressData?.district || ''}, ${orderDetails.addressData?.cityName || orderDetails.addressData?.city || ''}`}
+                  </p>
+                </div>
+                {orderDetails.addressData?.note && (
+                  <div className="flex items-start gap-2 mt-2 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                    <FiMessageSquare className="text-gray-400 mt-1" />
+                    <div>
+                      <p className="text-xs font-medium text-gray-600 mb-1">Ghi chú:</p>
+                      <p className="text-gray-800 text-sm">{orderDetails.addressData.note}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Map Component - Delivery location */}
+            <div className="border-b pb-6 mt-4">
+              <h3 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
+                <FiMapPin className="text-blue-500" /> Vị trí giao hàng:
+              </h3>
+              <div className="rounded-xl overflow-hidden border border-gray-200 shadow-md">
+                <MapComponent height="300px" addressData={orderDetails.addressData} />
+              </div>
+              <p className="text-xs text-gray-500 mt-2 italic text-center">
+                Bản đồ hiển thị vị trí tương đối của địa chỉ giao hàng.
+              </p>
             </div>
           </div>
 

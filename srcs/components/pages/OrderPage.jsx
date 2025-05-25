@@ -4,10 +4,11 @@ import OrderSummary from '../features/orders/OrderSummary';
 import SubmitOrderButton from '../features/orders/SubmitOrderButton';
 import AddressForm from '../features/auth/AddressForm';
 import PaymentMethods from '../features/payment/PaymentMethods';
-import { FiUser, FiCreditCard, FiCheck, FiTag, FiShoppingBag, FiPackage, FiMapPin, FiPhone, FiHome } from 'react-icons/fi';
+import { FiUser, FiCreditCard, FiCheck, FiTag, FiShoppingBag, FiPackage, FiMapPin, FiPhone, FiHome, FiMessageSquare } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { insertOrder } from '../features/orders/apiOrders';
+import MapComponent from '../features/map/MapComponent';
 
 const OrderPage = () => {
   const location = useLocation();
@@ -168,6 +169,9 @@ const OrderPage = () => {
       toast.dismiss();
       toast.success('Đặt hàng thành công!');
 
+      // Log để kiểm tra addressData
+      console.log('Address data including note:', addressData);
+
       // Chuyển đến trang hoàn tất đơn hàng
       navigate('/complete', {
         state: {
@@ -175,7 +179,9 @@ const OrderPage = () => {
             product,
             addressData,
             paymentMethod,
-            discount: appliedDiscount
+            discount: appliedDiscount,
+            // Đảm bảo note được đính kèm
+            note: addressData?.note || ''
           }
         }
       });
@@ -340,7 +346,29 @@ const OrderPage = () => {
                            `${addressData?.street || ''}, ${addressData?.wardName || addressData?.ward || ''}, ${addressData?.districtName || addressData?.district || ''}, ${addressData?.cityName || addressData?.city || ''}`}
                         </p>
                       </div>
+                      
+                      {/* Display note if available */}
+                      {addressData?.note && (
+                        <div className="flex items-start gap-2 mt-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                          <FiMessageSquare className="text-gray-400 mt-1" />
+                          <div>
+                            <p className="text-xs font-medium text-gray-500 mb-1">Ghi chú:</p>
+                            <p className="text-sm text-gray-700">{addressData.note}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
+                  </div>
+                  
+                  {/* Map Component for delivery location */}
+                  <div className="border-b pb-6 mb-4">
+                    <h3 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
+                      <FiMapPin className="text-green-500" /> Bản đồ vị trí:
+                    </h3>
+                    <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                      <MapComponent height="250px" addressData={addressData} />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2 italic">Vị trí hiển thị trên bản đồ có thể chỉ là gần đúng.</p>
                   </div>
                   
                   {/* Hiển thị phương thức thanh toán */}
