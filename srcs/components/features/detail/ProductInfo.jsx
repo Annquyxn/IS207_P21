@@ -1,12 +1,10 @@
 import { FiShoppingCart, FiZap } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { useNotifications } from '@/components/features/notify/NotificationContext';
 import { useCart } from '@/utils/CartContext';
 import toast from 'react-hot-toast';
 
 const ProductInfo = ({ product }) => {
   const navigate = useNavigate();
-  const { addToCart } = useNotifications();
   const { addToCart: addToCartReal } = useCart();
 
   const handleBuyNow = () => {
@@ -29,16 +27,19 @@ const ProductInfo = ({ product }) => {
     const productToAdd = {
       id: product.id,
       name: product.title,
-      image: product.image,
       price: product.salePrice,
-      originalPrice: product.originalPrice,
-      quantity: 1,
+      originalPrice: product.price,
+      image: product.image || '/public/no-image.png',
+      brand: product.vendor,
+      quantity: quantity
     };
-
+    
     addToCartReal(productToAdd);
-    addToCart({ name: product.title });
-    toast.success('🛒 Đã thêm vào giỏ hàng');
-    // Logic thêm vào giỏ hàng có thể được thêm ở đây
+    
+    setAddedToCart(true);
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 2000);
   };
 
   // Tính phần trăm giảm giá
