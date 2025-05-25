@@ -11,15 +11,9 @@ __pycache__/
 *.log
 *.sqlite3
 *.db
-*.env
-.env
-.env.*  # for .env.dev, .env.prod, etc.
 venv/
-ENV/
-env/
 .venv/
-.env
-.env.*
+
 
 
 # ====================

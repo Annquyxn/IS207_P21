@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
+import { useNotifications } from '../features/notify/NotificationContext';
 
 export function useCart() {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMutating, setIsMutating] = useState(false);
+  const { addToCart: addNotification } = useNotifications();
 
   // Load cart from localStorage
   useEffect(() => {
@@ -25,7 +27,7 @@ export function useCart() {
     }
   }, [cart, isLoading]);
 
-  // Add product to cart
+  // Add product to cart with notification handling
   const addToCart = useCallback((product, onSuccess) => {
     setIsMutating(true);
 
@@ -39,7 +41,7 @@ export function useCart() {
           if (existing) {
             const updated = prev.map((item) =>
               item.id === product.id
-                ? { ...item, quantity: item.quantity + 1 }
+                ? { ...item, quantity: item.quantity + (product.quantity || 1) }
                 : item
             );
 
@@ -47,14 +49,14 @@ export function useCart() {
               cart: updated,
               updatedProduct: {
                 ...existing,
-                quantity: existing.quantity + 1,
+                quantity: existing.quantity + (product.quantity || 1),
               },
               action: 'update',
             };
 
             return updated;
           } else {
-            const newProduct = { ...product, quantity: 1 };
+            const newProduct = { ...product, quantity: product.quantity || 1 };
             const updated = [...prev, newProduct];
 
             result = {
@@ -65,6 +67,14 @@ export function useCart() {
 
             return updated;
           }
+        });
+
+        // Show a toast notification
+        toast.success('🛒 Đã thêm vào giỏ hàng');
+        
+        // Add notification using the notification context - but only once per action
+        addNotification({
+          name: product.name || 'Sản phẩm'
         });
 
         setTimeout(() => {
@@ -79,7 +89,7 @@ export function useCart() {
         setIsMutating(false);
       }
     }, 300);
-  }, []);
+  }, [addNotification]);
 
   // ✅ ĐÃ SỬA: Remove product from cart
   const removeFromCart = useCallback(

@@ -28,17 +28,15 @@ const formatPrice = (price) => {
 
 // Payment Confirmation Component that shows completion for digital payments
 const PaymentConfirmation = ({ orderDetails, visible }) => {
-  const { orderSuccess } = useNotifications();
+  // Don't use orderSuccess directly in this component as it's already called in the main component
   const [notificationSent, setNotificationSent] = useState(false);
 
   useEffect(() => {
-    // Only send notification once
+    // Only mark notification as sent, the actual notification is handled in the main component
     if (visible && orderDetails && !notificationSent) {
-      // Send a success notification
-      orderSuccess(`Thanh toán #${orderDetails.orderNumber} thành công!`);
       setNotificationSent(true);
     }
-  }, [visible, orderDetails, orderSuccess, notificationSent]);
+  }, [visible, orderDetails, notificationSent]);
 
   // Only show for digital payment methods
   if (!visible || !orderDetails || orderDetails.paymentIcon === 'cod') {
@@ -297,7 +295,13 @@ function CompleteOrderPage() {
     }, 1000);
 
     // Thêm thông báo đặt hàng thành công nếu có thông tin đơn hàng và mã đơn hàng
-    if (orderDetails && orderNumber && !orderNotificationSent) {
+    // Sử dụng một cờ trong sessionStorage để đảm bảo chỉ gửi thông báo một lần cho mỗi đơn hàng
+    const notificationKey = `order_notified_${orderNumber}`;
+    const notificationSent = sessionStorage.getItem(notificationKey);
+    
+    if (orderDetails && orderNumber && !orderNotificationSent && !notificationSent) {
+      // Đánh dấu là đã gửi thông báo cả trong state và trong session
+      sessionStorage.setItem(notificationKey, 'true');
       orderSuccess(orderNumber);
       setOrderNotificationSent(true);
     }

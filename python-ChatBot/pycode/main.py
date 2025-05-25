@@ -26,7 +26,20 @@ logger = logging.getLogger(__name__)
 
 
 project_root = Path(__file__).resolve().parent
-load_dotenv(project_root / ".env")
+env_file = project_root / ".env"
+
+# Check if .env file exists, create it if not
+if not env_file.exists():
+    logger.info(f".env file not found at {env_file}, creating a default one")
+    with open(env_file, "w") as f:
+        f.write("# Environment variables for ChatBot API\n")
+        f.write("GROQ_API_KEY=your_groq_api_key_here\n")
+        f.write("# Add other environment variables as needed\n")
+    logger.info(f"Default .env file created at {env_file}")
+
+# Load environment variables from .env file
+load_dotenv(env_file)
+logger.info(f"Loaded environment variables from {env_file}")
 
 # Create directories for static files if they don't exist
 STATIC_DIR = project_root / "static"
@@ -36,9 +49,12 @@ CACHE_DIR = STATIC_DIR / "cache"
 for directory in [STATIC_DIR, IMAGES_DIR, CACHE_DIR]:
     directory.mkdir(exist_ok=True, parents=True)
 
+# Check for required environment variables
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    logger.warning("GROQ_API_KEY not found in environment variables")
+if not GROQ_API_KEY or GROQ_API_KEY == "your_groq_api_key_here":
+    logger.warning("GROQ_API_KEY not found or not properly set in environment variables. API functions will be limited.")
+else:
+    logger.info("GROQ_API_KEY successfully loaded")
 
 app = FastAPI(title="TechBot API")
 
@@ -189,10 +205,22 @@ def clean_data():
     
     products_df['product_type'] = products_df.apply(extract_product_type, axis=1)
     
+    # Make sure 'discount_percent' exists and is filled with zeros if missing
+    if 'discount_percent' not in products_df.columns:
+        products_df['discount_percent'] = 0
+    else:
+        products_df['discount_percent'] = products_df['discount_percent'].fillna(0)
+    
+    # Make sure 'rating' exists and is filled with zeros if missing
+    if 'rating' not in products_df.columns:
+        products_df['rating'] = 0
+    else:
+        products_df['rating'] = products_df['rating'].fillna(0)
+    
     # Calculate popularity score based on rating, discount, etc.
     products_df['popularity_score'] = (
-        products_df['rating'].fillna(0) * 0.5 + 
-        products_df['discount_percent'].fillna(0) * 0.3 +
+        products_df['rating'] * 0.5 + 
+        products_df['discount_percent'] * 0.3 +
         (products_df['salePrice'] < 10000000).astype(int) * 0.2  # More affordable products get a boost
     )
     
