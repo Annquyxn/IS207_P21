@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { FiShoppingCart } from "react-icons/fi";
 
-function CartHeader({ count }) {
+function CartHeader({ count, selectedCount = null, onContinueShopping = null }) {
   return (
     <motion.header 
       initial={{ opacity: 0, y: -20 }}
@@ -28,7 +28,13 @@ function CartHeader({ count }) {
             Giỏ hàng của bạn
           </h1>
           <p className="text-sm text-gray-500">
-            {count > 0 ? `${count} sản phẩm trong giỏ hàng` : "Chưa có sản phẩm nào"}
+            {count > 0 ? (
+              selectedCount !== null 
+                ? `${count} sản phẩm trong giỏ hàng (${selectedCount} đã chọn)`
+                : `${count} sản phẩm trong giỏ hàng`
+            ) : (
+              "Chưa có sản phẩm nào"
+            )}
           </p>
         </div>
       </div>
@@ -39,7 +45,10 @@ function CartHeader({ count }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <button className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1 font-medium">
+          <button 
+            onClick={onContinueShopping}
+            className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1 font-medium hover:underline"
+          >
             Tiếp tục mua sắm
           </button>
         </motion.div>
