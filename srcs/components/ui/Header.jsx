@@ -23,6 +23,7 @@ function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const notificationRef = useRef(null);
   const userMenuRef = useRef(null);
+  const hideTimeoutRef = useRef(null);
   const navigate = useNavigate();
   const { newCount: notificationCount } = useNotifications();
   const { user, signOut } = useAuth();
@@ -44,7 +45,10 @@ function Header() {
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      clearTimeout(hideTimeoutRef.current);
+    };
   }, []);
 
   const handleLoginClick = () => {
@@ -82,7 +86,6 @@ function Header() {
   return (
     <header className='bg-red-600 text-white py-3 px-6 shadow-lg sticky top-0 z-50 font-sans'>
       <div className='flex flex-wrap items-center justify-between gap-4'>
-        {/* LOGO */}
         <div className='flex items-center gap-4 flex-grow relative'>
           <div
             className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
@@ -97,11 +100,19 @@ function Header() {
               CLONE
             </span>
           </div>
+
           {/* DANH MỤC */}
           <div
             className='group relative'
-            onMouseEnter={() => setShowCategories(true)}
-            onMouseLeave={() => setShowCategories(false)}
+            onMouseEnter={() => {
+              clearTimeout(hideTimeoutRef.current);
+              setShowCategories(true);
+            }}
+            onMouseLeave={() => {
+              hideTimeoutRef.current = setTimeout(() => {
+                setShowCategories(false);
+              }, 200);
+            }}
           >
             <div
               className='flex items-center gap-2 bg-red-700 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-800 hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out'
@@ -120,13 +131,12 @@ function Header() {
               <LaptopCategories onClose={() => setShowCategories(false)} />
             )}
           </div>
-          {/* TÌM KIẾM */}
+
           <div className='relative flex-grow max-w-xl'>
             <Search />
           </div>
         </div>
 
-        {/* BUILDPC - THÔNG BÁO - GIỎ HÀNG - USER */}
         <div className='flex items-center gap-4'>
           <div
             className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
