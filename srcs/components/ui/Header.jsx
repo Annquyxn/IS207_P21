@@ -1,11 +1,11 @@
 import {
   IoChevronDownOutline,
   IoSearchOutline,
-  IoLocationOutline,
   IoNotificationsOutline,
   IoCartOutline,
   IoPersonOutline,
 } from 'react-icons/io5';
+import { LiaPuzzlePieceSolid } from 'react-icons/lia';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LaptopCategories from '../features/categories/LaptopCategories';
@@ -15,6 +15,7 @@ import { useAuth } from '../features/auth/AuthContext';
 import { useUser } from '../features/user/UserContext';
 import { useCart } from '@/utils/CartContext';
 import UserDropdownMenu from './UserDropdownMenu';
+import Search from '../features/search/Search';
 
 function Header() {
   const [showCategories, setShowCategories] = useState(false);
@@ -74,9 +75,14 @@ function Header() {
     navigate('/home');
   };
 
+  const handleGoToBuilPC = () => {
+    navigate('/build-PC');
+  };
+
   return (
     <header className='bg-red-600 text-white py-3 px-6 shadow-lg sticky top-0 z-50 font-sans'>
       <div className='flex flex-wrap items-center justify-between gap-4'>
+        {/* LOGO */}
         <div className='flex items-center gap-4 flex-grow relative'>
           <div
             className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
@@ -91,7 +97,7 @@ function Header() {
               CLONE
             </span>
           </div>
-
+          {/* DANH MỤC */}
           <div
             className='group relative'
             onMouseEnter={() => setShowCategories(true)}
@@ -114,23 +120,20 @@ function Header() {
               <LaptopCategories onClose={() => setShowCategories(false)} />
             )}
           </div>
-
+          {/* TÌM KIẾM */}
           <div className='relative flex-grow max-w-xl'>
-            <div className='bg-white flex items-center rounded-full px-6 py-2 shadow-sm'>
-              <input
-                type='text'
-                placeholder='Tìm kiếm sản phẩm...'
-                className='flex-grow outline-none text-gray-800 bg-transparent text-base placeholder:text-gray-500'
-              />
-              <IoSearchOutline className='text-2xl text-gray-600 ml-2' />
-            </div>
+            <Search />
           </div>
         </div>
 
+        {/* BUILDPC - THÔNG BÁO - GIỎ HÀNG - USER */}
         <div className='flex items-center gap-4'>
-          <div className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'>
-            <IoLocationOutline className='text-xl' />
-            <span className='text-base font-medium'>Địa chỉ</span>
+          <div
+            className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
+            onClick={handleGoToBuilPC}
+          >
+            <LiaPuzzlePieceSolid className='text-xl' />
+            <span className='text-base font-medium'>Build PC</span>
           </div>
 
           <div className='relative' ref={notificationRef}>

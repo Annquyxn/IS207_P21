@@ -1,5 +1,4 @@
 import Slider from 'react-slick';
-import ShockDeal from '../voucher/ShockDeal';
 import Banner0 from '@/assets/banner/banner-0.png';
 import Banner1 from '@/assets/banner/banner-1.png';
 import Banner2 from '@/assets/banner/banner-2.png';
@@ -55,10 +54,6 @@ function CenterColumn() {
   return (
     <section className='relative w-full max-w-full overflow-hidden rounded-lg'>
       <Slider {...settings}>
-        <div className='w-full h-[408px] overflow-hidden bg-orange-50'>
-          <ShockDeal />
-        </div>
-
         {banners.map((src, idx) => (
           <div
             key={idx}
