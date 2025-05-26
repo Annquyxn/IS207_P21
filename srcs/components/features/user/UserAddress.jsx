@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/components/services/supabase';
 import { useUser } from './UserContext';
 import Spinner from '@/components/ui/Spinner';
+import { fetchProvinces, fetchDistricts, fetchWards } from './apiAddress';
+import { insertAddress, updateAddress, deleteAddress, setDefaultAddress } from './apiAddAddress';
+import { toast } from 'react-hot-toast';
 
 function UserAddress() {
   const { userInfo, getUserId } = useUser();
@@ -20,8 +23,40 @@ function UserAddress() {
     district: '',
     city: '',
     isDefault: false,
-    type: 'home'
+    type: 'home',
+    provinceCode: '',
+    districtCode: '',
+    wardCode: ''
   });
+  
+  // Location data for dropdowns
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [loadingLocations, setLoadingLocations] = useState(false);
+
+  // Function to parse address_text JSON
+  const parseAddressText = (addressText) => {
+    try {
+      return JSON.parse(addressText);
+    } catch (e) {
+      console.error('Error parsing address_text:', e);
+      return {
+        name: 'Địa chỉ',
+        recipient: userInfo?.fullName || 'Người nhận',
+        phone: userInfo?.phone || '',
+        address: '',
+        ward: '',
+        district: '',
+        city: '',
+        isDefault: false,
+        type: 'home',
+        provinceCode: '',
+        districtCode: '',
+        wardCode: ''
+      };
+    }
+  };
 
   // Fetch addresses on component mount
   useEffect(() => {
@@ -35,7 +70,7 @@ function UserAddress() {
         }
 
         const { data, error } = await supabase
-          .from('addresses')
+          .from('user_address')
           .select('*')
           .eq('user_id', userId)
           .order('created_at', { ascending: false });
@@ -44,46 +79,138 @@ function UserAddress() {
           throw error;
         }
 
-        // If no addresses found, use mock data for demonstration
+        // If no addresses found, just set an empty array
         if (!data || data.length === 0) {
-          // Use userInfo for mock data if available
-          const defaultName = userInfo?.fullName || 'Nguyễn Văn A';
-          const defaultPhone = userInfo?.phone || '0901234567';
-          
-          setAddresses([
-            {
-              id: 1,
-              name: 'Nhà',
-              recipient: defaultName,
-              phone: defaultPhone,
-              address: '123 Đường Lê Lợi',
-              ward: 'Phường Bến Nghé',
-              district: 'Quận 1',
-              city: 'TP. Hồ Chí Minh',
-              isDefault: true,
-              type: 'home',
-              user_id: userId
-            }
-          ]);
+          setAddresses([]);
         } else {
-          setAddresses(data);
+          // Parse the address_text for each address
+          const parsedAddresses = data.map(addr => {
+            const addressData = parseAddressText(addr.address_text);
+            return {
+              id: addr.id,
+              user_id: addr.user_id,
+              created_at: addr.created_at,
+              ...addressData
+            };
+          });
+          
+          setAddresses(parsedAddresses);
         }
       } catch (error) {
         console.error('Error fetching addresses:', error);
+        setAddresses([]);
       } finally {
         setLoading(false);
       }
     }
 
     fetchAddresses();
+    loadProvinces();
   }, [userInfo, getUserId]);
+  
+  // Load provinces on component mount
+  const loadProvinces = async () => {
+    setLoadingLocations(true);
+    try {
+      const provinceData = await fetchProvinces();
+      setProvinces(provinceData);
+    } catch (error) {
+      console.error('Error loading provinces:', error);
+    } finally {
+      setLoadingLocations(false);
+    }
+  };
+  
+  // Load districts when province changes
+  useEffect(() => {
+    const loadDistricts = async () => {
+      if (!formData.provinceCode) {
+        setDistricts([]);
+        return;
+      }
+      
+      setLoadingLocations(true);
+      try {
+        const districtData = await fetchDistricts(formData.provinceCode);
+        setDistricts(districtData);
+        
+        // Reset district and ward
+        setFormData(prev => ({
+          ...prev,
+          districtCode: '',
+          wardCode: '',
+          district: '',
+          ward: ''
+        }));
+      } catch (error) {
+        console.error('Error loading districts:', error);
+      } finally {
+        setLoadingLocations(false);
+      }
+    };
+    
+    loadDistricts();
+  }, [formData.provinceCode]);
+  
+  // Load wards when district changes
+  useEffect(() => {
+    const loadWards = async () => {
+      if (!formData.districtCode) {
+        setWards([]);
+        return;
+      }
+      
+      setLoadingLocations(true);
+      try {
+        const wardData = await fetchWards(formData.districtCode);
+        setWards(wardData);
+        
+        // Reset ward
+        setFormData(prev => ({
+          ...prev,
+          wardCode: '',
+          ward: ''
+        }));
+      } catch (error) {
+        console.error('Error loading wards:', error);
+      } finally {
+        setLoadingLocations(false);
+      }
+    };
+    
+    loadWards();
+  }, [formData.districtCode]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
+    
+    if (name === 'provinceCode') {
+      const selectedProvince = provinces.find(p => p.value === value);
+      setFormData(prev => ({
+        ...prev,
+        provinceCode: value,
+        city: selectedProvince ? selectedProvince.label : ''
+      }));
+    } else if (name === 'districtCode') {
+      const selectedDistrict = districts.find(d => d.value === value);
+      setFormData(prev => ({
+        ...prev,
+        districtCode: value,
+        district: selectedDistrict ? selectedDistrict.label : ''
+      }));
+    } else if (name === 'wardCode') {
+      const selectedWard = wards.find(w => w.value === value);
+      setFormData(prev => ({
+        ...prev,
+        wardCode: value,
+        ward: selectedWard ? selectedWard.label : ''
+      }));
+    } else {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -96,47 +223,80 @@ function UserAddress() {
         return;
       }
       
+      const addressData = {
+        ...formData,
+        user_id: userId
+      };
+      
       if (editingId) {
-        // Update existing address in Supabase
-        const { error } = await supabase
-          .from('addresses')
-          .update({
-            ...formData,
-            user_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', editingId);
-          
-        if (error) throw error;
+        // Update existing address using the API
+        console.log(`Updating address ID ${editingId}`);
+        const data = await updateAddress(editingId, addressData);
         
-        // Update state
-        setAddresses(prev => prev.map(addr => 
-          addr.id === editingId ? { ...formData, id: editingId, user_id: userId } : addr
-        ));
-      } else {
-        // Add new address to Supabase
-        const { data, error } = await supabase
-          .from('addresses')
-          .insert({
-            ...formData,
-            user_id: userId,
-            created_at: new Date().toISOString()
-          })
-          .select();
+        if (data && data.length > 0) {
+          toast.success('Địa chỉ đã được cập nhật thành công!');
           
-        if (error) throw error;
-        
-        // Update state with new address from server
-        if (data && data[0]) {
-          setAddresses(prev => [...prev, data[0]]);
+          // Refresh the address list
+          const { data: refreshedAddresses, error } = await supabase
+            .from('user_address')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          
+          if (error) {
+            console.error('Error refreshing addresses:', error);
+          } else {
+            // Parse the address_text for each address
+            const parsedAddresses = refreshedAddresses.map(addr => {
+              const addressInfo = parseAddressText(addr.address_text);
+              return {
+                id: addr.id,
+                user_id: addr.user_id,
+                created_at: addr.created_at,
+                ...addressInfo
+              };
+            });
+            
+            setAddresses(parsedAddresses);
+          }
         } else {
-          // Fallback if no data returned
-          const newAddress = {
-            ...formData,
-            id: Date.now(),
-            user_id: userId
-          };
-          setAddresses(prev => [...prev, newAddress]);
+          // Failed to update
+          toast.error('Không thể cập nhật địa chỉ. Vui lòng thử lại.');
+        }
+      } else {
+        // Add new address using the API
+        console.log('Adding new address');
+        const data = await insertAddress(addressData);
+        
+        if (data && data.length > 0) {
+          toast.success('Đã thêm địa chỉ mới thành công!');
+          
+          // Refresh the address list
+          const { data: refreshedAddresses, error } = await supabase
+            .from('user_address')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          
+          if (error) {
+            console.error('Error refreshing addresses:', error);
+          } else {
+            // Parse the address_text for each address
+            const parsedAddresses = refreshedAddresses.map(addr => {
+              const addressInfo = parseAddressText(addr.address_text);
+              return {
+                id: addr.id,
+                user_id: addr.user_id,
+                created_at: addr.created_at,
+                ...addressInfo
+              };
+            });
+            
+            setAddresses(parsedAddresses);
+          }
+        } else {
+          // Failed to add
+          toast.error('Không thể thêm địa chỉ. Vui lòng thử lại.');
         }
       }
       
@@ -150,37 +310,94 @@ function UserAddress() {
         district: '',
         city: '',
         isDefault: false,
-        type: 'home'
+        type: 'home',
+        provinceCode: '',
+        districtCode: '',
+        wardCode: ''
       });
       setEditingId(null);
       setShowAddForm(false);
     } catch (error) {
       console.error('Error saving address:', error);
-      alert('Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại sau.');
+      toast.error('Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại sau.');
     }
   };
 
   const handleEdit = (address) => {
-    setFormData({ ...address });
+    // Find province, district, ward codes if they don't exist in the address
+    let provinceCode = address.provinceCode;
+    let districtCode = address.districtCode;
+    let wardCode = address.wardCode;
+    
+    // If codes don't exist, try to find them
+    if (!provinceCode) {
+      const province = provinces.find(p => p.label === address.city);
+      provinceCode = province ? province.value : '';
+    }
+    
+    setFormData({ 
+      ...address,
+      provinceCode: provinceCode || '',
+      districtCode: districtCode || '',
+      wardCode: wardCode || ''
+    });
     setEditingId(address.id);
     setShowAddForm(true);
+    
+    // Load districts for the selected province
+    if (provinceCode) {
+      fetchDistricts(provinceCode).then(data => {
+        setDistricts(data);
+        
+        // If districtCode doesn't exist, try to find it
+        if (!districtCode) {
+          const district = data.find(d => d.label === address.district);
+          if (district) {
+            districtCode = district.value;
+            setFormData(prev => ({
+              ...prev,
+              districtCode: districtCode
+            }));
+            
+            // Load wards for the selected district
+            fetchWards(districtCode).then(wardData => {
+              setWards(wardData);
+              
+              // If wardCode doesn't exist, try to find it
+              if (!wardCode) {
+                const ward = wardData.find(w => w.label === address.ward);
+                if (ward) {
+                  wardCode = ward.value;
+                  setFormData(prev => ({
+                    ...prev,
+                    wardCode: wardCode
+                  }));
+                }
+              }
+            });
+          }
+        }
+      });
+    }
   };
 
   const handleDelete = async (id) => {
     try {
-      // Delete from Supabase
-      const { error } = await supabase
-        .from('addresses')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
+      // Show confirmation dialog before deleting
+      if (!window.confirm('Bạn có chắc muốn xóa địa chỉ này?')) {
+        return;
+      }
+      
+      // Delete address using the API
+      await deleteAddress(id);
+      
+      toast.success('Đã xóa địa chỉ thành công!');
       
       // Update state
       setAddresses(prev => prev.filter(addr => addr.id !== id));
     } catch (error) {
       console.error('Error deleting address:', error);
-      alert('Có lỗi xảy ra khi xóa địa chỉ. Vui lòng thử lại sau.');
+      toast.error('Có lỗi xảy ra khi xóa địa chỉ. Vui lòng thử lại sau.');
     }
   };
 
@@ -192,27 +409,67 @@ function UserAddress() {
         return;
       }
       
-      // Update all addresses to non-default first
-      await supabase
-        .from('addresses')
-        .update({ isDefault: false })
-        .eq('user_id', userId);
-        
-      // Set selected address as default
-      await supabase
-        .from('addresses')
-        .update({ isDefault: true })
-        .eq('id', id);
+      // Set default address using the API
+      const data = await setDefaultAddress(userId, id);
       
-      // Update state
+      // If we got data back, parse and update the addresses
+      if (data && data.length > 0) {
+        toast.success('Đã đặt địa chỉ mặc định thành công!');
+        
+        // We need to fetch all addresses again since multiple were updated
+        const { data: refreshedAddresses, error } = await supabase
+          .from('user_address')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false });
+          
+        if (error) {
+          console.error('Error refreshing addresses:', error);
+          // Fallback to simple state update
+          setAddresses(prev => prev.map(addr => ({
+            ...addr,
+            isDefault: addr.id === id
+          })));
+          return;
+        }
+        
+        // Parse the address_text for each address
+        const parsedAddresses = refreshedAddresses.map(addr => {
+          const addressData = parseAddressText(addr.address_text);
+          return {
+            id: addr.id,
+            user_id: addr.user_id,
+            created_at: addr.created_at,
+            ...addressData
+          };
+        });
+        
+        setAddresses(parsedAddresses);
+      } else {
+        // Fallback to simple state update
+        toast.success('Đã đặt địa chỉ mặc định thành công!');
       setAddresses(prev => prev.map(addr => ({
         ...addr,
         isDefault: addr.id === id
       })));
+      }
     } catch (error) {
       console.error('Error setting default address:', error);
-      alert('Có lỗi xảy ra khi đặt địa chỉ mặc định. Vui lòng thử lại sau.');
+      toast.error('Có lỗi xảy ra khi đặt địa chỉ mặc định. Vui lòng thử lại sau.');
     }
+  };
+
+  // Function to safely display an address as a formatted string
+  const formatAddressForDisplay = (address) => {
+    if (!address) return 'Địa chỉ không hợp lệ';
+    
+    let parts = [];
+    if (address.address) parts.push(address.address);
+    if (address.ward) parts.push(address.ward);
+    if (address.district) parts.push(address.district);
+    if (address.city) parts.push(address.city);
+    
+    return parts.join(', ') || 'Chưa có địa chỉ chi tiết';
   };
 
   if (loading) return <Spinner />;
@@ -272,8 +529,7 @@ function UserAddress() {
                 </div>
                 
                 <div className="ml-1 text-gray-600">
-                  <p>{address.address}</p>
-                  <p>{address.ward}, {address.district}, {address.city}</p>
+                  <p>{formatAddressForDisplay(address)}</p>
                 </div>
                 
                 <div className="mt-4 flex justify-end gap-2">
@@ -403,46 +659,64 @@ function UserAddress() {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Ward field */}
+                {/* Province field */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phường/Xã</label>
-                  <input
-                    type="text"
-                    name="ward"
-                    value={formData.ward}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố</label>
+                  <select
+                    name="provinceCode"
+                    value={formData.provinceCode}
                     onChange={handleChange}
-                    placeholder="Phường/Xã"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     required
-                  />
+                    disabled={loadingLocations}
+                  >
+                    <option value="">Chọn Tỉnh/Thành phố</option>
+                    {provinces.map(province => (
+                      <option key={province.value} value={province.value}>
+                        {province.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 
                 {/* District field */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Quận/Huyện</label>
-                  <input
-                    type="text"
-                    name="district"
-                    value={formData.district}
+                  <select
+                    name="districtCode"
+                    value={formData.districtCode}
                     onChange={handleChange}
-                    placeholder="Quận/Huyện"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     required
-                  />
+                    disabled={!formData.provinceCode || loadingLocations}
+                  >
+                    <option value="">Chọn Quận/Huyện</option>
+                    {districts.map(district => (
+                      <option key={district.value} value={district.value}>
+                        {district.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 
-                {/* City field */}
+                {/* Ward field */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phường/Xã</label>
+                  <select
+                    name="wardCode"
+                    value={formData.wardCode}
                     onChange={handleChange}
-                    placeholder="Tỉnh/Thành phố"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     required
-                  />
+                    disabled={!formData.districtCode || loadingLocations}
+                  >
+                    <option value="">Chọn Phường/Xã</option>
+                    {wards.map(ward => (
+                      <option key={ward.value} value={ward.value}>
+                        {ward.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               
@@ -479,7 +753,10 @@ function UserAddress() {
                       district: '',
                       city: '',
                       isDefault: false,
-                      type: 'home'
+                      type: 'home',
+                      provinceCode: '',
+                      districtCode: '',
+                      wardCode: ''
                     });
                   }}
                   className="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"

@@ -1,54 +1,90 @@
-# TechBot API
+# ChatBot API - Tư vấn sản phẩm thông minh
 
-This is a FastAPI backend for the TechBot product recommendation system. It uses a CSV database of products to provide recommendations based on user queries.
+API trợ lý ảo tư vấn sản phẩm dựa trên dữ liệu từ GearVN, cung cấp khả năng tìm kiếm, so sánh và đề xuất sản phẩm máy tính, linh kiện công nghệ.
 
-## Setup
+## Tính năng chính
 
-1. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+1. **Tư vấn thông minh**: Phân tích câu hỏi người dùng và đề xuất sản phẩm phù hợp
+2. **So sánh sản phẩm**: Phân tích chi tiết sự khác biệt giữa các sản phẩm
+3. **Tìm kiếm theo tiêu chí**: Hỗ trợ lọc theo giá, hãng, loại sản phẩm
+4. **Trích xuất thông số**: Tự động trích xuất thông số kỹ thuật từ mô tả sản phẩm
+5. **Sản phẩm tương tự**: Gợi ý các sản phẩm tương tự dựa trên phân tích tương đồng
+6. **Phân tích trực quan**: Trả về dữ liệu có cấu trúc để hiển thị trực quan
 
-2. Create a `.env` file with your GROQ API key:
-   ```
-   GROQ_API_KEY=your_api_key_here
-   ```
-   
-   If you don't have a GROQ API key, you can get one from [https://console.groq.com/](https://console.groq.com/).
+## Cài đặt
 
-3. Ensure the CSV file `gearvn_products_transformed.csv` is in the same directory as `main.py`.
+```bash
+# Cài đặt các thư viện cần thiết
+pip install -r requirements.txt
 
-## Running the API
-
-Run the FastAPI server:
-```
-uvicorn main:app --reload --host 127.0.0.1 --port 8000
+# Chạy server
+python main.py
 ```
 
 ## API Endpoints
 
-- `GET /test` - Test if the API is running
-- `POST /direct-query` - Send a product query (form data with fields: query, model)
+### 1. Tư vấn sản phẩm
 
-## Frontend Integration
-
-The React frontend should send requests to the API at `http://127.0.0.1:8000`.
-
-Example query:
-```javascript
-const formData = new FormData();
-formData.append("query", "Laptop dưới 15 triệu");
-formData.append("model", "deepseek");
-
-axios.post("http://127.0.0.1:8000/direct-query", formData)
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });
+```
+GET/POST /direct-query?query=<câu_hỏi>&model=<tên_model>
 ```
 
-## Customization
+Phản hồi trả về:
+- Văn bản tư vấn
+- Danh sách sản phẩm phù hợp
+- Bảng so sánh (nếu là yêu cầu so sánh)
+- Metadata: loại truy vấn, số sản phẩm, danh mục,...
 
-You can modify the product search algorithm in the `search_products` function in `main.py`. 
+### 2. So sánh sản phẩm
+
+```
+GET/POST /compare-products?product_ids=id1,id2,id3
+```
+
+Phản hồi trả về:
+- Thông tin sản phẩm
+- Bảng so sánh thông số kỹ thuật
+- Đề xuất sản phẩm phù hợp nhất
+
+### 3. Sản phẩm tương tự
+
+```
+GET /similar-products/{product_id}
+```
+
+Phản hồi trả về:
+- Danh sách sản phẩm tương tự với sản phẩm chỉ định
+
+### 4. Thống kê danh mục sản phẩm
+
+```
+GET /product-categories
+```
+
+Phản hồi trả về:
+- Số lượng sản phẩm theo danh mục
+- Phạm vi giá theo danh mục
+- Thương hiệu phổ biến theo danh mục
+
+## Ví dụ truy vấn
+
+1. **Tìm sản phẩm cụ thể**:
+   - "Tư vấn laptop gaming dưới 25 triệu"
+   - "So sánh card màn hình RTX 3060 và RTX 3070"
+   - "Tìm SSD có dung lượng 1TB giá rẻ"
+
+2. **Yêu cầu tư vấn theo nhu cầu**:
+   - "Laptop nào phù hợp cho thiết kế đồ họa?"
+   - "Cần một bộ PC văn phòng giá rẻ"
+   - "Tư vấn tai nghe gaming tốt nhất"
+
+3. **So sánh sản phẩm**:
+   - "So sánh laptop Asus và MSI"
+   - "Nên chọn Intel hay AMD cho gaming?"
+   - "Card màn hình nào tốt hơn giữa RTX 3060 và RTX 4060?"
+
+## Lưu ý
+
+- API sử dụng dữ liệu từ file `gearvn_products_transformed.csv`
+- Cần thiết lập biến môi trường `GROQ_API_KEY` để sử dụng chức năng tư vấn dựa trên AI
+- Phản hồi API được thiết kế để dễ dàng tích hợp vào giao diện trực quan 

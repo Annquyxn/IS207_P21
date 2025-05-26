@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiFilter, FiRefreshCw, FiPackage, FiTruck, FiCheckSquare, FiAlertCircle, FiClock, FiXCircle } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiRefreshCw, FiPackage, FiTruck, FiCheckSquare, FiAlertCircle, FiClock, FiXCircle, FiPrinter } from 'react-icons/fi';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { getTotalRevenue } from '@/components/features/products/apiProduct';
 import { 
@@ -10,6 +10,7 @@ import {
   getOrderStatsByStatus,
   getCurrentWeekRevenue
 } from '@/components/features/orders/apiOrders';
+import { generateInvoice } from '@/components/features/orders/apiInvoice';
 import { formatCurrency } from '@/utils/format';
 import Spinner from '@/components/ui/Spinner';
 import { toast } from 'react-hot-toast';
@@ -121,6 +122,7 @@ const OrderManager = () => {
     total: 0
   });
   const [weeklyData, setWeeklyData] = useState([]);
+  const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
 
   // Fetch orders with pagination
   useEffect(() => {
@@ -250,6 +252,31 @@ const OrderManager = () => {
     // This will trigger the useEffect to reload data
   };
 
+  // Handle invoice generation
+  const handleGenerateInvoice = async (order) => {
+    if (!order) return;
+    
+    try {
+      setIsGeneratingInvoice(true);
+      toast.loading('Đang tạo hóa đơn PDF...');
+      
+      const success = await generateInvoice(order);
+      
+      toast.dismiss();
+      if (success) {
+        toast.success('Hóa đơn đã được tạo thành công!');
+      } else {
+        toast.error('Không thể tạo hóa đơn. Vui lòng thử lại sau.');
+      }
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      toast.dismiss();
+      toast.error('Lỗi khi tạo hóa đơn: ' + (error.message || 'Lỗi không xác định'));
+    } finally {
+      setIsGeneratingInvoice(false);
+    }
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -369,10 +396,20 @@ const OrderManager = () => {
                 <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
                 <XAxis dataKey="day" />
                 <YAxis 
+                  yAxisId="revenue"
                   tickFormatter={(value) => `${value/1000000}M`} 
+                  orientation="left"
+                />
+                <YAxis 
+                  yAxisId="orders"
+                  orientation="right"
+                  tickFormatter={(value) => `${value}`}
                 />
                 <Tooltip 
-                  formatter={(value) => [`${formatCurrency(value)}`, 'Doanh thu']}
+                  formatter={(value, name) => [
+                    name === "Doanh thu" ? formatCurrency(value) : value, 
+                    name
+                  ]}
                 />
                 <Legend />
                 <Line 
@@ -382,6 +419,7 @@ const OrderManager = () => {
                   stroke="#ef4444" 
                   strokeWidth={3}
                   activeDot={{ r: 8 }}
+                  yAxisId="revenue"
                 />
                 <Line 
                   type="monotone" 
@@ -390,7 +428,7 @@ const OrderManager = () => {
                   stroke="#3b82f6" 
                   strokeWidth={3}
                   activeDot={{ r: 8 }}
-                  yAxisId={1}
+                  yAxisId="orders"
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -658,8 +696,13 @@ const OrderManager = () => {
                   </button>
                   
                   <div className="space-x-3">
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                      In hóa đơn
+                    <button 
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
+                      onClick={() => handleGenerateInvoice(selectedOrder)}
+                      disabled={isGeneratingInvoice}
+                    >
+                      <FiPrinter className="mr-2" />
+                      {isGeneratingInvoice ? 'Đang tạo...' : 'Xuất hóa đơn PDF'}
                     </button>
                     <select
                       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
