@@ -44,6 +44,7 @@ import ScrollToTop from './utils/ScrollToTop';
 import MapComponent from './components/features/map/MapComponent';
 import ResetPasswordNotice from './components/pages/ResetPasswordNotice';
 import ResetPassword from './components/pages/ResetPassword';
+import LoginModal from './components/pages/LoginModal';
 
 function App() {
   return (
@@ -97,7 +98,7 @@ function App() {
                         path='login'
                         element={
                           <AnimatedPage>
-                            <LoginForm />
+                            <LoginModal />
                           </AnimatedPage>
                         }
                       />

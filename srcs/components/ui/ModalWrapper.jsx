@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 function ModalWrapper({ children }) {
   const navigate = useNavigate();
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40'>
-      <div className='bg-white rounded-xl shadow-xl relative max-w-md w-full p-6'>
+    <div className='fixed inset-0 z-50 flex justify-center items-start pt-[12vh] bg-black/30'>
+      <div className='bg-white rounded-xl relative max-w-4xl w-full p-0'>
         <button
           onClick={() => navigate('/home', { replace: true })}
-          className='absolute top-3 right-4 text-gray-500 text-2xl font-bold hover:text-red-500'
+          className='absolute top-3 right-4 text-white text-3xl font-bold hover:text-black '
         >
           &times;
         </button>

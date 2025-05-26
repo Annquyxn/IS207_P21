@@ -1,38 +1,38 @@
-import React from "react";
-import AnimatedPage from "@/components/ui/AnimatedPage";
-import { Link } from "react-router-dom";
-import { FaEnvelope } from "react-icons/fa";
+import AnimatedPage from '@/components/ui/AnimatedPage';
+import { Link } from 'react-router-dom';
+import { FaEnvelope } from 'react-icons/fa';
 
 export default function ResetPasswordNotice() {
   return (
     <AnimatedPage>
-      <div className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg font-sans mt-12 mb-12">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">
-            Kiểm tra email của bạn
-          </h2>
-          <div className="mb-6 flex justify-center">
-            <FaEnvelope className="w-16 h-16 text-red-600" />
+      <div className='max-w-xl w-full bg-white rounded-xl overflow-hidden'>
+        <div className='text-3xl font-bold text-center py-4 bg-red-500 border-b border-red-800 text-white'>
+          Kiểm tra email của bạn
+        </div>
+
+        <div className='px-12 py-8'>
+          <div className='mb-6 flex justify-center'>
+            <FaEnvelope className='w-16 h-16 text-red-600' />
           </div>
-          <p className="text-lg text-gray-600 mb-4">
+          <p className='text-base text-gray-600 mb-4 text-center'>
             Chúng tôi đã gửi email hướng dẫn đặt lại mật khẩu đến địa chỉ email
             của bạn.
           </p>
-          <p className="text-gray-500 mb-6">
+          <p className='text-sm text-gray-500 mb-6 text-center'>
             Vui lòng kiểm tra hộp thư đến và làm theo hướng dẫn để đặt lại mật
             khẩu. Nếu bạn không thấy email trong hộp thư đến, hãy kiểm tra thư
             mục spam.
           </p>
-          <div className="space-y-4">
+          <div className='space-y-4 max-w-sm mx-auto'>
             <Link
-              to="/home"
-              className="block w-full py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition"
+              to='/home'
+              className='block w-full py-2.5 bg-red-600 text-white rounded-md text-base font-semibold text-center hover:bg-red-700 transition'
             >
               Về trang chủ
             </Link>
             <Link
-              to="/forgot-password"
-              className="block w-full py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
+              to='/forgot-password'
+              className='block w-full py-2.5 border border-gray-300 text-gray-700 rounded-md text-base font-semibold text-center hover:bg-gray-50 transition'
             >
               Gửi lại email
             </Link>
