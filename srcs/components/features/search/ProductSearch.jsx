@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const ProductSearch = ({ product }) => {
   return (
     <Link
-      to={`/san-pham/${product.id}`}
+      to={`/product/${product.id}`}
       className='flex justify-between items-center gap-3 p-2 hover:bg-gray-100 transition'
     >
       <img
