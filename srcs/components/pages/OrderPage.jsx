@@ -4,23 +4,33 @@ import OrderSummary from '../features/orders/OrderSummary';
 import SubmitOrderButton from '../features/orders/SubmitOrderButton';
 import AddressForm from '../features/auth/AddressForm';
 import PaymentMethods from '../features/payment/PaymentMethods';
-import { FiUser, FiCreditCard, FiCheck, FiTag, FiShoppingBag, FiPackage, FiMapPin, FiPhone, FiHome, FiMessageSquare } from 'react-icons/fi';
+import { FiUser, FiCreditCard, FiCheck, FiTag, FiShoppingBag, FiPackage, FiMapPin, FiPhone, FiHome, FiMessageSquare, FiPlus, FiX } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { insertOrder } from '../features/orders/apiOrders';
 import MapComponent from '../features/map/MapComponent';
+import { useUser } from '../features/user/UserContext';
+import { supabase } from '../services/supabase';
 
 const OrderPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { product } = location.state || {};
+  const { product, address } = location.state || {};
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [addressData, setAddressData] = useState(null);
+  const [addressData, setAddressData] = useState(address || null);
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(null);
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const { userInfo, getUserId } = useUser();
+  
+  // Address selection states
+  const [showAddressSelection, setShowAddressSelection] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [loadingAddresses, setLoadingAddresses] = useState(false);
+  const [addressMode, setAddressMode] = useState('existing'); // 'existing' or 'new'
 
   // Show progress bar after a short delay
   useEffect(() => {
@@ -29,6 +39,120 @@ const OrderPage = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, []);
+
+  // Parse address_text JSON
+  const parseAddressText = (addressText) => {
+    try {
+      return JSON.parse(addressText);
+    } catch (e) {
+      console.error('Error parsing address_text:', e);
+      return {
+        name: 'Địa chỉ',
+        recipient: userInfo?.fullName || 'Người nhận',
+        phone: userInfo?.phone || '',
+        address: '',
+        ward: '',
+        district: '',
+        city: '',
+        isDefault: false,
+        type: 'home',
+        provinceCode: '',
+        districtCode: '',
+        wardCode: ''
+      };
+    }
+  };
+
+  // Format address for display
+  const formatAddressForDisplay = (address) => {
+    if (!address) return 'Địa chỉ không hợp lệ';
+    
+    let parts = [];
+    if (address.street) parts.push(address.street);
+    if (address.address) parts.push(address.address);
+    if (address.ward) parts.push(address.ward);
+    if (address.district) parts.push(address.district);
+    if (address.city) parts.push(address.city);
+    
+    return parts.join(', ') || 'Chưa có địa chỉ chi tiết';
+  };
+
+  // Fetch user addresses
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      if (!userInfo) return;
+      
+      setLoadingAddresses(true);
+      try {
+        const userId = await getUserId();
+        if (!userId) return;
+
+        const { data, error } = await supabase
+          .from('user_address')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          // Parse the address_text for each address
+          const parsedAddresses = data.map(addr => {
+            const addressData = parseAddressText(addr.address_text);
+            return {
+              id: addr.id,
+              user_id: addr.user_id,
+              created_at: addr.created_at,
+              ...addressData
+            };
+          });
+          
+          setAddresses(parsedAddresses);
+          
+          // Set default address as selected if not already set from location state
+          if (!addressData) {
+            const defaultAddress = parsedAddresses.find(addr => addr.isDefault);
+            setSelectedAddress(defaultAddress || parsedAddresses[0]);
+            setAddressData(defaultAddress || parsedAddresses[0]);
+          } else {
+            // If we already have address data (from direct navigation), find the matching one
+            const matchingAddress = parsedAddresses.find(
+              addr => addr.id === addressData.id
+            );
+            if (matchingAddress) {
+              setSelectedAddress(matchingAddress);
+            }
+          }
+        } else {
+          setAddresses([]);
+        }
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+        setAddresses([]);
+      } finally {
+        setLoadingAddresses(false);
+      }
+    };
+
+    fetchAddresses();
+  }, [userInfo, getUserId, addressData]);
+
+  // Handle address mode change
+  const handleAddressModeChange = (mode) => {
+    setAddressMode(mode);
+  };
+
+  // Handle address selection
+  const handleAddressSelect = (address) => {
+    setSelectedAddress(address);
+    setAddressData(address);
+    setShowAddressSelection(false);
+  };
+
+  // Handle add new address
+  const handleAddNewAddress = () => {
+    navigate('/user/address');
+  };
 
   // Giả lập danh sách mã giảm giá
   const availableDiscounts = {
@@ -85,10 +209,19 @@ const OrderPage = () => {
   // Calculate final price
   const calculateFinalPrice = () => {
     try {
-      const originalPrice = product?.salePrice ? 
-        (typeof product.salePrice === 'string' && product.salePrice.replace ? 
-          parseInt(product.salePrice.replace(/[^\d]/g, '')) : 
-          parseInt(product.salePrice) || 0) : 0;
+      let originalPrice = 0;
+      
+      if (product?.salePrice) {
+        if (typeof product.salePrice === 'string') {
+          if (product.salePrice.includes('₫')) {
+            originalPrice = parseInt(product.salePrice.replace(/[^\d]/g, ''));
+          } else {
+            originalPrice = parseInt(product.salePrice);
+          }
+        } else if (typeof product.salePrice === 'number') {
+          originalPrice = product.salePrice;
+        }
+      }
       
       const discountAmount = appliedDiscount ? appliedDiscount.amount : 0;
       return originalPrice - discountAmount;
@@ -143,6 +276,8 @@ const OrderPage = () => {
   // Xử lý khi form địa chỉ được submit
   const handleAddressSubmit = (data) => {
     setAddressData(data);
+    setSelectedAddress(data);
+    setAddressMode('existing');
     setCurrentStep(2); // Tự động chuyển sang bước thanh toán
   };
 
@@ -157,9 +292,47 @@ const OrderPage = () => {
       // Hiển thị thông báo đang xử lý
       toast.loading('Đang xử lý đơn hàng...');
 
+      // Ensure addressData has all required fields
+      if (!addressData) {
+        throw new Error('Vui lòng nhập thông tin giao hàng');
+      }
+
+      // Log the address data for debugging
+      console.log('Address data being used for order:', addressData);
+
+      // For address provided by API or from selected address
+      let formattedAddress = {...addressData};
+      
+      // If recipient is from userInfo, set it correctly (no "Khách hàng" default)
+      if (selectedAddress) {
+        // Use the formatted address from the selected address
+        formattedAddress = {
+          ...addressData,
+          fullName: selectedAddress.recipient,
+          name: selectedAddress.recipient,
+          recipient: selectedAddress.recipient,
+          phone: selectedAddress.phone,
+          // Ensure all address components are captured
+          address: selectedAddress.address || '',
+          street: selectedAddress.street || selectedAddress.address || '',
+          district: selectedAddress.district || '',
+          ward: selectedAddress.ward || '',
+          city: selectedAddress.city || '',
+          // Create a full address string for display
+          fullAddress: formatAddressForDisplay(selectedAddress),
+          // Keep any other fields that might be important
+          note: addressData.note || ''
+        };
+      } else if (addressData) {
+        // If using the form-submitted address, make sure it has a fullAddress
+        formattedAddress.fullAddress = formatAddressForDisplay(addressData);
+      }
+
+      console.log('Formatted address for order:', formattedAddress);
+
       // Tạo đơn hàng trong Supabase
       await insertOrder({
-        addressData,
+        addressData: formattedAddress,
         paymentMethod,
         product,
         discount: appliedDiscount
@@ -169,19 +342,15 @@ const OrderPage = () => {
       toast.dismiss();
       toast.success('Đặt hàng thành công!');
 
-      // Log để kiểm tra addressData
-      console.log('Address data including note:', addressData);
-
       // Chuyển đến trang hoàn tất đơn hàng
       navigate('/complete', {
         state: {
           orderInfo: {
             product,
-            addressData,
+            addressData: formattedAddress,
             paymentMethod,
             discount: appliedDiscount,
-            // Đảm bảo note được đính kèm
-            note: addressData?.note || ''
+            note: formattedAddress.note || ''
           }
         }
       });
@@ -275,7 +444,191 @@ const OrderPage = () => {
                   </div>
                   <h2 className="text-2xl font-bold text-gray-800">Thông tin giao hàng</h2>
                 </div>
-                <AddressForm onSubmitSuccess={handleAddressSubmit} />
+                
+                {/* Address Selection Button */}
+                {addresses.length > 0 && (
+                  <div className="mb-4">
+                    <button
+                      onClick={() => setShowAddressSelection(prev => !prev)}
+                      className="w-full flex items-center justify-between px-4 py-3 border border-blue-300 rounded-xl text-blue-600 hover:bg-blue-50 transition-colors"
+                    >
+                      <div className="flex items-center">
+                        <FiMapPin className="mr-2" />
+                        <span>{selectedAddress ? 'Chọn địa chỉ khác' : 'Chọn từ địa chỉ đã lưu'}</span>
+                      </div>
+                      <span>{selectedAddress ? formatAddressForDisplay(selectedAddress).substring(0, 30) + '...' : ''}</span>
+                    </button>
+                  </div>
+                )}
+                
+                {/* Address Selection Modal */}
+                {showAddressSelection && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className='mb-8 bg-blue-50 p-5 rounded-xl border border-blue-100'
+                  >
+                    <div className='flex justify-between items-center mb-4'>
+                      <h3 className='text-lg font-semibold text-blue-800 flex items-center'>
+                        <FiMapPin className='mr-2' /> Thông tin giao hàng
+                      </h3>
+                      <button
+                        onClick={() => setShowAddressSelection(false)}
+                        className='text-gray-500 hover:text-gray-700'
+                      >
+                        <FiX size={20} />
+                      </button>
+                    </div>
+
+                    {/* Address Mode Selector */}
+                    <div className='flex border-b border-blue-200 mb-4'>
+                      <button
+                        onClick={() => handleAddressModeChange('existing')}
+                        className={`py-2 px-4 font-medium ${
+                          addressMode === 'existing'
+                            ? 'text-blue-600 border-b-2 border-blue-600'
+                            : 'text-gray-600 hover:text-blue-500'
+                        }`}
+                      >
+                        Địa chỉ nhận hàng
+                      </button>
+                      <button
+                        onClick={() => handleAddressModeChange('new')}
+                        className={`py-2 px-4 font-medium ${
+                          addressMode === 'new'
+                            ? 'text-blue-600 border-b-2 border-blue-600'
+                            : 'text-gray-600 hover:text-blue-500'
+                        }`}
+                      >
+                        Thêm địa chỉ mới
+                      </button>
+                    </div>
+
+                    {/* Existing Addresses */}
+                    {addressMode === 'existing' && (
+                      <>
+                        {loadingAddresses ? (
+                          <div className='py-4 text-center text-gray-500'>
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                              className='w-6 h-6 border-2 border-blue-200 border-t-blue-600 rounded-full inline-block mr-2'
+                            />
+                            Đang tải địa chỉ...
+                          </div>
+                        ) : addresses.length === 0 ? (
+                          <div className='py-4 text-center'>
+                            <p className='text-gray-600 mb-3'>Bạn chưa có địa chỉ nào</p>
+                            <div className='flex justify-center gap-3'>
+                              <button
+                                onClick={handleAddNewAddress}
+                                className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'
+                              >
+                                Quản lý địa chỉ
+                              </button>
+                              <button
+                                onClick={() => handleAddressModeChange('new')}
+                                className='px-4 py-2 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors'
+                              >
+                                Thêm địa chỉ mới
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className='space-y-3 max-h-64 overflow-y-auto pr-2'>
+                            {addresses.map((address) => (
+                              <div
+                                key={address.id}
+                                className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                                  selectedAddress?.id === address.id
+                                    ? 'border-blue-500 bg-blue-50'
+                                    : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                                }`}
+                                onClick={() => handleAddressSelect(address)}
+                              >
+                                <div className='flex items-start'>
+                                  <div className='w-6 h-6 mt-1 mr-3 flex-shrink-0'>
+                                    {selectedAddress?.id === address.id ? (
+                                      <div className='w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center'>
+                                        <div className='w-2 h-2 bg-white rounded-full'></div>
+                                      </div>
+                                    ) : (
+                                      <div className='w-5 h-5 border-2 border-gray-300 rounded-full'></div>
+                                    )}
+                                  </div>
+                                  <div className='flex-1 space-y-1'>
+                                    <div className='flex items-center'>
+                                      <p className='font-semibold text-gray-800 text-lg'>
+                                        {address.recipient}
+                                      </p>
+                                      {address.isDefault && (
+                                        <span className='ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full'>
+                                          Mặc định
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className='text-gray-700 font-medium'>
+                                      {address.phone}
+                                    </p>
+                                    <p className='text-gray-600'>
+                                      {formatAddressForDisplay(address)}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+
+                            <button
+                              onClick={handleAddNewAddress}
+                              className='w-full py-3 mt-2 border border-dashed border-blue-300 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center'
+                            >
+                              <FiPlus className='mr-2' /> Quản lý địa chỉ
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* For the 'new' address mode, we'll use the existing AddressForm */}
+                    {addressMode === 'new' && (
+                      <div className='py-2'>
+                        <p className='text-blue-600 mb-3 text-sm'>
+                          Vui lòng điền thông tin địa chỉ mới bên dưới:
+                        </p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+                
+                {/* Conditionally render AddressForm based on addressMode */}
+                {addressMode === 'new' || (!selectedAddress && addresses.length === 0) ? (
+                  <AddressForm onSubmitSuccess={handleAddressSubmit} />
+                ) : (
+                  selectedAddress && (
+                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                      <h3 className="font-medium text-gray-700 mb-2">Địa chỉ giao hàng đã chọn:</h3>
+                      <div className="pl-4 border-l-2 border-blue-300">
+                        <p className="font-semibold">{selectedAddress.recipient}</p>
+                        <p className="text-gray-700">{selectedAddress.phone}</p>
+                        <p className="text-gray-600">{formatAddressForDisplay(selectedAddress)}</p>
+                        <button 
+                          onClick={() => setShowAddressSelection(true)}
+                          className="text-blue-600 text-sm mt-2 hover:underline"
+                        >
+                          Thay đổi
+                        </button>
+                      </div>
+                      
+                      {/* Continue button */}
+                      <button
+                        onClick={() => setCurrentStep(2)}
+                        className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 rounded-xl font-semibold transition-all duration-300 hover:from-blue-600 hover:to-blue-800 hover:shadow-lg"
+                      >
+                        Tiếp tục đến phương thức thanh toán
+                      </button>
+                    </div>
+                  )
+                )}
               </motion.div>
             )}
 
@@ -333,17 +686,18 @@ const OrderPage = () => {
                     <div className="pl-6 space-y-1">
                       <div className="flex items-center gap-2">
                         <FiUser className="text-gray-400" />
-                        <p className="text-gray-800">{addressData?.fullName}</p>
+                        <p className="text-gray-800 font-medium">{addressData?.fullName || addressData?.recipient || addressData?.name}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <FiPhone className="text-gray-400" />
                         <p className="text-gray-800">{addressData?.phone}</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <FiHome className="text-gray-400" />
+                      <div className="flex items-start gap-2">
+                        <FiHome className="text-gray-400 mt-1" />
                         <p className="text-gray-800">
                           {addressData?.fullAddress || 
-                           `${addressData?.street || ''}, ${addressData?.wardName || addressData?.ward || ''}, ${addressData?.districtName || addressData?.district || ''}, ${addressData?.cityName || addressData?.city || ''}`}
+                           formatAddressForDisplay(addressData) || 
+                           `${addressData?.street || addressData?.address || ''}, ${addressData?.wardName || addressData?.ward || ''}, ${addressData?.districtName || addressData?.district || ''}, ${addressData?.cityName || addressData?.city || ''}`}
                         </p>
                       </div>
                       

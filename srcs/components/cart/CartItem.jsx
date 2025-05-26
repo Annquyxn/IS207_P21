@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiTrash2, FiHeart, FiMinus, FiPlus } from 'react-icons/fi';
+import { FiTrash2, FiHeart, FiMinus, FiPlus, FiShoppingBag, FiCheckSquare, FiSquare } from 'react-icons/fi';
+import QuickBuyButton from './QuickBuyButton';
 
-function CartItem({ item, onRemove, onUpdateQuantity }) {
+function CartItem({ 
+  item, 
+  onRemove, 
+  onUpdateQuantity, 
+  onQuickBuy, 
+  isSelected = true, 
+  onToggleSelect 
+}) {
   const [isHovered, setIsHovered] = useState(false);
 
   const formatPrice = (price) => {
@@ -33,10 +41,29 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-      className='flex gap-5 py-6 border-b hover:bg-gray-50 transition-colors rounded-lg p-4'
+      className={`flex gap-3 py-6 border-b hover:bg-gray-50 transition-colors rounded-lg p-4 relative ${
+        isSelected ? 'bg-blue-50/30' : ''
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Selection Checkbox */}
+      <div className="flex items-start pt-1">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onToggleSelect) onToggleSelect();
+          }}
+          className="p-1 focus:outline-none text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          {isSelected ? (
+            <FiCheckSquare size={20} className="text-blue-600" />
+          ) : (
+            <FiSquare size={20} className="text-gray-400" />
+          )}
+        </button>
+      </div>
+
       <div className='relative w-24 h-24 flex-shrink-0'>
         <motion.img
           whileHover={{ scale: 1.05 }}
@@ -129,6 +156,25 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
             )}
           </div>
         </div>
+      </div>
+      
+      {/* Quick Buy Button */}
+      <div className='absolute right-3 -bottom-4 z-10'>
+        {onQuickBuy ? (
+          <button
+            onClick={() => onQuickBuy(item.id)}
+            className='text-xs bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600 transition shadow-sm flex items-center gap-1'
+          >
+            <FiShoppingBag className="text-white" size={12} />
+            <span>Mua ngay</span>
+          </button>
+        ) : (
+          <QuickBuyButton 
+            product={item} 
+            size="sm" 
+            showIcon={true}
+          />
+        )}
       </div>
     </motion.div>
   );
