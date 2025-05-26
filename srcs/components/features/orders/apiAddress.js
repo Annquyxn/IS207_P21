@@ -1,12 +1,9 @@
 import { supabase } from '@/components/services/supabase';
 
-// Helper function to format currency
 const formatCurrency = (amount) => {
-  // Use a simpler formatting approach to avoid Intl issues
   return amount.toLocaleString('vi-VN') + ' ₫';
 };
 
-// Fallback data for provinces
 const fallbackProvinces = [
   { value: '01', label: 'Thành phố Hà Nội' },
   { value: '79', label: 'Thành phố Hồ Chí Minh' },
@@ -15,7 +12,6 @@ const fallbackProvinces = [
   { value: '31', label: 'Thành phố Hải Phòng' },
 ];
 
-// Fallback data for districts (mapped by province code)
 const fallbackDistricts = {
   '01': [
     { value: '001', label: 'Quận Ba Đình' },
@@ -49,21 +45,17 @@ const fallbackDistricts = {
   ],
 };
 
-// Fallback data for wards (mapped by district code)
 const fallbackWards = {
-  // Hà Nội
   '001': [
     { value: '00001', label: 'Phường Phúc Xá' },
     { value: '00004', label: 'Phường Trúc Bạch' },
     { value: '00006', label: 'Phường Vĩnh Phúc' },
   ],
-  // HCM
   '760': [
     { value: '26734', label: 'Phường Bến Nghé' },
     { value: '26737', label: 'Phường Bến Thành' },
     { value: '26740', label: 'Phường Cầu Kho' },
   ],
-  // Đà Nẵng
   '490': [
     { value: '20194', label: 'Phường Hòa Hiệp Bắc' },
     { value: '20195', label: 'Phường Hòa Hiệp Nam' },
@@ -71,7 +63,6 @@ const fallbackWards = {
   ],
 };
 
-// Legacy function - can be deprecated if not used elsewhere
 export async function fetchAddress(tableName = 'products') {
   const { data, error } = await supabase.from(tableName).select('*');
   
@@ -111,7 +102,6 @@ export async function fetchAddress(tableName = 'products') {
   });
 }
 
-// Fetch all provinces/cities
 export async function fetchProvinces() {
   try {
     const { data, error } = await supabase
@@ -140,7 +130,6 @@ export async function fetchProvinces() {
   }
 }
 
-// Fetch districts based on province code
 export async function fetchDistricts(provinceCode) {
   if (!provinceCode) return [];
   
@@ -172,7 +161,6 @@ export async function fetchDistricts(provinceCode) {
   }
 }
 
-// Fetch wards based on district code
 export async function fetchWards(districtCode) {
   if (!districtCode) return [];
   
@@ -204,10 +192,8 @@ export async function fetchWards(districtCode) {
   }
 }
 
-// Get full address information
 export async function getFullAddress(provinceCode, districtCode, wardCode) {
   try {
-    // Get province info
     const { data: provinceData, error: provinceError } = await supabase
       .from('provinces')
       .select('name, full_name')
@@ -216,7 +202,6 @@ export async function getFullAddress(provinceCode, districtCode, wardCode) {
     
     if (provinceError) throw provinceError;
     
-    // Get district info
     const { data: districtData, error: districtError } = await supabase
       .from('districts')
       .select('name, full_name')
@@ -225,7 +210,6 @@ export async function getFullAddress(provinceCode, districtCode, wardCode) {
     
     if (districtError) throw districtError;
     
-    // Get ward info
     const { data: wardData, error: wardError } = await supabase
       .from('wards')
       .select('name, full_name')
@@ -241,7 +225,6 @@ export async function getFullAddress(provinceCode, districtCode, wardCode) {
     };
   } catch (error) {
     console.error('Error fetching address information:', error.message);
-    // Return fallback data for the address
     return {
       province: { name: 'Unknown Province', full_name: 'Unknown Province' },
       district: { name: 'Unknown District', full_name: 'Unknown District' },
