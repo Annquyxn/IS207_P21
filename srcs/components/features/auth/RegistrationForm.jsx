@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EyeIcon, EyeOffIcon } from '@heroicons/react/outline';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 import Spinner from '@/components/ui/Spinner';
 import AnimatedDiv from '@/components/ui/AnimatedDiv';
 import { useRegisterFormLogic } from './useRegisterFormLogic';
@@ -92,9 +92,9 @@ function RegistrationForm() {
             className='absolute right-3 top-1/2 -translate-y-1/2'
           >
             {showPassword ? (
-              <EyeOffIcon className='w-5 h-5 text-gray-500' />
+              <HiEyeOff className='w-5 h-5 text-gray-600' />
             ) : (
-              <EyeIcon className='w-5 h-5 text-gray-500' />
+              <HiEye className='w-5 h-5 text-gray-600' />
             )}
           </button>
           {errors.password && (
