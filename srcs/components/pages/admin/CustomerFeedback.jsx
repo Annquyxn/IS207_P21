@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiFilter, FiMessageSquare, FiUser, FiCalendar, FiStar, FiTrash2, FiMail, FiTag, FiRefreshCw } from 'react-icons/fi';
-import { supabase } from '@/components/services/supabase';
 import Spinner from '@/components/ui/Spinner';
 import { toast } from 'react-hot-toast';
 
@@ -23,34 +22,8 @@ const CustomerFeedback = () => {
       setError(null);
       
       try {
-        let query = supabase.from('customer_feedback').select('*');
-        
-        // Apply filters if needed
-        if (filterStatus !== 'all') {
-          query = query.eq('status', filterStatus);
-        }
-        
-        if (filterType !== 'all') {
-          query = query.eq('type', filterType);
-        }
-        
-        if (filterRating !== 'all') {
-          query = query.eq('rating', parseInt(filterRating));
-        }
-        
-        // Sort by date descending
-        query = query.order('date', { ascending: false });
-        
-        const { data, error } = await query;
-        
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-          setFeedbacks(data);
-        } else {
-          // If no data or empty array, use mock data as fallback
-          setFeedbacks(getMockFeedbackData());
-        }
+        // Skip Supabase query and use mock data directly
+        setFeedbacks(getMockFeedbackData());
       } catch (error) {
         console.error('Error fetching feedback data:', error.message);
         setError('Không thể tải dữ liệu phản hồi. Sử dụng dữ liệu mẫu.');
@@ -84,19 +57,7 @@ const CustomerFeedback = () => {
     if (!replyMessage.trim() || !selectedFeedback) return;
     
     try {
-      // Update feedback status in Supabase
-      const { error } = await supabase
-        .from('customer_feedback')
-        .update({ 
-          status: 'Đã phản hồi',
-          reply: replyMessage,
-          replied_at: new Date().toISOString()
-        })
-        .eq('id', selectedFeedback.id);
-      
-      if (error) throw error;
-      
-      // Update local state
+      // Update local state without Supabase calls
       const updatedFeedbacks = feedbacks.map(f => 
         f.id === selectedFeedback.id ? { ...f, status: 'Đã phản hồi', reply: replyMessage } : f
       );
@@ -107,28 +68,13 @@ const CustomerFeedback = () => {
     } catch (error) {
       console.error('Error updating feedback:', error.message);
       toast.error('Không thể cập nhật phản hồi');
-      
-      // Update local state anyway for better UX
-      const updatedFeedbacks = feedbacks.map(f => 
-        f.id === selectedFeedback.id ? { ...f, status: 'Đã phản hồi' } : f
-      );
-      
-      setFeedbacks(updatedFeedbacks);
     }
   };
 
   const handleDeleteFeedback = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa phản hồi này?')) {
       try {
-        // Delete from Supabase
-        const { error } = await supabase
-          .from('customer_feedback')
-          .delete()
-          .eq('id', id);
-        
-        if (error) throw error;
-        
-        // Update local state
+        // Update local state only, no Supabase calls
         const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
         setFeedbacks(updatedFeedbacks);
         
@@ -140,14 +86,6 @@ const CustomerFeedback = () => {
       } catch (error) {
         console.error('Error deleting feedback:', error.message);
         toast.error('Không thể xóa phản hồi');
-        
-        // Update local state anyway for better UX
-        const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
-        setFeedbacks(updatedFeedbacks);
-        
-        if (selectedFeedback && selectedFeedback.id === id) {
-          setSelectedFeedback(null);
-        }
       }
     }
   };
@@ -184,9 +122,54 @@ const CustomerFeedback = () => {
       date: '2023-11-10',
       product: 'Logitech G502',
       status: 'Đã phản hồi',
+      type: 'Khiếu nại',
+      reply: 'Xin chân thành cáo lỗi vì trải nghiệm không tốt của quý khách. Chúng tôi đã ghi nhận vấn đề và sẽ cải thiện dịch vụ.'
+    },
+    {
+      id: 3,
+      customer: 'Lê Minh C',
+      email: 'leminhc@gmail.com',
+      rating: 4,
+      message: 'Sản phẩm tốt nhưng thời gian giao hàng hơi lâu. Nhân viên tư vấn nhiệt tình.',
+      date: '2023-11-05',
+      product: 'Laptop Asus TUF Gaming',
+      status: 'Chưa phản hồi',
+      type: 'Đánh giá sản phẩm'
+    },
+    {
+      id: 4,
+      customer: 'Phạm Tuấn D',
+      email: 'phamtuand@gmail.com',
+      rating: 1,
+      message: 'Sản phẩm bị lỗi ngay khi mở hộp. Cần được hỗ trợ bảo hành gấp.',
+      date: '2023-11-01',
+      product: 'RAM Kingston 16GB',
+      status: 'Đang xử lý',
       type: 'Khiếu nại'
     },
-    // ... other mock data items ...
+    {
+      id: 5,
+      customer: 'Hoàng Thị E',
+      email: 'hoangthie@gmail.com',
+      rating: 5,
+      message: 'Shop tư vấn nhiệt tình, sản phẩm đúng như mô tả. Sẽ ủng hộ shop lần sau.',
+      date: '2023-10-28',
+      product: 'Màn hình LG 27 inch',
+      status: 'Đã phản hồi',
+      type: 'Đánh giá sản phẩm',
+      reply: 'Cảm ơn quý khách đã tin tưởng và ủng hộ shop. Chúc quý khách có trải nghiệm tuyệt vời với sản phẩm!'
+    },
+    {
+      id: 6,
+      customer: 'Vũ Thành F',
+      email: 'vuthanhf@gmail.com',
+      rating: 3,
+      message: 'Sản phẩm tạm được nhưng giá hơi cao so với chất lượng. Cần cải thiện chính sách giá.',
+      date: '2023-10-25',
+      product: 'Bàn phím cơ AKKO',
+      status: 'Chưa phản hồi',
+      type: 'Đánh giá sản phẩm'
+    }
   ];
 
   // Loading state

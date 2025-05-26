@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FiShoppingBag, FiTag, FiArrowRight, FiShield, FiTruck, FiCheckCircle } from "react-icons/fi";
+import { FiShoppingBag, FiTag, FiArrowRight, FiShield, FiTruck, FiCheckCircle, FiMapPin, FiEdit2 } from "react-icons/fi";
 
-function OrderSummary({ cart = [], onCheckout }) {
+function OrderSummary({ cart = [], onCheckout, address = null, onEditAddress = null }) {
   const [discountCode, setDiscountCode] = useState("");
   const [isApplying, setIsApplying] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState(null);
@@ -94,6 +94,34 @@ function OrderSummary({ cart = [], onCheckout }) {
         <span>Tóm tắt đơn hàng</span>
       </motion.h2>
 
+      {/* Address Section */}
+      {address && (
+        <motion.div 
+          variants={item} 
+          className="mb-5 p-3 bg-blue-50 rounded-lg border border-blue-100"
+        >
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="font-medium text-blue-800 flex items-center gap-1">
+              <FiMapPin className="text-blue-600" />
+              Địa chỉ giao hàng
+            </h3>
+            {onEditAddress && (
+              <button 
+                onClick={onEditAddress}
+                className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
+              >
+                <FiEdit2 size={14} />
+                Thay đổi
+              </button>
+            )}
+          </div>
+          <div className="text-sm text-gray-700">
+            <p className="font-medium">{address.recipient} | {address.phone}</p>
+            <p>{address.address}, {address.ward}, {address.district}, {address.city}</p>
+          </div>
+        </motion.div>
+      )}
+
       <div className="space-y-4 mb-6">
         <motion.div variants={item} className="flex justify-between items-center">
           <span className="text-gray-600">Tạm tính:</span>
@@ -162,14 +190,14 @@ function OrderSummary({ cart = [], onCheckout }) {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => onCheckout && onCheckout()}
-        disabled={subtotal === 0}
+        disabled={subtotal === 0 || !address}
         className={`w-full py-3 rounded-xl flex items-center justify-center gap-2 font-medium transition-all ${
-          subtotal === 0
+          subtotal === 0 || !address
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-            : "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg"
+            : "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md hover:shadow-lg"
         }`}
       >
-        <span>Tiến hành đặt hàng</span>
+        <span>{!address ? "Vui lòng chọn địa chỉ" : "Đặt hàng ngay"}</span>
         <FiArrowRight />
       </motion.button>
       

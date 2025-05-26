@@ -1,24 +1,22 @@
-import { ChevronDownIcon, TicketIcon } from "@heroicons/react/outline";
-import AddressForm from "@/components/features/auth/AddressForm";
-import OrderSummary from "@/components/features/orders/OrderSummary";
-import SubmitOrderButton from "@/components/features/orders/SubmitOrderButton";
+import AddressForm from '@/components/features/auth/AddressForm';
+import OrderSummary from '@/components/features/orders/OrderSummary';
+import SubmitOrderButton from '@/components/features/orders/SubmitOrderButton';
 
 function ShippingInfoPage() {
   const handleSubmitOrder = () => {
-    console.log("Order submitted");
-    // Xử lý đặt hàng ở đây
+    console.log('Order submitted');
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 font-sans">
-      <h1 className="text-3xl font-bold mb-8">Đặt hàng</h1>{" "}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-        {" "}
+    <div className='max-w-7xl mx-auto p-6 font-sans'>
+      <h1 className='text-3xl font-bold mb-8'>Đặt hàng</h1>{' '}
+      <div className='bg-white p-6 rounded-lg shadow-md mb-8'>
+        {' '}
         <AddressForm />
         <OrderSummary />
         <SubmitOrderButton onClick={handleSubmitOrder} />
       </div>
-      <footer className="py-6 mt-8 text-center"></footer>
+      <footer className='py-6 mt-8 text-center'></footer>
     </div>
   );
 }

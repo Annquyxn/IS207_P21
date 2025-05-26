@@ -4,6 +4,7 @@ import { apiLogin } from "@/components/services/apiLogin";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import { supabase } from "@/components/services/supabase";
 
 export function useLoginFormLogic() {
   const navigate = useNavigate();
@@ -39,14 +40,36 @@ export function useLoginFormLogic() {
 
   // Redirect after role is updated
   useEffect(() => {
-    if (pendingLogin && role) {
-      if (role === "admin") {
-        navigate("/admin", { replace: true }); // Đảm bảo luôn về dashboard
-      } else {
-        navigate("/home", { replace: true });
+    async function checkAndRedirect() {
+      if (pendingLogin) {
+        let userId = null;
+        try {
+          const user = JSON.parse(localStorage.getItem("user"));
+          userId = user?.user?.id || user?.id;
+        } catch (e) {
+          // ignore
+        }
+        let isAdmin = false;
+        if (userId) {
+          // Truy vấn role, email, full_name từ bảng public.user_admin
+          const { data, error } = await supabase
+            .from("user_admin")
+            .select("role, email, full_name")
+            .eq("user_id", userId)
+            .single();
+          if (!error && data?.role === "admin") {
+            isAdmin = true;
+          }
+        }
+        if (isAdmin) {
+          navigate("/admin", { replace: true, state: {} });
+        } else {
+          navigate("/home", { replace: true, state: {} });
+        }
+        setPendingLogin(false);
       }
-      setPendingLogin(false);
     }
+    checkAndRedirect();
   }, [pendingLogin, role, navigate]);
 
   const onSubmit = (data) => mutation.mutate(data);
