@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/components/services/supabase';
 import { useUser } from './UserContext';
 import Spinner from '@/components/ui/Spinner';
+import { fetchProvinces, fetchDistricts, fetchWards } from './apiAddress';
 
 function UserAddress() {
   const { userInfo, getUserId } = useUser();
@@ -20,8 +21,17 @@ function UserAddress() {
     district: '',
     city: '',
     isDefault: false,
-    type: 'home'
+    type: 'home',
+    provinceCode: '',
+    districtCode: '',
+    wardCode: ''
   });
+  
+  // Location data for dropdowns
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [loadingLocations, setLoadingLocations] = useState(false);
 
   // Fetch addresses on component mount
   useEffect(() => {
@@ -62,7 +72,10 @@ function UserAddress() {
               city: 'TP. Hồ Chí Minh',
               isDefault: true,
               type: 'home',
-              user_id: userId
+              user_id: userId,
+              provinceCode: '79',
+              districtCode: '760',
+              wardCode: '26734'
             }
           ]);
         } else {
@@ -76,14 +89,112 @@ function UserAddress() {
     }
 
     fetchAddresses();
+    loadProvinces();
   }, [userInfo, getUserId]);
+  
+  // Load provinces on component mount
+  const loadProvinces = async () => {
+    setLoadingLocations(true);
+    try {
+      const provinceData = await fetchProvinces();
+      setProvinces(provinceData);
+    } catch (error) {
+      console.error('Error loading provinces:', error);
+    } finally {
+      setLoadingLocations(false);
+    }
+  };
+  
+  // Load districts when province changes
+  useEffect(() => {
+    const loadDistricts = async () => {
+      if (!formData.provinceCode) {
+        setDistricts([]);
+        return;
+      }
+      
+      setLoadingLocations(true);
+      try {
+        const districtData = await fetchDistricts(formData.provinceCode);
+        setDistricts(districtData);
+        
+        // Reset district and ward
+        setFormData(prev => ({
+          ...prev,
+          districtCode: '',
+          wardCode: '',
+          district: '',
+          ward: ''
+        }));
+      } catch (error) {
+        console.error('Error loading districts:', error);
+      } finally {
+        setLoadingLocations(false);
+      }
+    };
+    
+    loadDistricts();
+  }, [formData.provinceCode]);
+  
+  // Load wards when district changes
+  useEffect(() => {
+    const loadWards = async () => {
+      if (!formData.districtCode) {
+        setWards([]);
+        return;
+      }
+      
+      setLoadingLocations(true);
+      try {
+        const wardData = await fetchWards(formData.districtCode);
+        setWards(wardData);
+        
+        // Reset ward
+        setFormData(prev => ({
+          ...prev,
+          wardCode: '',
+          ward: ''
+        }));
+      } catch (error) {
+        console.error('Error loading wards:', error);
+      } finally {
+        setLoadingLocations(false);
+      }
+    };
+    
+    loadWards();
+  }, [formData.districtCode]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    
+    if (name === 'provinceCode') {
+      const selectedProvince = provinces.find(p => p.value === value);
+      setFormData(prev => ({
+        ...prev,
+        provinceCode: value,
+        city: selectedProvince ? selectedProvince.label : ''
+      }));
+    } else if (name === 'districtCode') {
+      const selectedDistrict = districts.find(d => d.value === value);
+      setFormData(prev => ({
+        ...prev,
+        districtCode: value,
+        district: selectedDistrict ? selectedDistrict.label : ''
+      }));
+    } else if (name === 'wardCode') {
+      const selectedWard = wards.find(w => w.value === value);
+      setFormData(prev => ({
+        ...prev,
+        wardCode: value,
+        ward: selectedWard ? selectedWard.label : ''
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -150,7 +261,10 @@ function UserAddress() {
         district: '',
         city: '',
         isDefault: false,
-        type: 'home'
+        type: 'home',
+        provinceCode: '',
+        districtCode: '',
+        wardCode: ''
       });
       setEditingId(null);
       setShowAddForm(false);
@@ -161,9 +275,61 @@ function UserAddress() {
   };
 
   const handleEdit = (address) => {
-    setFormData({ ...address });
+    // Find province, district, ward codes if they don't exist in the address
+    let provinceCode = address.provinceCode;
+    let districtCode = address.districtCode;
+    let wardCode = address.wardCode;
+    
+    // If codes don't exist, try to find them
+    if (!provinceCode) {
+      const province = provinces.find(p => p.label === address.city);
+      provinceCode = province ? province.value : '';
+    }
+    
+    setFormData({ 
+      ...address,
+      provinceCode: provinceCode || '',
+      districtCode: districtCode || '',
+      wardCode: wardCode || ''
+    });
     setEditingId(address.id);
     setShowAddForm(true);
+    
+    // Load districts for the selected province
+    if (provinceCode) {
+      fetchDistricts(provinceCode).then(data => {
+        setDistricts(data);
+        
+        // If districtCode doesn't exist, try to find it
+        if (!districtCode) {
+          const district = data.find(d => d.label === address.district);
+          if (district) {
+            districtCode = district.value;
+            setFormData(prev => ({
+              ...prev,
+              districtCode: districtCode
+            }));
+            
+            // Load wards for the selected district
+            fetchWards(districtCode).then(wardData => {
+              setWards(wardData);
+              
+              // If wardCode doesn't exist, try to find it
+              if (!wardCode) {
+                const ward = wardData.find(w => w.label === address.ward);
+                if (ward) {
+                  wardCode = ward.value;
+                  setFormData(prev => ({
+                    ...prev,
+                    wardCode: wardCode
+                  }));
+                }
+              }
+            });
+          }
+        }
+      });
+    }
   };
 
   const handleDelete = async (id) => {
@@ -403,46 +569,64 @@ function UserAddress() {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Ward field */}
+                {/* Province field */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phường/Xã</label>
-                  <input
-                    type="text"
-                    name="ward"
-                    value={formData.ward}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố</label>
+                  <select
+                    name="provinceCode"
+                    value={formData.provinceCode}
                     onChange={handleChange}
-                    placeholder="Phường/Xã"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     required
-                  />
+                    disabled={loadingLocations}
+                  >
+                    <option value="">Chọn Tỉnh/Thành phố</option>
+                    {provinces.map(province => (
+                      <option key={province.value} value={province.value}>
+                        {province.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 
                 {/* District field */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Quận/Huyện</label>
-                  <input
-                    type="text"
-                    name="district"
-                    value={formData.district}
+                  <select
+                    name="districtCode"
+                    value={formData.districtCode}
                     onChange={handleChange}
-                    placeholder="Quận/Huyện"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     required
-                  />
+                    disabled={!formData.provinceCode || loadingLocations}
+                  >
+                    <option value="">Chọn Quận/Huyện</option>
+                    {districts.map(district => (
+                      <option key={district.value} value={district.value}>
+                        {district.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 
-                {/* City field */}
+                {/* Ward field */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phường/Xã</label>
+                  <select
+                    name="wardCode"
+                    value={formData.wardCode}
                     onChange={handleChange}
-                    placeholder="Tỉnh/Thành phố"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     required
-                  />
+                    disabled={!formData.districtCode || loadingLocations}
+                  >
+                    <option value="">Chọn Phường/Xã</option>
+                    {wards.map(ward => (
+                      <option key={ward.value} value={ward.value}>
+                        {ward.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               
@@ -479,7 +663,10 @@ function UserAddress() {
                       district: '',
                       city: '',
                       isDefault: false,
-                      type: 'home'
+                      type: 'home',
+                      provinceCode: '',
+                      districtCode: '',
+                      wardCode: ''
                     });
                   }}
                   className="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
