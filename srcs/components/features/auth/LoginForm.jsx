@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import AnimatedDiv from '@/components/ui/AnimatedDiv';
 import AnimatedButton from '@/components/ui/AnimatedButton';
@@ -54,7 +55,11 @@ function LoginForm() {
                 onClick={() => setShowPassword(!showPassword)}
                 className='absolute right-3 top-2.5 text-sm text-gray-600'
               >
-                {showPassword ? 'Ẩn' : 'Hiện'}
+                {showPassword ? (
+                  <HiEyeOff className='w-5 h-5 text-gray-600' />
+                ) : (
+                  <HiEye className='w-5 h-5 text-gray-600' />
+                )}
               </button>
               {errors.password && (
                 <p className='text-red-500 text-sm mt-1'>
