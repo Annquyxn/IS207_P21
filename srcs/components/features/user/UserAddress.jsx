@@ -5,6 +5,8 @@ import { supabase } from '@/components/services/supabase';
 import { useUser } from './UserContext';
 import Spinner from '@/components/ui/Spinner';
 import { fetchProvinces, fetchDistricts, fetchWards } from './apiAddress';
+import { insertAddress, updateAddress, deleteAddress, setDefaultAddress } from './apiAddAddress';
+import { toast } from 'react-hot-toast';
 
 function UserAddress() {
   const { userInfo, getUserId } = useUser();
@@ -33,6 +35,29 @@ function UserAddress() {
   const [wards, setWards] = useState([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
 
+  // Function to parse address_text JSON
+  const parseAddressText = (addressText) => {
+    try {
+      return JSON.parse(addressText);
+    } catch (e) {
+      console.error('Error parsing address_text:', e);
+      return {
+        name: 'Địa chỉ',
+        recipient: userInfo?.fullName || 'Người nhận',
+        phone: userInfo?.phone || '',
+        address: '',
+        ward: '',
+        district: '',
+        city: '',
+        isDefault: false,
+        type: 'home',
+        provinceCode: '',
+        districtCode: '',
+        wardCode: ''
+      };
+    }
+  };
+
   // Fetch addresses on component mount
   useEffect(() => {
     async function fetchAddresses() {
@@ -45,7 +70,7 @@ function UserAddress() {
         }
 
         const { data, error } = await supabase
-          .from('addresses')
+          .from('user_address')
           .select('*')
           .eq('user_id', userId)
           .order('created_at', { ascending: false });
@@ -54,35 +79,26 @@ function UserAddress() {
           throw error;
         }
 
-        // If no addresses found, use mock data for demonstration
+        // If no addresses found, just set an empty array
         if (!data || data.length === 0) {
-          // Use userInfo for mock data if available
-          const defaultName = userInfo?.fullName || 'Nguyễn Văn A';
-          const defaultPhone = userInfo?.phone || '0901234567';
-          
-          setAddresses([
-            {
-              id: 1,
-              name: 'Nhà',
-              recipient: defaultName,
-              phone: defaultPhone,
-              address: '123 Đường Lê Lợi',
-              ward: 'Phường Bến Nghé',
-              district: 'Quận 1',
-              city: 'TP. Hồ Chí Minh',
-              isDefault: true,
-              type: 'home',
-              user_id: userId,
-              provinceCode: '79',
-              districtCode: '760',
-              wardCode: '26734'
-            }
-          ]);
+          setAddresses([]);
         } else {
-          setAddresses(data);
+          // Parse the address_text for each address
+          const parsedAddresses = data.map(addr => {
+            const addressData = parseAddressText(addr.address_text);
+            return {
+              id: addr.id,
+              user_id: addr.user_id,
+              created_at: addr.created_at,
+              ...addressData
+            };
+          });
+          
+          setAddresses(parsedAddresses);
         }
       } catch (error) {
         console.error('Error fetching addresses:', error);
+        setAddresses([]);
       } finally {
         setLoading(false);
       }
@@ -190,10 +206,10 @@ function UserAddress() {
         ward: selectedWard ? selectedWard.label : ''
       }));
     } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value
-      }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
     }
   };
 
@@ -207,47 +223,80 @@ function UserAddress() {
         return;
       }
       
+      const addressData = {
+        ...formData,
+        user_id: userId
+      };
+      
       if (editingId) {
-        // Update existing address in Supabase
-        const { error } = await supabase
-          .from('addresses')
-          .update({
-            ...formData,
-            user_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', editingId);
-          
-        if (error) throw error;
+        // Update existing address using the API
+        console.log(`Updating address ID ${editingId}`);
+        const data = await updateAddress(editingId, addressData);
         
-        // Update state
-        setAddresses(prev => prev.map(addr => 
-          addr.id === editingId ? { ...formData, id: editingId, user_id: userId } : addr
-        ));
-      } else {
-        // Add new address to Supabase
-        const { data, error } = await supabase
-          .from('addresses')
-          .insert({
-            ...formData,
-            user_id: userId,
-            created_at: new Date().toISOString()
-          })
-          .select();
+        if (data && data.length > 0) {
+          toast.success('Địa chỉ đã được cập nhật thành công!');
           
-        if (error) throw error;
-        
-        // Update state with new address from server
-        if (data && data[0]) {
-          setAddresses(prev => [...prev, data[0]]);
+          // Refresh the address list
+          const { data: refreshedAddresses, error } = await supabase
+            .from('user_address')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          
+          if (error) {
+            console.error('Error refreshing addresses:', error);
+          } else {
+            // Parse the address_text for each address
+            const parsedAddresses = refreshedAddresses.map(addr => {
+              const addressInfo = parseAddressText(addr.address_text);
+              return {
+                id: addr.id,
+                user_id: addr.user_id,
+                created_at: addr.created_at,
+                ...addressInfo
+              };
+            });
+            
+            setAddresses(parsedAddresses);
+          }
         } else {
-          // Fallback if no data returned
-          const newAddress = {
-            ...formData,
-            id: Date.now(),
-            user_id: userId
-          };
-          setAddresses(prev => [...prev, newAddress]);
+          // Failed to update
+          toast.error('Không thể cập nhật địa chỉ. Vui lòng thử lại.');
+        }
+      } else {
+        // Add new address using the API
+        console.log('Adding new address');
+        const data = await insertAddress(addressData);
+        
+        if (data && data.length > 0) {
+          toast.success('Đã thêm địa chỉ mới thành công!');
+          
+          // Refresh the address list
+          const { data: refreshedAddresses, error } = await supabase
+            .from('user_address')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          
+          if (error) {
+            console.error('Error refreshing addresses:', error);
+          } else {
+            // Parse the address_text for each address
+            const parsedAddresses = refreshedAddresses.map(addr => {
+              const addressInfo = parseAddressText(addr.address_text);
+              return {
+                id: addr.id,
+                user_id: addr.user_id,
+                created_at: addr.created_at,
+                ...addressInfo
+              };
+            });
+            
+            setAddresses(parsedAddresses);
+          }
+        } else {
+          // Failed to add
+          toast.error('Không thể thêm địa chỉ. Vui lòng thử lại.');
         }
       }
       
@@ -270,7 +319,7 @@ function UserAddress() {
       setShowAddForm(false);
     } catch (error) {
       console.error('Error saving address:', error);
-      alert('Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại sau.');
+      toast.error('Có lỗi xảy ra khi lưu địa chỉ. Vui lòng thử lại sau.');
     }
   };
 
@@ -334,19 +383,21 @@ function UserAddress() {
 
   const handleDelete = async (id) => {
     try {
-      // Delete from Supabase
-      const { error } = await supabase
-        .from('addresses')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
+      // Show confirmation dialog before deleting
+      if (!window.confirm('Bạn có chắc muốn xóa địa chỉ này?')) {
+        return;
+      }
+      
+      // Delete address using the API
+      await deleteAddress(id);
+      
+      toast.success('Đã xóa địa chỉ thành công!');
       
       // Update state
       setAddresses(prev => prev.filter(addr => addr.id !== id));
     } catch (error) {
       console.error('Error deleting address:', error);
-      alert('Có lỗi xảy ra khi xóa địa chỉ. Vui lòng thử lại sau.');
+      toast.error('Có lỗi xảy ra khi xóa địa chỉ. Vui lòng thử lại sau.');
     }
   };
 
@@ -358,27 +409,67 @@ function UserAddress() {
         return;
       }
       
-      // Update all addresses to non-default first
-      await supabase
-        .from('addresses')
-        .update({ isDefault: false })
-        .eq('user_id', userId);
-        
-      // Set selected address as default
-      await supabase
-        .from('addresses')
-        .update({ isDefault: true })
-        .eq('id', id);
+      // Set default address using the API
+      const data = await setDefaultAddress(userId, id);
       
-      // Update state
+      // If we got data back, parse and update the addresses
+      if (data && data.length > 0) {
+        toast.success('Đã đặt địa chỉ mặc định thành công!');
+        
+        // We need to fetch all addresses again since multiple were updated
+        const { data: refreshedAddresses, error } = await supabase
+          .from('user_address')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false });
+          
+        if (error) {
+          console.error('Error refreshing addresses:', error);
+          // Fallback to simple state update
+          setAddresses(prev => prev.map(addr => ({
+            ...addr,
+            isDefault: addr.id === id
+          })));
+          return;
+        }
+        
+        // Parse the address_text for each address
+        const parsedAddresses = refreshedAddresses.map(addr => {
+          const addressData = parseAddressText(addr.address_text);
+          return {
+            id: addr.id,
+            user_id: addr.user_id,
+            created_at: addr.created_at,
+            ...addressData
+          };
+        });
+        
+        setAddresses(parsedAddresses);
+      } else {
+        // Fallback to simple state update
+        toast.success('Đã đặt địa chỉ mặc định thành công!');
       setAddresses(prev => prev.map(addr => ({
         ...addr,
         isDefault: addr.id === id
       })));
+      }
     } catch (error) {
       console.error('Error setting default address:', error);
-      alert('Có lỗi xảy ra khi đặt địa chỉ mặc định. Vui lòng thử lại sau.');
+      toast.error('Có lỗi xảy ra khi đặt địa chỉ mặc định. Vui lòng thử lại sau.');
     }
+  };
+
+  // Function to safely display an address as a formatted string
+  const formatAddressForDisplay = (address) => {
+    if (!address) return 'Địa chỉ không hợp lệ';
+    
+    let parts = [];
+    if (address.address) parts.push(address.address);
+    if (address.ward) parts.push(address.ward);
+    if (address.district) parts.push(address.district);
+    if (address.city) parts.push(address.city);
+    
+    return parts.join(', ') || 'Chưa có địa chỉ chi tiết';
   };
 
   if (loading) return <Spinner />;
@@ -438,8 +529,7 @@ function UserAddress() {
                 </div>
                 
                 <div className="ml-1 text-gray-600">
-                  <p>{address.address}</p>
-                  <p>{address.ward}, {address.district}, {address.city}</p>
+                  <p>{formatAddressForDisplay(address)}</p>
                 </div>
                 
                 <div className="mt-4 flex justify-end gap-2">

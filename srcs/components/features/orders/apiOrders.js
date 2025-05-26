@@ -17,19 +17,54 @@ export async function insertOrder({
   discount = null
 }) {
   try {
+    console.log('Inserting order with address data:', addressData);
+    
+    // Handle different address field names that could exist
+    // Prioritize recipient field first as it's the most accurate for selected addresses
+    const customerName = addressData.recipient || addressData.fullName || addressData.name || '';
+    
+    // If we still don't have a name, this is a critical error
+    if (!customerName || customerName === 'Unknown Customer') {
+      throw new Error('Tên người nhận không hợp lệ');
+    }
+    
+    const phoneNumber = addressData.phone || '';
+    if (!phoneNumber || phoneNumber === 'Unknown') {
+      throw new Error('Số điện thoại không hợp lệ');
+    }
+    
+    // Create full address string if not already provided
+    let fullAddressString = '';
+    if (addressData.fullAddress) {
+      fullAddressString = addressData.fullAddress;
+    } else {
+      const addressParts = [];
+      if (addressData.street || addressData.address) 
+        addressParts.push(addressData.street || addressData.address);
+      if (addressData.ward || addressData.wardName) 
+        addressParts.push(addressData.ward || addressData.wardName);
+      if (addressData.district || addressData.districtName) 
+        addressParts.push(addressData.district || addressData.districtName);
+      if (addressData.city || addressData.cityName) 
+        addressParts.push(addressData.city || addressData.cityName);
+      
+      fullAddressString = addressParts.join(', ');
+    }
+    
     // Format dữ liệu để lưu vào Supabase
     const orderData = {
-      customer_name: addressData.fullName,
-      gender: addressData.gender,
-      phone: addressData.phone,
+      customer_name: customerName,
+      gender: addressData.gender || 'unknown',
+      phone: phoneNumber,
       address: {
-        city: addressData.city,
-        district: addressData.district,
-        ward: addressData.ward,
-        street: addressData.street,
+        full_address: fullAddressString,
+        city: addressData.city || addressData.cityName || '',
+        district: addressData.district || addressData.districtName || '',
+        ward: addressData.ward || addressData.wardName || '',
+        street: addressData.street || addressData.address || '',
         note: addressData.note || '',
       },
-      shipping_method: addressData.shippingMethod,
+      shipping_method: addressData.shippingMethod || 'standard',
       payment_method: paymentMethod,
       product_info: {
         id: product.id,
@@ -40,7 +75,7 @@ export async function insertOrder({
         quantity: product.quantity || 1,
       },
       product_price: parsePrice(product.salePrice) * (product.quantity || 1),
-      shipping_fee: calculateShippingFee(addressData.shippingMethod, parsePrice(product.salePrice)),
+      shipping_fee: calculateShippingFee(addressData.shippingMethod || 'standard', parsePrice(product.salePrice)),
       discount: discount ? discount.amount : 0,
       discount_code: discount ? discount.code : '',
       status: 'pending', // Trạng thái mặc định khi tạo đơn hàng
@@ -52,6 +87,8 @@ export async function insertOrder({
       orderData.product_price + 
       orderData.shipping_fee - 
       orderData.discount;
+
+    console.log('Order data being submitted:', orderData);
 
     const { data, error } = await supabase
       .from('orders')
