@@ -83,6 +83,14 @@ const MapComponent = ({ height = "350px", addressData = null, deliveryAddress = 
     // Get location data - no need to store in state since we're using it immediately
     const locations = getStoreLocations(addressData, deliveryAddress);
     
+    // Log delivery location for debugging
+    const deliveryPoint = locations.find(loc => loc.isDeliveryPoint);
+    if (deliveryPoint) {
+      console.log("Delivery point:", deliveryPoint);
+      console.log("Delivery coordinates:", deliveryPoint.coordinates);
+      console.log("Delivery address:", deliveryPoint.address);
+    }
+    
     // Create vector source and layer for markers
     const vectorSource = new VectorSource();
     const vectorLayer = new VectorLayer({
@@ -112,8 +120,6 @@ const MapComponent = ({ height = "350px", addressData = null, deliveryAddress = 
     });
     
     // If we have a delivery point, calculate the shortest route
-    const deliveryPoint = locations.find(loc => loc.isDeliveryPoint);
-    
     if (deliveryPoint) {
       const shortestRoute = findShortestRoute(deliveryPoint.coordinates, locations);
       

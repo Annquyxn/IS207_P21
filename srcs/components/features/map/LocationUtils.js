@@ -73,6 +73,35 @@ export const provinceCoordinates = {
   "Cà Mau": [105.1508, 9.1769],
 };
 
+export const hcmDistrictCoordinates = {
+  "Thủ Đức": [106.7698, 10.8231],
+  "Linh Trung": [106.7734, 10.8711],
+  "Quận 1": [106.7020, 10.7756],
+  "Quận 2": [106.7477, 10.7868],
+  "Quận 3": [106.6839, 10.7804],
+  "Quận 4": [106.7057, 10.7573],
+  "Quận 5": [106.6671, 10.7539],
+  "Quận 6": [106.6367, 10.7481],
+  "Quận 7": [106.7009, 10.7392],
+  "Quận 8": [106.6285, 10.7214],
+  "Quận 9": [106.8316, 10.8431],
+  "Quận 10": [106.6683, 10.7728],
+  "Quận 11": [106.6501, 10.7639],
+  "Quận 12": [106.6413, 10.8667],
+  "Bình Tân": [106.6018, 10.7654],
+  "Bình Thạnh": [106.7096, 10.8113],
+  "Gò Vấp": [106.6966, 10.8385],
+  "Phú Nhuận": [106.6824, 10.7999],
+  "Tân Bình": [106.6527, 10.8026],
+  "Tân Phú": [106.6232, 10.7935],
+  "Tây Thạnh": [106.6167, 10.8168],
+  "Bình Chánh": [106.5432, 10.6901],
+  "Cần Giờ": [106.9510, 10.4113],
+  "Củ Chi": [106.4938, 11.0237],
+  "Hóc Môn": [106.5924, 10.8869],
+  "Nhà Bè": [106.7080, 10.6684]
+};
+
 export const getLocationFromIP = async () => {
   try {
     const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
@@ -106,27 +135,88 @@ export const getLocationFromIP = async () => {
 export const getAddressCoordinates = (address) => {
   let coordinates = [106.6297, 10.8231];
   
-  if (address) {
-    const addressStr = typeof address === 'string' ? address : '';
+  if (!address) return coordinates;
+  
+  const isHCMCity = (cityName) => {
+    if (!cityName) return false;
+    const lcCityName = cityName.toLowerCase();
+    return lcCityName.includes('hồ chí minh') || 
+           lcCityName.includes('ho chi minh') || 
+           lcCityName.includes('hcm') || 
+           lcCityName.includes('tp.hcm') || 
+           lcCityName.includes('tphcm');
+  };
+  
+  const containsLocation = (text, locationName) => {
+    if (!text || !locationName) return false;
+    return text.toLowerCase().includes(locationName.toLowerCase());
+  };
+
+  let addressStr = '';
+  let district = '';
+  let city = '';
+  
+  if (typeof address === 'object') {
+    district = address.district || address.districtName || '';
+    city = address.city || address.cityName || '';
     
-    if (typeof address === 'object') {
-      if (address.cityName || address.city) {
-        const cityName = address.cityName || address.city;
-        for (const [province, coords] of Object.entries(provinceCoordinates)) {
-          if (province.toLowerCase().includes(cityName.toLowerCase()) || 
-              cityName.toLowerCase().includes(province.toLowerCase())) {
-            coordinates = coords;
-            break;
-          }
-        }
+    const addressParts = [];
+    if (address.street || address.address) addressParts.push(address.street || address.address);
+    if (address.ward || address.wardName) addressParts.push(address.ward || address.wardName);
+    if (district) addressParts.push(district);
+    if (city) addressParts.push(city);
+    
+    addressStr = addressParts.join(', ');
+  } else if (typeof address === 'string') {
+    addressStr = address;
+    
+    const parts = addressStr.split(',').map(part => part.trim());
+    
+    for (const part of parts) {
+      if (isHCMCity(part)) {
+        city = 'Thành phố Hồ Chí Minh';
+        break;
       }
-    } else {
-      for (const [province, coords] of Object.entries(provinceCoordinates)) {
-        if (addressStr.toLowerCase().includes(province.toLowerCase())) {
-          coordinates = coords;
+      
+      for (const provinceName of Object.keys(provinceCoordinates)) {
+        if (containsLocation(part, provinceName)) {
+          city = provinceName;
           break;
         }
       }
+    }
+  }
+  
+  console.log("Processing address:", addressStr);
+  
+  if (containsLocation(addressStr, 'Linh Trung')) {
+    console.log("Found Linh Trung in address");
+    return hcmDistrictCoordinates["Linh Trung"];
+  }
+  
+  if (containsLocation(addressStr, 'Thủ Đức') || containsLocation(addressStr, 'Thu Duc')) {
+    console.log("Found Thu Duc in address");
+    return hcmDistrictCoordinates["Thủ Đức"];
+  }
+  
+  if (isHCMCity(city) || containsLocation(addressStr, 'Hồ Chí Minh')) {
+    console.log("Address is in HCM, checking districts");
+    
+    for (const [districtName, coords] of Object.entries(hcmDistrictCoordinates)) {
+      if (containsLocation(addressStr, districtName) || 
+          (district && containsLocation(district, districtName))) {
+        console.log(`Found district: ${districtName}`);
+        return coords;
+      }
+    }
+    
+    return provinceCoordinates["Thành phố Hồ Chí Minh"];
+  }
+  
+  for (const [province, coords] of Object.entries(provinceCoordinates)) {
+    if (containsLocation(addressStr, province) || 
+        (city && containsLocation(city, province))) {
+      return coords;
     }
   }
   
@@ -164,7 +254,7 @@ export const getStoreLocations = (addressData, deliveryAddress) => {
       coordinates: deliveryCoordinates,
       address: deliveryAddress || 
               (addressData?.fullAddress || 
-              `${addressData?.street || ''}, ${addressData?.wardName || addressData?.ward || ''}, ${addressData?.districtName || addressData?.district || ''}, ${addressData?.cityName || addressData?.city || ''}`) ||
+              `${addressData?.street || addressData?.address || ''}, ${addressData?.wardName || addressData?.ward || ''}, ${addressData?.districtName || addressData?.district || ''}, ${addressData?.cityName || addressData?.city || ''}`) ||
               "Địa chỉ không xác định",
       isDeliveryPoint: true
     }] : []),
