@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext, useCallback } from "rea
 import { useAuth } from "../auth/AuthContext";
 import { getUserId as getSupabaseUserId } from "../products/apiProduct";
 // Import will be restored when database functionality is needed
-// import { supabase } from "@/components/services/supabase";
+import { supabase } from "@/components/services/supabase";
 import { toast } from "react-hot-toast";
 
 const UserContext = createContext();
@@ -15,6 +15,8 @@ export function UserProvider({ children }) {
   const [recentlyAddedItems, setRecentlyAddedItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [isCartLoading, setIsCartLoading] = useState(false);
+  const [orderCount, setOrderCount] = useState({ active: 0, completed: 0, cancelled: 0 });
+  const [isOrdersLoading, setIsOrdersLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -31,11 +33,15 @@ export function UserProvider({ children }) {
       
       // Fetch cart items when user is logged in
       fetchCartItems(user.id);
+      
+      // Fetch order counts when user is logged in
+      fetchOrderCounts(user.id);
     } else {
       setUserInfo(null);
       setUserId(null);
       setCartItems([]);
       setCartCount(0);
+      setOrderCount({ active: 0, completed: 0, cancelled: 0 });
     }
   }, [user]);
 
@@ -46,6 +52,53 @@ export function UserProvider({ children }) {
     
     // Otherwise, use the function from apiProduct.js
     return await getSupabaseUserId();
+  };
+
+  // Fetch order counts for badges and notifications
+  const fetchOrderCounts = async (uid) => {
+    if (!uid) return;
+    
+    setIsOrdersLoading(true);
+    
+    try {
+      // Count active orders (pending, processing, shipping)
+      const { count: activeCount, error: activeError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', uid)
+        .in('status', ['pending', 'processing', 'shipping']);
+        
+      if (activeError) throw activeError;
+      
+      // Count completed orders
+      const { count: completedCount, error: completedError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', uid)
+        .eq('status', 'completed');
+        
+      if (completedError) throw completedError;
+      
+      // Count cancelled and refunded orders
+      const { count: cancelledCount, error: cancelledError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', uid)
+        .in('status', ['cancelled', 'refunded']);
+        
+      if (cancelledError) throw cancelledError;
+      
+      setOrderCount({
+        active: activeCount || 0,
+        completed: completedCount || 0,
+        cancelled: cancelledCount || 0
+      });
+      
+    } catch (error) {
+      console.error("Error fetching order counts:", error);
+    } finally {
+      setIsOrdersLoading(false);
+    }
   };
 
   // Fetch cart items from database or local storage
@@ -240,6 +293,66 @@ export function UserProvider({ children }) {
       return false;
     }
   }, []);
+  
+  // Create a new order
+  const createOrder = useCallback(async (orderData) => {
+    try {
+      const userId = await getUserId();
+      if (!userId) {
+        toast.error("Vui lòng đăng nhập để đặt hàng!");
+        return false;
+      }
+      
+      // Add user ID to order data
+      const orderWithUserId = {
+        ...orderData,
+        user_id: userId,
+        status: 'pending',
+        order_date: new Date().toISOString(),
+        created_at: new Date().toISOString()
+      };
+      
+      // Insert into orders table
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert(orderWithUserId)
+        .select()
+        .single();
+        
+      if (orderError) throw orderError;
+      
+      // Get order items from cart
+      const orderItems = orderData.product_info.map(item => ({
+        order_id: order.id,
+        product_id: item.id,
+        product_name: item.title || item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image_url: item.thumbnail || item.image,
+        created_at: new Date().toISOString()
+      }));
+      
+      // Insert into order_items table
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+        
+      if (itemsError) throw itemsError;
+      
+      // Clear cart after successful order
+      await clearCart();
+      
+      // Update order counts
+      await fetchOrderCounts(userId);
+      
+      toast.success("Đặt hàng thành công!");
+      return order.id;
+    } catch (error) {
+      console.error("Error creating order:", error);
+      toast.error("Không thể tạo đơn hàng. Vui lòng thử lại sau.");
+      return false;
+    }
+  }, [clearCart]);
 
   return (
     <UserContext.Provider value={{ 
@@ -251,6 +364,10 @@ export function UserProvider({ children }) {
       cartCount,
       isCartLoading,
       recentlyAddedItems,
+      orderCount,
+      isOrdersLoading,
+      fetchOrderCounts,
+      createOrder,
       addToCart,
       removeFromCart,
       updateCartItemQuantity,
