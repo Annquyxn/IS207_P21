@@ -24,7 +24,7 @@
 
 ## CÔNG NGHỆ SỬ DỤNG
 
--    **Backend:** [PHP](https://www.php.net/), [NodeJS](https://nodejs.org/en), [Python](https://www.python.org/) (Optional)
+-    **Backend:** [PHP](https://www.php.net/), [NodeJS](https://nodejs.org/en), [Python](https://www.python.org/) (Optional), [Postman](https://www.postman.com/)
 -    **Frontend:** [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), [JavaScript](https://www.javascript.com/), [Figma](https://www.figma.com/community), [Vite](https://vite.dev/), [ReactJS](https://react.dev/)
 -    **Database:** [phpMyAdmin](https://www.phpmyadmin.net/), [Supabase](https://supabase.com/) (Optional Test)
 
