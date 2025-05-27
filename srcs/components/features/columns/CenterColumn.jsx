@@ -5,6 +5,7 @@ import Banner2 from '@/assets/banner/banner-2.png';
 import Banner3 from '@/assets/banner/banner-3.png';
 import Banner4 from '@/assets/banner/banner-4.png';
 import Banner5 from '@/assets/banner/banner-5.png';
+import { Link } from 'react-router-dom';
 
 function CenterColumn() {
   const settings = {
@@ -51,11 +52,21 @@ function CenterColumn() {
 
   const banners = [Banner0, Banner1, Banner2, Banner3, Banner4, Banner5];
 
+  const bannerLinks = [
+    '/san-pham?category=keyboard',
+    '/san-pham?category=laptop-van-phong',
+    '/build-PC',
+    '/san-pham?category=laptop-do-hoa',
+    '/san-pham?category=headphone',
+    '/san-pham?category=mouse',
+  ];
+
   return (
     <section className='relative w-full max-w-full overflow-hidden rounded-lg'>
       <Slider {...settings}>
         {banners.map((src, idx) => (
-          <div
+          <Link
+            to={bannerLinks[idx]}
             key={idx}
             className='w-full h-[408px] overflow-hidden object-contain'
           >
@@ -64,7 +75,7 @@ function CenterColumn() {
               alt={`banner-${idx}`}
               className='w-full h-full object-cover transition-transform duration-300 hover:scale-[1.02]'
             />
-          </div>
+          </Link>
         ))}
       </Slider>
     </section>
