@@ -61,41 +61,91 @@ export function UserProvider({ children }) {
     setIsOrdersLoading(true);
     
     try {
-      // Count active orders (pending, processing, shipping)
-      const { count: activeCount, error: activeError } = await supabase
+      // First, try to get a sample record to check the schema
+      const { data: sampleData, error: sampleError } = await supabase
         .from('orders')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', uid)
+        .select('*')
+        .limit(1);
+        
+      if (sampleError) {
+        console.error("Error fetching sample order:", sampleError);
+        setOrderCount({ active: 0, completed: 0, cancelled: 0 });
+        setIsOrdersLoading(false);
+        return;
+      }
+      
+      // Determine the correct column name for user ID
+      let userIdColumn = 'user_id';
+      
+      if (sampleData && sampleData.length > 0) {
+        const firstRecord = sampleData[0];
+        // Check if userId (camelCase) exists instead of user_id (snake_case)
+        if (Object.prototype.hasOwnProperty.call(firstRecord, 'userId') && 
+            !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')) {
+          userIdColumn = 'userId';
+          console.log("Using 'userId' column instead of 'user_id'");
+        }
+        // Check if userid (lowercase) exists
+        else if (Object.prototype.hasOwnProperty.call(firstRecord, 'userid') && 
+                !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')) {
+          userIdColumn = 'userid';
+          console.log("Using 'userid' column instead of 'user_id'");
+        }
+      } else {
+        console.log("No sample data available to determine schema");
+        setOrderCount({ active: 0, completed: 0, cancelled: 0 });
+        setIsOrdersLoading(false);
+        return;
+      }
+      
+      // Now use the correct column name for all queries
+      
+      // Get active orders (pending, processing, shipping)
+      const { data: activeOrders, error: activeError } = await supabase
+        .from('orders')
+        .select('id')
+        .eq(userIdColumn, uid)
         .in('status', ['pending', 'processing', 'shipping']);
         
-      if (activeError) throw activeError;
+      if (activeError) {
+        console.error("Error fetching active orders:", activeError);
+        return;
+      }
       
-      // Count completed orders
-      const { count: completedCount, error: completedError } = await supabase
+      // Get completed orders
+      const { data: completedOrders, error: completedError } = await supabase
         .from('orders')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', uid)
+        .select('id')
+        .eq(userIdColumn, uid)
         .eq('status', 'completed');
         
-      if (completedError) throw completedError;
+      if (completedError) {
+        console.error("Error fetching completed orders:", completedError);
+        return;
+      }
       
-      // Count cancelled and refunded orders
-      const { count: cancelledCount, error: cancelledError } = await supabase
+      // Get cancelled and refunded orders
+      const { data: cancelledOrders, error: cancelledError } = await supabase
         .from('orders')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', uid)
+        .select('id')
+        .eq(userIdColumn, uid)
         .in('status', ['cancelled', 'refunded']);
         
-      if (cancelledError) throw cancelledError;
+      if (cancelledError) {
+        console.error("Error fetching cancelled orders:", cancelledError);
+        return;
+      }
       
+      // Set counts based on array lengths
       setOrderCount({
-        active: activeCount || 0,
-        completed: completedCount || 0,
-        cancelled: cancelledCount || 0
+        active: Array.isArray(activeOrders) ? activeOrders.length : 0,
+        completed: Array.isArray(completedOrders) ? completedOrders.length : 0,
+        cancelled: Array.isArray(cancelledOrders) ? cancelledOrders.length : 0
       });
       
     } catch (error) {
       console.error("Error fetching order counts:", error);
+      setOrderCount({ active: 0, completed: 0, cancelled: 0 });
     } finally {
       setIsOrdersLoading(false);
     }
@@ -303,14 +353,41 @@ export function UserProvider({ children }) {
         return false;
       }
       
-      // Add user ID to order data
+      // First, check the orders table structure to determine the correct column name
+      const { data: sampleData, error: sampleError } = await supabase
+        .from('orders')
+        .select('*')
+        .limit(1);
+      
+      // Determine the correct column name for user ID
+      let userIdColumn = 'user_id';
+      
+      if (!sampleError && sampleData && sampleData.length > 0) {
+        const firstRecord = sampleData[0];
+        // Check if userId (camelCase) exists instead of user_id (snake_case)
+        if (Object.prototype.hasOwnProperty.call(firstRecord, 'userId') && 
+            !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')) {
+          userIdColumn = 'userId';
+          console.log("Using 'userId' column instead of 'user_id'");
+        }
+        // Check if userid (lowercase) exists
+        else if (Object.prototype.hasOwnProperty.call(firstRecord, 'userid') && 
+                !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')) {
+          userIdColumn = 'userid';
+          console.log("Using 'userid' column instead of 'user_id'");
+        }
+      }
+      
+      // Add user ID to order data with the correct column name
       const orderWithUserId = {
         ...orderData,
-        user_id: userId,
         status: 'pending',
         order_date: new Date().toISOString(),
         created_at: new Date().toISOString()
       };
+      
+      // Set the user ID with the correct column name
+      orderWithUserId[userIdColumn] = userId;
       
       // Insert into orders table
       const { data: order, error: orderError } = await supabase

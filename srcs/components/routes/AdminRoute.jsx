@@ -15,24 +15,75 @@ const AdminRoute = () => {
   useEffect(() => {
     const checkAdminRole = async () => {
       if (user) {
-        // Lấy user id
-        const userId = user.id || user?.user?.id;
-        if (userId) {
-          // Truy vấn bảng user_admin để kiểm tra quyền admin
-          const { data, error } = await supabase
-            .from("user_admin")
-            .select("role")
-            .eq("user_id", userId)
-            .single();
-          setIsAdmin(!error && data?.role === "admin");
-        } else {
+        try {
+          // Lấy user id
+          const userId = user.id || user?.user?.id;
+          if (userId) {
+            try {
+              // First, check the user_admin table structure
+              const { data: sampleData, error: sampleError } = await supabase
+                .from("user_admin")
+                .select('*')
+                .limit(1);
+              
+              if (sampleError) {
+                console.error("Error checking user_admin table:", sampleError);
+                setIsAdmin(false);
+                setLoading(false);
+                return;
+              }
+              
+              // Determine the correct column name for user ID
+              let userIdColumn = 'user_id';
+              
+              if (sampleData && sampleData.length > 0) {
+                const firstRecord = sampleData[0];
+                // Check if userId (camelCase) exists instead of user_id (snake_case)
+                if (Object.prototype.hasOwnProperty.call(firstRecord, 'userId') && 
+                    !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')) {
+                  userIdColumn = 'userId';
+                  console.log("Using 'userId' column instead of 'user_id'");
+                }
+                // Check if userid (lowercase) exists
+                else if (Object.prototype.hasOwnProperty.call(firstRecord, 'userid') && 
+                        !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')) {
+                  userIdColumn = 'userid';
+                  console.log("Using 'userid' column instead of 'user_id'");
+                }
+              }
+              
+              // Truy vấn bảng user_admin để kiểm tra quyền admin
+              const { data, error } = await supabase
+                .from("user_admin")
+                .select("role")
+                .eq(userIdColumn, userId)
+                .eq("role", "admin");
+                
+              if (error) {
+                console.error("Error checking admin role:", error);
+                setIsAdmin(false);
+              } else {
+                // Check if we got any results back
+                setIsAdmin(Array.isArray(data) && data.length > 0);
+              }
+            } catch (innerError) {
+              console.error("Error in admin check:", innerError);
+              setIsAdmin(false);
+            }
+          } else {
+            setIsAdmin(false);
+          }
+        } catch (error) {
+          console.error("Error in admin check:", error);
           setIsAdmin(false);
         }
       } else {
         setIsAdmin(false);
       }
+      
       setLoading(false);
     };
+    
     checkAdminRole();
   }, [user]);
 

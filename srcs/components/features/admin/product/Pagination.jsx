@@ -7,7 +7,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     } else {
       pages.push(1);
 
-      if (currentPage > 4) pages.push('...');
+      if (currentPage > 4) pages.push('ellipsis-1');
       for (
         let i = Math.max(2, currentPage - 2);
         i <= Math.min(totalPages - 1, currentPage + 2);
@@ -16,7 +16,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         pages.push(i);
       }
 
-      if (currentPage < totalPages - 3) pages.push('...');
+      if (currentPage < totalPages - 3) pages.push('ellipsis-2');
       pages.push(totalPages);
     }
 
@@ -28,13 +28,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <div className='flex items-center justify-center gap-1 py-4 overflow-x-auto scrollbar-thin'>
       {pageList.map((page, idx) =>
-        page === '...' ? (
-          <span key={idx} className='px-2 text-gray-400'>
+        page === 'ellipsis-1' || page === 'ellipsis-2' ? (
+          <span key={`ellipsis-${idx}`} className='px-2 text-gray-400'>
             ...
           </span>
         ) : (
           <button
-            key={page}
+            key={`page-${page}-${idx}`}
             className={`px-3 py-1.5 rounded border text-sm ${
               currentPage === page
                 ? 'bg-blue-600 text-white border-blue-600'
