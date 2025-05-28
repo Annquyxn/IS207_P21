@@ -1,20 +1,25 @@
+import { Link } from 'react-router-dom';
+
 function LeftColumn() {
-  const links = ['#', '#', '#', '#'];
+  const links = [
+    '/san-pham?category=laptop-gaming',
+    '/san-pham?category=cpu-intel-i9',
+    '/san-pham?category=cpu-amd-r9',
+    '/san-pham?category=screen',
+  ];
   const images = [
-    'https://file.hstatic.net/200000722513/file/thang_04_layout_web_-01.png',
-    'https://file.hstatic.net/200000722513/file/thang_04_layout_web_-01.png',
-    'https://file.hstatic.net/200000722513/file/thang_04_layout_web_-09.png',
-    'https://file.hstatic.net/200000722513/file/thang_04_layout_web_-08.png',
+    '/srcs/assets/banner-phu/banner-1.webp',
+    '/srcs/assets/banner-phu/banner-2.webp',
+    '/srcs/assets/banner-phu/banner-3.webp',
+    '/srcs/assets/banner-phu/banner-4.webp',
   ];
 
   return (
     <div className='flex gap-5 px-2'>
       {images.map((src, idx) => (
-        <a
+        <Link
           key={idx}
-          href={links[idx]}
-          target='_blank'
-          rel='noopener noreferrer'
+          to={links[idx]}
           className='block flex-1 rounded-2xl overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-300'
           style={{ aspectRatio: '4 / 3' }}
         >
@@ -24,7 +29,7 @@ function LeftColumn() {
             className='w-full h-full object-contain rounded-2xl max-w-full'
             style={{ display: 'block' }}
           />
-        </a>
+        </Link>
       ))}
     </div>
   );
