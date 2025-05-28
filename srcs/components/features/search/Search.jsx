@@ -2,9 +2,10 @@ import { useState } from 'react';
 import ProductSearch from './ProductSearch';
 import { FiSearch } from 'react-icons/fi';
 import { useProductSearch } from './useProductSearch';
+import Spinner from '../../ui/Spinner';
 
 const Search = () => {
-  const { query, setQuery, results, searchRef } = useProductSearch();
+  const { query, setQuery, results, loading, searchRef } = useProductSearch();
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -37,8 +38,15 @@ const Search = () => {
         />
       </div>
 
-      {/* DROPDOWN */}
-      {results.length > 0 && (
+      {/* LOADING SPINNER */}
+      {loading && (
+        <div className='absolute z-[1000] top-full mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg flex items-center justify-center py-5'>
+          <Spinner />
+        </div>
+      )}
+
+      {/* DROPDOWN KẾT QUẢ */}
+      {!loading && results.length > 0 && (
         <ul className='absolute z-[1000] top-full mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto'>
           {results.map((item) => (
             <li key={item.id}>

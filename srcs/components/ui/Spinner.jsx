@@ -1,4 +1,4 @@
-const Spinner = ({ className = 'w-6 h-6', color = 'text-red-500' }) => {
+const Spinner = ({ className = 'w-8 h-8', color = 'text-red-500' }) => {
   return (
     <div
       className='flex items-center justify-center'

@@ -6,8 +6,9 @@ import { fetchProductsByTitle } from '../../services/apiSearch';
 export const useProductSearch = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-  const debouncedQuery = useDebounce(query, 400);
+  const debouncedQuery = useDebounce(query, 200);
   const searchRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -16,13 +17,21 @@ export const useProductSearch = () => {
   }, [location.pathname]);
 
   useEffect(() => {
+    if (query.trim()) setLoading(true);
+  }, [query]);
+
+  useEffect(() => {
     const getData = async () => {
       const data = await fetchProductsByTitle(debouncedQuery);
       setResults(data);
+      setLoading(false);
     };
 
     if (debouncedQuery) getData();
-    else setResults([]);
+    else {
+      setResults([]);
+      setLoading(false);
+    }
   }, [debouncedQuery]);
 
   useEffect(() => {
@@ -41,6 +50,7 @@ export const useProductSearch = () => {
     query,
     setQuery,
     results,
+    loading,
     searchRef,
   };
 };
