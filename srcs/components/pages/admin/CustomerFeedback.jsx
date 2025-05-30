@@ -3,6 +3,70 @@ import { motion } from 'framer-motion';
 import { FiFilter, FiMessageSquare, FiUser, FiCalendar, FiStar, FiTrash2, FiMail, FiTag, FiRefreshCw } from 'react-icons/fi';
 import Spinner from '@/components/ui/Spinner';
 import { toast } from 'react-hot-toast';
+import { supabase } from '@/components/services/supabase';
+
+// Function to fetch feedback data from Supabase
+const fetchFeedbackData = async (status, type, rating) => {
+  try {
+    let query = supabase.from('feedback').select('*');
+    
+    if (status !== 'all') {
+      query = query.eq('status', status);
+    }
+    
+    if (type !== 'all') {
+      query = query.eq('type', type);
+    }
+    
+    if (rating !== 'all') {
+      query = query.eq('rating', parseInt(rating));
+    }
+    
+    const { data, error } = await query.order('date', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching feedback:', error.message);
+    throw error;
+  }
+};
+
+// Function to reply to a feedback
+const replyToFeedback = async (feedbackId, replyMessage) => {
+  try {
+    const { data, error } = await supabase
+      .from('feedback')
+      .update({
+        reply: replyMessage,
+        status: 'Đã phản hồi'
+      })
+      .eq('id', feedbackId)
+      .select();
+      
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error replying to feedback:', error.message);
+    throw error;
+  }
+};
+
+// Function to delete feedback
+const deleteFeedbackItem = async (feedbackId) => {
+  try {
+    const { error } = await supabase
+      .from('feedback')
+      .delete()
+      .eq('id', feedbackId);
+      
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error deleting feedback:', error.message);
+    throw error;
+  }
+};
 
 const CustomerFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -17,24 +81,29 @@ const CustomerFeedback = () => {
 
   // Fetch feedback data from Supabase
   useEffect(() => {
-    const fetchFeedbacks = async () => {
+    const loadFeedbacks = async () => {
       setIsLoading(true);
       setError(null);
       
       try {
-        // Skip Supabase query and use mock data directly
-        setFeedbacks(getMockFeedbackData());
+        const data = await fetchFeedbackData(filterStatus, filterType, filterRating);
+        setFeedbacks(data);
       } catch (error) {
         console.error('Error fetching feedback data:', error.message);
-        setError('Không thể tải dữ liệu phản hồi. Sử dụng dữ liệu mẫu.');
-        setFeedbacks(getMockFeedbackData());
+        setError('Không thể tải dữ liệu phản hồi. Vui lòng thử lại sau.');
+        
+        // If there's no data yet in Supabase, use mock data for development
+        if (import.meta.env.NODE_ENV === 'development') {
+          setFeedbacks(getMockFeedbackData());
+        }
+        
         toast.error('Lỗi kết nối dữ liệu!');
       } finally {
         setIsLoading(false);
       }
     };
     
-    fetchFeedbacks();
+    loadFeedbacks();
   }, [filterStatus, filterType, filterRating]);
 
   // Filter feedbacks based on search term
@@ -57,24 +126,31 @@ const CustomerFeedback = () => {
     if (!replyMessage.trim() || !selectedFeedback) return;
     
     try {
-      // Update local state without Supabase calls
+      // Send reply to Supabase
+      await replyToFeedback(selectedFeedback.id, replyMessage);
+      
+      // Update local state
       const updatedFeedbacks = feedbacks.map(f => 
         f.id === selectedFeedback.id ? { ...f, status: 'Đã phản hồi', reply: replyMessage } : f
       );
       
       setFeedbacks(updatedFeedbacks);
+      setSelectedFeedback({ ...selectedFeedback, status: 'Đã phản hồi', reply: replyMessage });
       setReplyMessage('');
       toast.success(`Đã gửi phản hồi đến ${selectedFeedback.customer}`);
     } catch (error) {
       console.error('Error updating feedback:', error.message);
-      toast.error('Không thể cập nhật phản hồi');
+      toast.error('Không thể cập nhật phản hồi. Vui lòng thử lại sau.');
     }
   };
 
   const handleDeleteFeedback = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa phản hồi này?')) {
       try {
-        // Update local state only, no Supabase calls
+        // Delete from Supabase
+        await deleteFeedbackItem(id);
+        
+        // Update local state
         const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
         setFeedbacks(updatedFeedbacks);
         
@@ -85,7 +161,7 @@ const CustomerFeedback = () => {
         toast.success('Đã xóa phản hồi');
       } catch (error) {
         console.error('Error deleting feedback:', error.message);
-        toast.error('Không thể xóa phản hồi');
+        toast.error('Không thể xóa phản hồi. Vui lòng thử lại sau.');
       }
     }
   };
@@ -100,7 +176,7 @@ const CustomerFeedback = () => {
     ));
   };
   
-  // Mock data function for fallback
+  // Mock data function for development/fallback
   const getMockFeedbackData = () => [
     {
       id: 1,
@@ -172,6 +248,31 @@ const CustomerFeedback = () => {
     }
   ];
 
+  // Refresh data function
+  const handleRefresh = () => {
+    setIsLoading(true);
+    setFilterStatus('all');
+    setFilterType('all');
+    setFilterRating('all');
+    setSearchTerm('');
+    
+    setTimeout(() => {
+      const loadFeedbacks = async () => {
+        try {
+          const data = await fetchFeedbackData('all', 'all', 'all');
+          setFeedbacks(data);
+        } catch (error) {
+          setError('Không thể tải dữ liệu phản hồi. Vui lòng thử lại sau.');
+          toast.error('Lỗi kết nối dữ liệu!');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadFeedbacks();
+    }, 500);
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -192,15 +293,7 @@ const CustomerFeedback = () => {
         <h1 className="text-2xl font-bold text-gray-800">Phản hồi khách hàng</h1>
         <div className="flex space-x-2">
           <button 
-            onClick={() => {
-              setIsLoading(true);
-              setTimeout(() => {
-                setFilterStatus('all');
-                setFilterType('all');
-                setFilterRating('all');
-                setSearchTerm('');
-              }, 300);
-            }}
+            onClick={handleRefresh}
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition flex items-center"
           >
             <FiRefreshCw className="mr-2" />
@@ -221,7 +314,7 @@ const CustomerFeedback = () => {
             </div>
             <div className="ml-3">
               <p className="text-sm text-yellow-700">
-                {error} <button onClick={() => window.location.reload()} className="font-medium underline">Tải lại trang</button>
+                {error} <button onClick={handleRefresh} className="font-medium underline">Tải lại trang</button>
               </p>
             </div>
           </div>
@@ -365,7 +458,18 @@ const CustomerFeedback = () => {
                   </div>
                 </div>
                 
-                {/* Previous replies would go here in a real app */}
+                {selectedFeedback.reply && (
+                  <div className="bg-white p-4 rounded-lg shadow-sm mb-6 relative">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-green-500 rounded-l-lg"></div>
+                    <div className="pl-3">
+                      <div className="flex items-start mb-2">
+                        <FiMessageSquare className="mt-1 mr-2 text-green-600" />
+                        <h3 className="font-medium text-gray-800">Phản hồi của bạn</h3>
+                      </div>
+                      <p className="text-gray-700 whitespace-pre-line">{selectedFeedback.reply}</p>
+                    </div>
+                  </div>
+                )}
                 
                 <form onSubmit={handleReplySubmit} className="bg-white p-4 rounded-lg shadow-sm">
                   <div className="mb-3">
