@@ -14,15 +14,14 @@ import { useNotifications } from '../features/notify/NotificationContext';
 import { useAuth } from '../features/auth/AuthContext';
 import { useUser } from '../features/user/UserContext';
 import { useCart } from '@/utils/CartContext';
+import { useAdmin } from '../hooks/useAdmin'; // Import hook mới
 import UserDropdownMenu from './UserDropdownMenu';
 import Search from '../features/search/Search';
-import { supabase } from '../services/supabase';
 
 function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const notificationRef = useRef(null);
   const userMenuRef = useRef(null);
   const hideTimeoutRef = useRef(null);
@@ -31,74 +30,7 @@ function Header() {
   const { user, signOut } = useAuth();
   const { userInfo } = useUser();
   const { cart } = useCart();
-
-  // Check admin status
-  useEffect(() => {
-    async function checkAdminRole() {
-      if (!user) {
-        setIsAdmin(false);
-        return;
-      }
-
-      try {
-        // First, check the user_admin table structure
-        const { data: sampleData, error: sampleError } = await supabase
-          .from('user_admin')
-          .select('*')
-          .limit(1);
-
-        if (sampleError) {
-          console.error('Error checking user_admin table:', sampleError);
-          setIsAdmin(false);
-          return;
-        }
-
-        // Determine the correct column name for user ID
-        let userIdColumn = 'user_id';
-
-        if (sampleData && sampleData.length > 0) {
-          const firstRecord = sampleData[0];
-          // Check if userId (camelCase) exists instead of user_id (snake_case)
-          if (
-            Object.prototype.hasOwnProperty.call(firstRecord, 'userId') &&
-            !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')
-          ) {
-            userIdColumn = 'userId';
-            console.log("Using 'userId' column instead of 'user_id'");
-          }
-          // Check if userid (lowercase) exists
-          else if (
-            Object.prototype.hasOwnProperty.call(firstRecord, 'userid') &&
-            !Object.prototype.hasOwnProperty.call(firstRecord, 'user_id')
-          ) {
-            userIdColumn = 'userid';
-            console.log("Using 'userid' column instead of 'user_id'");
-          }
-        }
-
-        // Query the user_admin table to check for admin role
-        const { data, error } = await supabase
-          .from('user_admin')
-          .select('role')
-          .eq(userIdColumn, user.id)
-          .eq('role', 'admin');
-
-        if (error) {
-          console.error('Error checking admin role:', error);
-          setIsAdmin(false);
-          return;
-        }
-
-        // Check if we got any results back
-        setIsAdmin(Array.isArray(data) && data.length > 0);
-      } catch (error) {
-        console.error('Error checking admin role:', error);
-        setIsAdmin(false);
-      }
-    }
-
-    checkAdminRole();
-  }, [user]);
+  const { isAdmin, loading: adminLoading } = useAdmin(); // Sử dụng hook mới
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -170,9 +102,6 @@ function Header() {
               alt='GearVN Logo'
               className='w-30 h-12 object-contain'
             />
-            {/* <span className='text-sm font-bold text-white hidden md:inline'>
-              HAAD
-            </span> */}
           </div>
 
           {/* DANH MỤC */}
@@ -220,7 +149,8 @@ function Header() {
             <span className='text-base font-medium'>Build PC</span>
           </div>
 
-          {isAdmin && (
+          {/* Chỉ hiển thị nút Quản lý khi đã load xong và user là admin */}
+          {!adminLoading && isAdmin && (
             <div
               className='flex items-center gap-2 cursor-pointer hover:bg-red-700 hover:scale-105 hover:shadow-lg px-3 py-2 rounded-lg transition-all duration-300 ease-in-out'
               onClick={handleGoToAdmin}

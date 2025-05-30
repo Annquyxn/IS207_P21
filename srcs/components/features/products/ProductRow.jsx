@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import ProductCard from '@/components/features/products/ProductCard';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import Spinner from '../../ui/Spinner';
 
 const CATEGORY_LABELS = {
   laptop: 'Laptop',

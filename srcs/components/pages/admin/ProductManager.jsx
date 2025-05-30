@@ -1,16 +1,28 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { AiOutlinePlus, AiOutlineBarChart } from 'react-icons/ai';
 import { MdInventory, MdTrendingUp, MdCategory } from 'react-icons/md';
-import { 
-  PieChart, Pie, Cell, ResponsiveContainer, 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
 } from 'recharts';
 import ProductRow from '../../features/admin/product/ProductRow';
 import ProductForm from '../../features/admin/product/ProductForm';
 import { useProduct } from '../../features/admin/product/useProduct';
 import Pagination from '../../features/admin/product/pagination';
-import { getProductCount, getTopProductPerformance } from '@/components/features/products/apiProduct';
+import {
+  getProductCount,
+  getTopProductPerformance,
+} from '@/components/features/products/apiProduct';
 
 const pageSize = 7;
 const COLORS = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
@@ -21,42 +33,44 @@ const containerVariants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { 
-    opacity: 1, 
+  show: {
+    opacity: 1,
     y: 0,
     transition: {
-      type: "spring",
+      type: 'spring',
       stiffness: 300,
-      damping: 24
-    }
-  }
+      damping: 24,
+    },
+  },
 };
 
 const StatCard = ({ title, value, icon, change }) => {
   return (
     <motion.div
       variants={itemVariants}
-      className="bg-white p-5 rounded-xl shadow-sm border border-gray-100"
-      whileHover={{ y: -5, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
+      className='bg-white p-5 rounded-xl shadow-sm border border-gray-100'
+      whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
     >
-      <div className="flex items-start justify-between">
+      <div className='flex items-start justify-between'>
         <div>
-          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{title}</p>
-          <h3 className="text-2xl font-bold text-gray-800 mt-2">{value}</h3>
+          <p className='text-sm font-semibold text-gray-500 uppercase tracking-wider'>
+            {title}
+          </p>
+          <h3 className='text-2xl font-bold text-gray-800 mt-2'>{value}</h3>
           {change && (
-            <p className="text-xs text-green-600 mt-1 flex items-center">
+            <p className='text-xs text-green-600 mt-1 flex items-center'>
               <span>▲</span> {change}
             </p>
           )}
         </div>
-        <div className="p-3 bg-red-50 rounded-lg text-red-600 text-xl">
+        <div className='p-3 bg-red-50 rounded-lg text-red-600 text-xl'>
           {icon}
         </div>
       </div>
@@ -72,7 +86,7 @@ const ProductManager = () => {
   const [productStats, setProductStats] = useState({
     totalProducts: 0,
     topProducts: [],
-    categoryData: []
+    categoryData: [],
   });
 
   const totalPages = Math.ceil(products.length / pageSize);
@@ -85,26 +99,29 @@ const ProductManager = () => {
       try {
         const count = await getProductCount();
         const topProducts = await getTopProductPerformance();
-        
+
         // Create category distribution from products
         const categories = {};
-        products.forEach(product => {
+        products.forEach((product) => {
           const category = product.category || 'other';
           if (!categories[category]) {
             categories[category] = 0;
           }
           categories[category]++;
         });
-        
-        const categoryData = Object.entries(categories).map(([name, value]) => ({
-          name: name.charAt(0).toUpperCase() + name.slice(1).replace(/_/g, ' '),
-          value
-        })).slice(0, 5);
-        
+
+        const categoryData = Object.entries(categories)
+          .map(([name, value]) => ({
+            name:
+              name.charAt(0).toUpperCase() + name.slice(1).replace(/_/g, ' '),
+            value,
+          }))
+          .slice(0, 5);
+
         setProductStats({
           totalProducts: count,
           topProducts,
-          categoryData
+          categoryData,
         });
       } catch (error) {
         console.error('Error fetching product stats:', error);
@@ -129,7 +146,9 @@ const ProductManager = () => {
       <div className='flex justify-between items-center'>
         <div>
           <h2 className='text-2xl font-bold text-gray-800'>Quản lý sản phẩm</h2>
-          <p className='text-gray-500 mt-1'>Tổng cộng: {products.length} sản phẩm</p>
+          <p className='text-gray-500 mt-1'>
+            Tổng cộng: {products.length} sản phẩm
+          </p>
         </div>
         <div className='flex items-center gap-3'>
           <motion.button
@@ -155,25 +174,25 @@ const ProductManager = () => {
       {showStats && (
         <motion.div
           variants={containerVariants}
-          initial="hidden"
-          animate="show"
+          initial='hidden'
+          animate='show'
         >
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
             <StatCard
-              title="Tổng sản phẩm"
+              title='Tổng sản phẩm'
               value={productStats.totalProducts.toLocaleString()}
               icon={<MdInventory />}
-              change="8.3% so với tháng trước"
+              change='8.3% so với tháng trước'
             />
             <StatCard
-              title="Sản phẩm bán chạy"
-              value={productStats.topProducts[0]?.name || "Chưa có dữ liệu"}
+              title='Sản phẩm bán chạy'
+              value={productStats.topProducts[0]?.name || 'Chưa có dữ liệu'}
               icon={<MdTrendingUp />}
               change={`${productStats.topProducts[0]?.growth}% tăng trưởng`}
             />
             <StatCard
-              title="Danh mục phổ biến"
-              value={productStats.categoryData[0]?.name || "Chưa có dữ liệu"}
+              title='Danh mục phổ biến'
+              value={productStats.categoryData[0]?.name || 'Chưa có dữ liệu'}
               icon={<MdCategory />}
               change={`${productStats.categoryData[0]?.value} sản phẩm`}
             />
@@ -182,36 +201,41 @@ const ProductManager = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
             {/* Top Products Chart */}
             <div className='bg-white p-4 rounded-xl shadow-sm border border-gray-100'>
-              <h3 className='text-lg font-semibold mb-4'>Top 5 sản phẩm bán chạy</h3>
+              <h3 className='text-lg font-semibold mb-4'>
+                Top 5 sản phẩm bán chạy
+              </h3>
               <div className='h-64'>
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width='100%' height='100%'>
                   <BarChart
                     data={productStats.topProducts.slice(0, 5)}
-                    layout="vertical"
+                    layout='vertical'
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" />
-                    <YAxis 
-                      dataKey="name" 
-                      type="category" 
-                      scale="band" 
+                    <CartesianGrid strokeDasharray='3 3' horizontal={false} />
+                    <XAxis type='number' />
+                    <YAxis
+                      dataKey='name'
+                      type='category'
+                      scale='band'
                       width={150}
                       tick={{ fontSize: 12 }}
                     />
-                    <Tooltip 
-                      formatter={(value) => [`${value} đơn hàng`, 'Số lượng bán']}
-                      contentStyle={{ 
+                    <Tooltip
+                      formatter={(value) => [
+                        `${value} đơn hàng`,
+                        'Số lượng bán',
+                      ]}
+                      contentStyle={{
                         borderRadius: '8px',
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                        border: 'none'
+                        border: 'none',
                       }}
                     />
-                    <Bar 
-                      dataKey="sales" 
-                      fill="#ef4444" 
+                    <Bar
+                      dataKey='sales'
+                      fill='#ef4444'
                       radius={[0, 4, 4, 0]}
-                      name="Số lượng bán"
+                      name='Số lượng bán'
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -222,35 +246,40 @@ const ProductManager = () => {
             <div className='bg-white p-4 rounded-xl shadow-sm border border-gray-100'>
               <h3 className='text-lg font-semibold mb-4'>Phân bố danh mục</h3>
               <div className='h-64'>
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width='100%' height='100%'>
                   <PieChart>
                     <Pie
                       data={productStats.categoryData}
-                      cx="50%"
-                      cy="50%"
+                      cx='50%'
+                      cy='50%'
                       labelLine={false}
                       outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      nameKey="name"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      fill='#8884d8'
+                      dataKey='value'
+                      nameKey='name'
+                      label={({ name, percent }) =>
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
                     >
                       {productStats.categoryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <Tooltip
                       formatter={(value) => [`${value} sản phẩm`, '']}
-                      contentStyle={{ 
+                      contentStyle={{
                         borderRadius: '8px',
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                        border: 'none'
+                        border: 'none',
                       }}
                     />
                     <Legend
-                      layout="vertical" 
-                      align="right"
-                      verticalAlign="middle" 
+                      layout='vertical'
+                      align='right'
+                      verticalAlign='middle'
                       wrapperStyle={{ fontSize: 12 }}
                     />
                   </PieChart>
