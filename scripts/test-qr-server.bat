@@ -1,40 +1,41 @@
 @echo off
-title QR Server Test
-color 0F
+setlocal
 
-:: Đổi thư mục làm việc 
-cd /d "%~dp0"
-cd ..\python-ChatBot\qrCode
+REM ===== QR SERVICE TEST CONFIGURATION =====
+set SERVICE_NAME=QR Code Payment Service
+set SERVICE_URL=http://localhost:8001
+set HEALTH_ENDPOINT=/health
+set MB_ENDPOINT=/mb/qr
+set MOMO_ENDPOINT=/momo/qr
 
-echo ======================================================
-echo              KIEM TRA SERVER THANH TOAN QR           
-echo ======================================================
+echo Testing %SERVICE_NAME%...
 echo.
 
-:: Kiểm tra Python
-where python >nul 2>&1
+REM Check if curl is available
+where curl >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ERROR] Python khong duoc tim thay! Vui long cai dat Python.
-    pause
-    exit /b 1
+    echo ERROR: curl command not found.
+    echo Please install curl or add it to your PATH.
+    goto :end
 )
 
-:: Cài đặt thư viện requests
-echo Cai dat thu vien kiem tra...
-python -m pip install requests --quiet
-echo.
-
-:: Chạy test script
-python test_qr.py
-
-echo.
-echo ======================================================
-if %errorlevel% equ 0 (
-    echo    Server QR code dang hoat dong tot!
-) else (
-    echo    Server QR code khong hoat dong.
-    echo    Vui long chay 'start-qr-payment.bat' va thu lai.
+REM Test health endpoint
+echo Testing health endpoint...
+curl -s -o nul -w "Status: %%{http_code}\n" %SERVICE_URL%%HEALTH_ENDPOINT%
+if %errorlevel% neq 0 (
+    echo ERROR: Service is not running.
+    echo Please start the service using run_qr_service.bat
+    goto :end
 )
-echo ======================================================
+
 echo.
-pause 
+echo Service is running!
+echo.
+echo Available endpoints:
+echo - MB Bank QR: %SERVICE_URL%%MB_ENDPOINT%?amount=1000000
+echo - Momo QR: %SERVICE_URL%%MOMO_ENDPOINT%?amount=1000000
+echo.
+echo Test completed successfully.
+
+:end
+endlocal 

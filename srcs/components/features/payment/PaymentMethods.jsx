@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 // QR server utility functions built directly into component
-const QR_SERVER_URLS = ['http://127.0.0.1:8000', 'http://localhost:8000', 'http://localhost:8001'];
+const QR_SERVER_URLS = ['http://127.0.0.1:8001', 'http://localhost:8001'];
 const MOCK_QR_DATA = {
   qr_image_base64: "iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAAAklEQVR4AewaftIAAAOdSURBVO3BQY4kRxIAQdVA/f/Leh87NQK6B0hmyTCHjfgZa/zCWuMX1hq/sNb4hbXGL6w1fmGt8QtrjV9Ya/zCWuMX1hq/sNb4hbXGL6w1fuGDl0D+UsVNoJO6E8idil9SMVNxE+gk8pcq3lhr/MJa4xfWGr/w4WEVTwI9CXRSdxKYKk4qJoGTipOKE4EnFU9aa/zCWuMX1hq/8OGXBbpTcRK4U3ES6E7FSeBJxU2gOxVPAroT+JcE7qw1fmGt8QtrjV/48P8M0EnFpOKk4i8FelLFSeBE4KRiErij8X9nrfELa41fWGv8woe/rOImMFXcBE4qJoGbikngpGIS6ATuVEwCk8A/aa3xC2uNX1hr/MKHX1bxJoGp4k5FJ3CnojtPAj0J3Kk4qegEJoEnFW9aa/zCWuMX1hq/8OFhAv+SQHcqJoGp4omKSeAk0FPFJDAJdAJ3KiaBSeAvWWv8wlrjF9Yav/DhZRU3gSeBTuBEYKp4EnhS0VU8CZxUTAJPKm4qnrTW+IW1xi+sNX7hw8ME7lRMAneCnoBOxSRwp6ITeBI4qZgETgQ6gU6gE5gq7qw1fmGt8QtrjV/48LKKk4qbQE8VJ4FO4CbQCXQCJxWTwFTRCdwETgQmgZOKTmCqeNJa4xfWGr+w1viFDw8T+JcqOoFJoBOYKu4IdAJ3Km4CncBJxSTQCZwI/JecVEwCb1hr/MJa4xfWGr/w4WEVJxWTwE3FJNAJdBWTwFTxJHAnMFV0An+JwFRxEjgReNJa4xfWGr+w1viFDy8T+EsqJoFJYKroKjqBN1WcCEwVncBJxSRwUjEJdAJ3Kt601viFtcYvrDV+4cMvq7gJnFTcBJ4EnlScVNwEOoFOYBI4EZgqTio6gZOKTuBNAm9aa/zCWuMX1hq/8OFhAp3AScWbKiaBO4GbipvAJHBT0Ql0ApPAVHESOKl4UjEJ3Flr/MJa4xfWGr/w4X9MxSTQVdwETiomgTsVJwKTwFTRCXQCncBNxSQwCUwVT1pr/MJa4xfWGr/w4WUCf0mgE+gETipOKiaB7jypOBHoKjqBSeAk8CRwp+JJa41fWGv8wlrjFz48rOIvEegqJoFJ4KTipOKXVNwRegLoBDqBJ601fmGt8QtrjV/48DCBvxS4qegq7lRMAneFTuCkohOYBCaBk4qbQCfwprXGL6w1fmGt8QsfXibwlyreBPQkcBI4qZgEbiomgUngTkUncBI4qZgqnrTW+IW1xi+sNX5hrfELa41fWGv8wlrjF9Yav7DW+IW1xi+sNX5hrfELa41fWGv8wlrjF/4H3Iaa2rU/5rsAAAAASUVORK5CYII=",
   amount: 1000000,
@@ -60,7 +60,7 @@ function PaymentMethods({ paymentMethod, setPaymentMethod, orderInfo }) {
   const [qrData, setQrData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [apiUrl, setApiUrl] = useState('http://127.0.0.1:8000'); 
+  const [apiUrl, setApiUrl] = useState('http://127.0.0.1:8001'); 
   const [refreshInterval, setRefreshInterval] = useState(null);
   const [showServerInstructions, setShowServerInstructions] = useState(false);
   const [serverStatus, setServerStatus] = useState('checking'); // 'online', 'offline', 'checking'
@@ -196,7 +196,8 @@ function PaymentMethods({ paymentMethod, setPaymentMethod, orderInfo }) {
             setApiUrl(serverUrl);
             
             // Determine the endpoint based on payment method
-            const endpoint = paymentMethod === 'bank' ? '/mbqr' : '/momoqr';
+            // Sử dụng endpoint mới với template KE2heNu
+            const endpoint = paymentMethod === 'bank' ? '/mb/qr' : '/momo/qr';
             
             // Generate a reference ID for the payment
             const refId = `ORD${Date.now().toString().slice(-6)}`;

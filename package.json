@@ -33,7 +33,8 @@
     "fullstack:manual": "start cmd /c \"npm run dev\" && start cmd /c \"cd scripts && start_chatbot_service.bat\" && start cmd /c \"cd scripts && run_qr_service.bat\" && start cmd /c \"cd scripts && start_invoice_service.bat\"",
     "fullstack:start": "concurrently -n \"FRONTEND,BACKENDS\" -c \"green,blue\" \"npm run dev\" \"cd scripts && run_all_backends.bat\"",
     "fullstack:stop": "npm run services:stop-all",
-    "fullstack:test": "cd scripts && test_all_backends.bat"
+    "fullstack:test": "cd scripts && test_all_backends.bat",
+    "python:install": "cd scripts && install_all_requirements.bat"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",

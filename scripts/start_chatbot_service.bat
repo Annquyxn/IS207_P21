@@ -58,9 +58,9 @@ if %ERRORLEVEL% EQU 0 (
     )
 )
 
-:: Install required packages
-echo Installing required packages...
-%PYTHON_CMD% -m pip install --quiet --disable-pip-version-check fastapi uvicorn pandas python-dotenv groq
+:: Install required packages from requirements.txt
+echo Installing required packages from requirements.txt...
+%PYTHON_CMD% -m pip install --quiet --disable-pip-version-check -r requirements.txt
 echo Done!
 echo.
 
