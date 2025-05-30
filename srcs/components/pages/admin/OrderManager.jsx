@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSearch, FiFilter, FiRefreshCw, FiPackage, FiTruck, FiCheckSquare, FiAlertCircle, FiClock, FiXCircle, FiPrinter } from 'react-icons/fi';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
@@ -8,35 +8,42 @@ import {
   getOrderById, 
   updateOrderStatus, 
   getOrderStatsByStatus,
-  getCurrentWeekRevenue
+  getCurrentWeekRevenue,
+  deleteOrder
 } from '@/components/features/orders/apiOrders';
 import { generateInvoice } from '@/components/features/orders/apiInvoice';
 import { formatCurrency } from '@/utils/format';
 import Spinner from '@/components/ui/Spinner';
 import { toast } from 'react-hot-toast';
+import { AiOutlineSearch, AiOutlineFilter, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
+import { MdDelete, MdEdit, MdShoppingBag, MdLocalShipping, MdDone, MdCancel } from 'react-icons/md';
 
 // Status badges
 const StatusBadge = ({ status }) => {
-  const getStatusInfo = (status) => {
-    switch (status) {
-      case 'processing':
-        return { color: 'bg-yellow-100 text-yellow-800', icon: <FiClock className="mr-1" /> };
-      case 'shipped':
-        return { color: 'bg-blue-100 text-blue-800', icon: <FiTruck className="mr-1" /> };
-      case 'delivered':
-        return { color: 'bg-green-100 text-green-800', icon: <FiCheckSquare className="mr-1" /> };
-      case 'cancelled':
-        return { color: 'bg-red-100 text-red-800', icon: <FiXCircle className="mr-1" /> };
-      default:
-        return { color: 'bg-gray-100 text-gray-800', icon: <FiPackage className="mr-1" /> };
+  let bgColor = 'bg-gray-100 text-gray-800';
+  let icon = null;
+  
+  if (status === 'pending') {
+    bgColor = 'bg-yellow-100 text-yellow-800';
+    icon = <MdShoppingBag className="mr-1" />;
+  } else if (status === 'processing') {
+    bgColor = 'bg-blue-100 text-blue-800';
+    icon = <MdEdit className="mr-1" />;
+  } else if (status === 'shipping') {
+    bgColor = 'bg-indigo-100 text-indigo-800';
+    icon = <MdLocalShipping className="mr-1" />;
+  } else if (status === 'completed') {
+    bgColor = 'bg-green-100 text-green-800';
+    icon = <MdDone className="mr-1" />;
+  } else if (status === 'cancelled') {
+    bgColor = 'bg-red-100 text-red-800';
+    icon = <MdCancel className="mr-1" />;
     }
-  };
-
-  const { color, icon } = getStatusInfo(status);
 
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center w-fit ${color}`}>
-      {icon} {status.charAt(0).toUpperCase() + status.slice(1)}
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bgColor}`}>
+      {icon}
+      {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 };
@@ -123,16 +130,15 @@ const OrderManager = () => {
   });
   const [weeklyData, setWeeklyData] = useState([]);
   const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
+  const [showOrderDetail, setShowOrderDetail] = useState(false);
 
   // Fetch orders with pagination
-  useEffect(() => {
-    const fetchOrders = async () => {
+  const fetchOrders = useCallback(async (page = currentPage) => {
       setIsLoading(true);
       setError(null);
       try {
-        // Get orders with pagination and filters
         const { orders: fetchedOrders, pageCount } = await getAdminOrders({
-          page: currentPage,
+        page,
           pageSize: 10,
           status: statusFilter !== 'all' ? statusFilter : null,
           searchTerm: searchTerm,
@@ -150,48 +156,46 @@ const OrderManager = () => {
       } finally {
         setIsLoading(false);
       }
-    };
-
-    fetchOrders();
   }, [currentPage, statusFilter, searchTerm]);
 
   // Fetch order statistics
-  useEffect(() => {
-    const fetchOrderStats = async () => {
+  const fetchOrderStats = useCallback(async () => {
       try {
-        // Parallel requests for better performance
-        const [statusStats, revenueData, weeklyRevenueData] = await Promise.allSettled([
-          getOrderStatsByStatus(),
-          getTotalRevenue(),
-          getCurrentWeekRevenue()
-        ]);
-
-        if (statusStats.status === 'fulfilled') {
-          setStatusCounts(statusStats.value);
+      const stats = await getOrderStatsByStatus();
+      const statsObject = {};
+      
+      // Check if stats is an array before using forEach
+      if (Array.isArray(stats)) {
+        stats.forEach(item => {
+          statsObject[item.status] = item.count;
+        });
+      } else if (stats && typeof stats === 'object') {
+        // If stats is an object, use it directly
+        Object.keys(stats).forEach(status => {
+          statsObject[status] = stats[status];
+        });
         }
 
-        if (revenueData.status === 'fulfilled') {
+      setStatusCounts(statsObject);
           setOrderStats(prev => ({
             ...prev,
-            revenue: revenueData.value,
-            total: statusStats.status === 'fulfilled' ? statusStats.value.total : 0
+        total: statsObject.total || 0
           }));
-        }
-
-        if (weeklyRevenueData.status === 'fulfilled') {
-          setWeeklyData(weeklyRevenueData.value);
-        }
+      
+      // Fetch weekly revenue data
+      const weeklyRevenueData = await getCurrentWeekRevenue();
+      setWeeklyData(weeklyRevenueData);
       } catch (error) {
         console.error('Error fetching order stats:', error);
-        // We don't set the main error state here to still allow viewing orders
         toast.error('Không thể tải thông tin thống kê.');
       }
-    };
+  }, []);
 
-    if (!isLoading && !error) {
+  // Initial fetch
+  useEffect(() => {
+    fetchOrders();
       fetchOrderStats();
-    }
-  }, [isLoading, error]);
+  }, [fetchOrders, fetchOrderStats]);
 
   // Fetch order details when an order is selected
   useEffect(() => {
@@ -232,8 +236,7 @@ const OrderManager = () => {
       }
       
       // Refresh order stats
-      const statusStats = await getOrderStatsByStatus();
-      setStatusCounts(statusStats);
+      fetchOrderStats();
       
       toast.success('Cập nhật trạng thái thành công!');
     } catch (error) {
@@ -242,14 +245,41 @@ const OrderManager = () => {
     }
   };
 
-  // Retry loading data after error
-  const handleRetry = () => {
-    setError(null);
-    setIsLoading(true);
-    setCurrentPage(1);
-    setStatusFilter('all');
-    setSearchTerm('');
-    // This will trigger the useEffect to reload data
+  // Handle order deletion
+  const handleDeleteOrder = async (orderId) => {
+    const confirmation = window.confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');
+    if (!confirmation) return;
+    
+    try {
+      await deleteOrder(orderId);
+      toast.success(`Đơn hàng #${orderId} đã được xóa thành công`);
+      
+      // Update local state
+      setOrders(orders.filter(order => order.id !== orderId));
+      
+      // Refresh statistics
+      fetchOrderStats();
+      
+      // Close modal if open
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setShowOrderDetail(false);
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast.error('Không thể xóa đơn hàng. Vui lòng thử lại sau.');
+    }
+  };
+
+  // View order details
+  const viewOrderDetails = async (orderId) => {
+    try {
+      const order = await getOrderById(orderId);
+      setSelectedOrder(order);
+      setShowOrderDetail(true);
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+      toast.error('Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau.');
+    }
   };
 
   // Handle invoice generation
@@ -282,7 +312,14 @@ const OrderManager = () => {
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={handleRetry} />;
+    return <ErrorState message={error} onRetry={() => {
+      setError(null);
+      setIsLoading(true);
+      setCurrentPage(1);
+      setStatusFilter('all');
+      setSearchTerm('');
+      fetchOrders();
+    }} />;
   }
 
   return (
@@ -473,7 +510,7 @@ const OrderManager = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     whileHover={{ backgroundColor: '#f9fafb' }}
-                    onClick={() => setSelectedOrder(order)}
+                    onClick={() => viewOrderDetails(order.id)}
                     className="cursor-pointer"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -495,15 +532,26 @@ const OrderManager = () => {
                       <StatusBadge status={order.status} />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end space-x-2">
                       <button 
-                        className="text-red-600 hover:text-red-900 mr-4"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedOrder(order);
+                            viewOrderDetails(order.id);
                         }}
+                          className="text-indigo-600 hover:text-indigo-900"
                       >
                         Chi tiết
                       </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteOrder(order.id);
+                          }}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          Xóa
+                        </button>
+                      </div>
                     </td>
                   </motion.tr>
                 ))
@@ -589,13 +637,13 @@ const OrderManager = () => {
 
       {/* Order Detail Modal */}
       <AnimatePresence>
-        {selectedOrder && (
+        {showOrderDetail && selectedOrder && (
           <motion.div
             className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedOrder(null)}
+            onClick={() => setShowOrderDetail(false)}
           >
             <motion.div
               className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
@@ -690,7 +738,7 @@ const OrderManager = () => {
                 <div className="flex justify-between pt-4">
                   <button
                     className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-                    onClick={() => setSelectedOrder(null)}
+                    onClick={() => setShowOrderDetail(false)}
                   >
                     Đóng
                   </button>
@@ -698,7 +746,10 @@ const OrderManager = () => {
                   <div className="space-x-3">
                     <button 
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
-                      onClick={() => handleGenerateInvoice(selectedOrder)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleGenerateInvoice(selectedOrder);
+                      }}
                       disabled={isGeneratingInvoice}
                     >
                       <FiPrinter className="mr-2" />
