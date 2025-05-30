@@ -1,86 +1,95 @@
 @echo off
-title ChatBot API Service
-color 0C
+setlocal enabledelayedexpansion
 
-echo =======================================================
-echo                CHATBOT API SERVICE
-echo =======================================================
-echo.
-echo This service provides AI-powered chatbot functionality.
-echo Please leave this window open while using the chatbot.
-echo.
+echo ===================================
+echo       TECHBOT CHATBOT SERVICE
+echo ===================================
 
-:: Change to the directory where the script is located and then to the chatbot directory
-cd "%~dp0\..\python-ChatBot\pycode"
+REM Đường dẫn tới thư mục gốc của dự án
+set "PROJECT_ROOT=%~dp0.."
+set "CHATBOT_DIR=%PROJECT_ROOT%\python-ChatBot\pycode"
 
-:: Check for Python installation
-echo Checking Python...
-py -3 --version >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    python --version >nul 2>&1
-    if %ERRORLEVEL% NEQ 0 (
-        echo ERROR: Python not found!
-        echo Please install Python from https://www.python.org/downloads/
-        pause
-        exit /b 1
-    ) else (
-        set PYTHON_CMD=python
-    )
-) else (
-    set PYTHON_CMD=py -3
+echo [INFO] Đường dẫn ChatBot: %CHATBOT_DIR%
+
+REM Kiểm tra xem thư mục ChatBot có tồn tại không
+if not exist "%CHATBOT_DIR%" (
+    echo [ERROR] Không tìm thấy thư mục ChatBot tại đường dẫn: %CHATBOT_DIR%
+    echo [ERROR] Vui lòng kiểm tra lại cấu trúc thư mục dự án.
+    goto :error
 )
 
-echo Python found: %PYTHON_CMD%
-echo.
+REM Kiểm tra Python
+python --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [ERROR] Python không được cài đặt! Vui lòng cài đặt Python 3.8 trở lên.
+    goto :error
+)
 
-:: Check if port 8000 is already in use
-netstat -ano | findstr ":8000" > nul
-if %ERRORLEVEL% EQU 0 (
-    echo WARNING: Port 8000 is already in use.
-    echo Another service might be running on this port.
-    echo.
-    set /p answer=Do you want to kill the process using port 8000? (Y/N): 
-    if /i "%answer%" EQU "Y" (
-        for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":8000"') do (
-            echo Attempting to kill process with PID: %%a
-            taskkill /F /PID %%a
-            if %ERRORLEVEL% EQU 0 (
-                echo Successfully killed process.
-            ) else (
-                echo Failed to kill process. Please close it manually.
-                pause
-            )
-        )
-    ) else (
-        echo Please close the application using port 8000 and try again.
-        pause
-        exit /b 1
+REM Chuyển đến thư mục ChatBot
+cd /d "%CHATBOT_DIR%"
+
+REM Kiểm tra và tạo môi trường ảo nếu chưa có
+if not exist venv (
+    echo [INFO] Đang tạo môi trường ảo...
+    python -m venv venv
+    if %errorlevel% neq 0 (
+        echo [ERROR] Không thể tạo môi trường ảo! Vui lòng kiểm tra lại cài đặt Python.
+        goto :error
     )
 )
 
-:: Install required packages from requirements.txt
-echo Installing required packages from requirements.txt...
-%PYTHON_CMD% -m pip install --quiet --disable-pip-version-check -r requirements.txt
-echo Done!
-echo.
+REM Kiểm tra xem có cần cài đặt các gói phụ thuộc không
+if not exist "venv\Scripts\activate" (
+    echo [ERROR] Môi trường ảo không hợp lệ. Vui lòng xóa thư mục venv và thử lại.
+    goto :error
+)
 
-echo =======================================================
-echo Starting ChatBot API Service (Please don't close this window)
-echo =======================================================
-echo.
-echo Server running at:
-echo   http://127.0.0.1:8000
-echo.
-echo Press CTRL+C to exit when done.
-echo.
+REM Kích hoạt môi trường ảo
+call venv\Scripts\activate
 
-:: Create a simple test file to verify the server is accessible
-echo ^<!DOCTYPE html^>^<html^>^<head^>^<title^>ChatBot Test^</title^>^</head^>^<body^>^<h1^>Testing ChatBot Service^</h1^>^<div id="result"^>Checking connection...^</div^>^<script^>fetch('http://127.0.0.1:8000/test').then(response => response.json()).then(data => document.getElementById('result').innerHTML = 'Connection successful: ' + JSON.stringify(data)).catch(error => document.getElementById('result').innerHTML = 'Connection failed: ' + error)^</script^>^</body^>^</html^> > chatbot-test.html
+REM Kiểm tra và cài đặt các gói phụ thuộc
+echo [INFO] Đang cài đặt các gói phụ thuộc...
+pip install -r requirements.txt
+if %errorlevel% neq 0 (
+    echo [ERROR] Không thể cài đặt các gói phụ thuộc.
+    goto :error
+)
 
-:: Start the server
-%PYTHON_CMD% -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+REM Kiểm tra file .env
+if not exist .env (
+    echo [INFO] File .env không tồn tại. Đang tạo từ mẫu...
+    copy .env-example .env
+    echo [WARNING] Vui lòng mở file .env và cập nhật GROQ_API_KEY của bạn.
+)
 
-echo.
-echo Server stopped. Press any key to exit.
+REM Tạo thư mục logs nếu chưa có
+if not exist "%PROJECT_ROOT%\scripts\logs" (
+    mkdir "%PROJECT_ROOT%\scripts\logs"
+)
+
+REM Khởi động ứng dụng
+echo [INFO] Đang khởi động TechBot API...
+echo [INFO] Nhật ký (log) sẽ được lưu tại: %PROJECT_ROOT%\scripts\logs\chatbot.log
+
+REM Kiểm tra xem cổng 8000 có đang được sử dụng không
+netstat -ano | findstr :8000 > nul
+if %errorlevel% equ 0 (
+    echo [WARNING] Cổng 8000 đã được sử dụng. Có thể một instance khác của ChatBot đang chạy.
+    echo [WARNING] Vui lòng kiểm tra và dừng instance đó trước khi tiếp tục.
+    choice /C YN /M "Bạn có muốn tiếp tục khởi động không (Y/N)?"
+    if !errorlevel! equ 2 goto :error
+)
+
+REM Khởi động ứng dụng và ghi log
+start "TechBot ChatBot Service" /MIN cmd /c "call venv\Scripts\activate && python run.py > "%PROJECT_ROOT%\scripts\logs\chatbot.log" 2>&1"
+
+echo [SUCCESS] TechBot ChatBot Service đã được khởi động!
+echo [INFO] Truy cập API tại: http://localhost:8000
+echo [INFO] Nhấn Enter để đóng cửa sổ này (ChatBot sẽ tiếp tục chạy trong nền)
+pause > nul
+goto :eof
+
+:error
+echo [ERROR] Đã xảy ra lỗi khi khởi động TechBot ChatBot Service.
 pause
-exit /b 0 
+exit /b 1 
