@@ -27,9 +27,15 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <div className='flex items-center justify-center gap-1 py-4 overflow-x-auto scrollbar-thin'>
+<<<<<<< HEAD
       {pageList.map((page, idx) =>
         page === 'ellipsis-1' || page === 'ellipsis-2' ? (
           <span key={`ellipsis-${idx}`} className='px-2 text-gray-400'>
+=======
+      {pageList.map((page) =>
+        page === 'ellipsis-1' || page === 'ellipsis-2' ? (
+          <span key={page} className='px-2 text-gray-400'>
+>>>>>>> old-version
             ...
           </span>
         ) : (
