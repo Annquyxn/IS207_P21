@@ -1,61 +1,54 @@
 @echo off
-title PDF Invoice Service
-color 0B
+setlocal enabledelayedexpansion
 
-echo =======================================================
-echo                PDF INVOICE SERVER
-echo =======================================================
-echo.
-echo Please leave this window open while using the invoice system.
-echo.
+REM ===== INVOICE SERVICE CONFIGURATION =====
+set SERVICE_NAME=Invoice Generator Service
+set SERVICE_PATH=..\python-ChatBot\exportInvoice
+set SERVICE_PORT=8002
+set LOG_FILE=logs\invoice_service.log
+set PID_FILE=logs\invoice_service.pid
 
-cd "%~dp0\..\python-ChatBot\exportInvoice"
+REM Create logs directory if it doesn't exist
+if not exist logs mkdir logs
 
-:: Check for Python installation
-echo Checking Python...
-py -3 --version >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    python --version >nul 2>&1
-    if %ERRORLEVEL% NEQ 0 (
-        echo ERROR: Python not found!
-        echo Please install Python from https://www.python.org/downloads/
-        pause
-        exit /b 1
+REM Check if the service is already running
+if exist %PID_FILE% (
+    set /p PID=<%PID_FILE%
+    wmic process where "ProcessId=%PID%" get CommandLine 2>nul | find "uvicorn" >nul
+    if !errorlevel! equ 0 (
+        echo %SERVICE_NAME% is already running with PID !PID!
+        echo To restart the service, use restart-invoice-service.bat
+        goto :eof
     ) else (
-        set PYTHON_CMD=python
+        echo Removing stale PID file
+        del %PID_FILE%
     )
-) else (
-    set PYTHON_CMD=py -3
 )
 
-echo Python found: %PYTHON_CMD%
-echo.
+echo Starting %SERVICE_NAME%...
+echo Logs will be saved to %LOG_FILE%
 
-:: Download required fonts first
-echo Downloading fonts for invoice generation...
-%PYTHON_CMD% download_fonts.py
-echo.
+REM Start the service
+cd %SERVICE_PATH%
+start /B cmd /c "python -m uvicorn main:app --host 127.0.0.1 --port %SERVICE_PORT% --reload > ..\..\scripts\%LOG_FILE% 2>&1"
 
-:: Install required packages
-echo Installing required packages...
-%PYTHON_CMD% -m pip install --quiet --disable-pip-version-check fastapi uvicorn reportlab python-multipart
-echo Done!
-echo.
+REM Get the PID of the process
+for /f "tokens=2" %%a in ('wmic process where "CommandLine like '%%uvicorn main:app --host 127.0.0.1 --port %SERVICE_PORT%%%'" get ProcessId /value ^| find "="') do (
+    set PID=%%a
+)
 
-echo =======================================================
-echo Starting PDF Invoice Server (Please don't close this window)
-echo =======================================================
-echo.
-echo Server running at:
-echo   http://127.0.0.1:8002
-echo.
-echo Press CTRL+C to exit when done.
-echo.
+REM Save the PID to file
+echo !PID! > %PID_FILE%
 
-:: Start the server
-%PYTHON_CMD% -m uvicorn main:app --host 127.0.0.1 --port 8002
-
+echo %SERVICE_NAME% started with PID !PID!
+echo Service running at http://127.0.0.1:%SERVICE_PORT%
 echo.
-echo Server stopped. Press any key to exit.
-pause
-exit /b 0 
+echo API Endpoints:
+echo - POST /generate-invoice/ : Generate invoice from order data
+echo - GET /test-invoice/ : Generate a test invoice
+echo.
+echo Press any key to view the log file (Ctrl+C to exit)
+pause > nul
+type %LOG_FILE%
+
+endlocal 

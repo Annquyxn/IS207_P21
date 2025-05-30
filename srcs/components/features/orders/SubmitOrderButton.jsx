@@ -3,17 +3,6 @@ import { FiCheck, FiLoader } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { insertOrder } from './apiOrders';
 
-/**
- * Component nút đặt hàng với xử lý gửi đơn hàng đến Supabase
- * 
- * @param {Object} props - Component props
- * @param {Object} props.addressData - Dữ liệu địa chỉ
- * @param {Object} props.product - Thông tin sản phẩm
- * @param {string} props.paymentMethod - Phương thức thanh toán
- * @param {Object|null} props.discount - Thông tin giảm giá
- * @param {Function} props.onSuccess - Callback khi đặt hàng thành công
- * @param {Function} props.onError - Callback khi đặt hàng thất bại
- */
 function SubmitOrderButton({
   addressData,
   product,
