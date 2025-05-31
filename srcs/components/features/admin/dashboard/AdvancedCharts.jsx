@@ -8,7 +8,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LineChart,
   Line,
   BarChart,
   Bar,
