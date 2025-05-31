@@ -13,7 +13,7 @@ const AdminLayout = ({ routes }) => {
   }, [location.pathname]);
 
   return (
-    <div className='flex h-screen bg-gray-100 overflow-hidden font-sans'>
+    <div className='flex min-h-screen bg-gray-100 font-sans'>
       {isMobileSidebarOpen && (
         <div
           className='fixed inset-0 bg-gray-900 bg-opacity-50 z-20 lg:hidden'
@@ -54,7 +54,7 @@ const AdminLayout = ({ routes }) => {
       {/* Main Content */}
       <div className='flex-1 flex flex-col overflow-hidden'>
         {/* Content */}
-        <main className='flex-1 overflow-auto p-6 bg-gray-100'>
+        <main className='flex-1 p-6 bg-gray-100'>
           <AnimatePresence mode='wait'>
             <motion.div
               key={location.pathname}

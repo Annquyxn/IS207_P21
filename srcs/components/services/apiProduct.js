@@ -1,6 +1,5 @@
 import { supabase } from './supabase';
 
-// ============= API cũ ====================================
 export async function getProduct() {
   let { data: product, error } = await supabase.from('product').select('*');
 
@@ -244,4 +243,3 @@ export async function getRevenueByRegion() {
 
   return regionData;
 }
-

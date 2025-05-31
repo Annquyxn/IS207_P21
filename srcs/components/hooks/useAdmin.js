@@ -18,30 +18,22 @@ export function useAdmin() {
       try {
         setLoading(true);
 
-        // Query the user_admin table to check for admin role
-        // Thử cả id và email để đảm bảo
         const { data, error } = await supabase
-          .from('user_admin')
-          .select('*')
-          .or(`id.eq.${user.id},email.eq.${user.email}`);
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
 
         if (error) {
-          console.error('Error checking admin role:', error);
+          console.error('Lỗi khi kiểm tra vai trò người dùng:', error);
           setIsAdmin(false);
-          setLoading(false);
-          return;
+        } else {
+          setIsAdmin(data?.role === 'admin');
         }
 
-        // Check if user has admin role
-        const hasAdminRole =
-          data &&
-          data.length > 0 &&
-          data.some((record) => record.role === 'admin');
-
-        setIsAdmin(hasAdminRole);
         setLoading(false);
       } catch (error) {
-        console.error('Error checking admin role:', error);
+        console.error('Lỗi khi kiểm tra quyền admin:', error);
         setIsAdmin(false);
         setLoading(false);
       }
