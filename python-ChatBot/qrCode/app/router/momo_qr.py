@@ -8,8 +8,9 @@ router = APIRouter(prefix="/momo", tags=["Momo QR"])
 
 def add_cors_headers(response: Response):
     response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Max-Age"] = "3600"
     return response
 
 @router.get("/qr", response_model=QRResponse)

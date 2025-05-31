@@ -19,8 +19,10 @@ class AIService:
     def __init__(self):
         self.client = None
         if GROQ_API_KEY:
-            self.client = groq.Client(api_key=GROQ_API_KEY)
-            logger.info("Groq client initialized successfully")
+            # Sử dụng API trực tiếp thay vì Client object cho phiên bản 0.3.0
+            os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+            self.client = True  # Đánh dấu là đã có API key
+            logger.info("Groq API key set successfully")
         else:
             logger.error("Failed to initialize Groq client - missing API key")
     
@@ -91,23 +93,17 @@ class AIService:
             """
             
             logger.info("Sending request to Groq API")
-            chat_completion = self.client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Bạn là TechBot, trợ lý tư vấn sản phẩm công nghệ chuyên nghiệp."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
+            
+            # Sử dụng groq.Completion.create thay vì client.chat.completions.create
+            chat_completion = groq.Completion.create(
                 model=model_name,
+                prompt=f"System: Bạn là TechBot, trợ lý tư vấn sản phẩm công nghệ chuyên nghiệp.\n\nUser: {prompt}",
                 temperature=0.7,
                 max_tokens=1000,
             )
             
-            ai_response = chat_completion.choices[0].message.content
+            # Điều chỉnh cách truy cập kết quả
+            ai_response = chat_completion.choices[0].text
             logger.info("Received response from Groq API")
             
             response_items = [TextItem(message=ai_response)]
@@ -147,23 +143,17 @@ class AIService:
             
             model_name = self._get_model_name(model)
             logger.info(f"Comparing products with model: {model_name}")
-            chat_completion = self.client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Bạn là TechBot, trợ lý tư vấn sản phẩm công nghệ chuyên nghiệp."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
+            
+            # Sử dụng groq.Completion.create thay vì client.chat.completions.create
+            chat_completion = groq.Completion.create(
                 model=model_name,
+                prompt=f"System: Bạn là TechBot, trợ lý tư vấn sản phẩm công nghệ chuyên nghiệp.\n\nUser: {prompt}",
                 temperature=0.7,
                 max_tokens=1500,
             )
             
-            comparison_text = chat_completion.choices[0].message.content
+            # Điều chỉnh cách truy cập kết quả
+            comparison_text = chat_completion.choices[0].text
             logger.info("Received comparison response from Groq API")
             return comparison_text
             

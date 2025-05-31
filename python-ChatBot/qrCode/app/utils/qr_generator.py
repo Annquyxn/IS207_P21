@@ -19,13 +19,16 @@ def generate_mb_qr(amount: int, note: str) -> str:
     # Sử dụng mẫu KE2heNu theo yêu cầu mới từ ảnh
     template = "KE2heNu"
     
+    # Tạo URL trực tiếp (không cần xác thực)
+    direct_url = (
+        f"https://api.vietqr.io/image/{settings.MB_BIN}-{settings.MB_ACCOUNT_NUMBER}-{template}.jpg"
+        f"?accountName={quote(settings.MB_ACCOUNT_NAME)}&amount={amount}&addInfo={quote(note)}"
+    )
+    
     # Nếu chưa có thông tin xác thực VietQR API, dùng phương thức URL trực tiếp
     if not settings.VIETQR_CLIENT_ID or not settings.VIETQR_API_KEY:
         # Sử dụng URL trực tiếp (không cần xác thực)
-        return (
-            f"https://api.vietqr.io/image/{settings.MB_BIN}-{settings.MB_ACCOUNT_NUMBER}-{template}.jpg"
-            f"?accountName={quote(settings.MB_ACCOUNT_NAME)}&amount={amount}&addInfo={quote(note)}"
-        )
+        return direct_url
     
     # Sử dụng API chính thức của VietQR (có xác thực)
     try:
@@ -63,10 +66,7 @@ def generate_mb_qr(amount: int, note: str) -> str:
         print(f"Error calling VietQR API: {str(e)}")
     
     # Fallback về URL trực tiếp nếu có lỗi
-    return (
-        f"https://api.vietqr.io/image/{settings.MB_BIN}-{settings.MB_ACCOUNT_NUMBER}-{template}.jpg"
-        f"?accountName={quote(settings.MB_ACCOUNT_NAME)}&amount={amount}&addInfo={quote(note)}"
-    )
+    return direct_url
 
 def generate_momo_deep_link(amount: int, note: str) -> str:
     """

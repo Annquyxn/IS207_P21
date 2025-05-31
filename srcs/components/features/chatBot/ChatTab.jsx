@@ -43,7 +43,6 @@ export default function ChatTab({ onClose }) {
     console.log("ChatTab mounted, testing API connection...");
     checkApiConnection();
     
-    // Set up interval to check API connection periodically
     const intervalId = setInterval(() => {
       if (apiStatus === "error" && retryCount < 5) {
         console.log(`Retrying API connection (${retryCount + 1}/5)...`);
@@ -57,7 +56,7 @@ export default function ChatTab({ onClose }) {
 
   useEffect(() => {
     scrollToBottom();
-    console.log("Messages updated:", messages); // Debug messages state
+    console.log("Messages updated:", messages);
   }, [messages]);
 
   const checkApiConnection = async () => {
