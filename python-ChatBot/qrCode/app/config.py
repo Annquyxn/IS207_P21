@@ -15,9 +15,8 @@ try:
         MOMO_PHONE: str = "0982685374"
         MOMO_NAME: str = "DANG THIEN AN"
         
-        # VietQR API config (cần cập nhật từ tài khoản My VietQR)
-        VIETQR_CLIENT_ID: str = ""  # Cập nhật Client ID từ My VietQR
-        VIETQR_API_KEY: str = ""    # Cập nhật API Key từ My VietQR
+        VIETQR_CLIENT_ID: str = "13131c60-3af0-4101-9ca7-41737ef2611e"  
+        VIETQR_API_KEY: str = "19243164-1fb6-4142-92ab-8cb69e4c4ba9"   
         
 except ImportError:
     from pydantic import BaseModel
