@@ -20,16 +20,17 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import {
-  getProductCount,
-  getTotalRevenue,
-  getOrderCount,
-  getUserCount,
-  getTopProductPerformance,
-  getOrderCountByStatus,
-  getRevenueByRecentDays,
-} from '@/components/features/products/apiProduct';
+
 import Spinner from '@/components/ui/Spinner';
+import {
+  getOrderCount,
+  getOrderCountByStatus,
+  getProductCount,
+  getRevenueByRecentDays,
+  getTopProductPerformance,
+  getTotalRevenue,
+  getUserCount,
+} from '../../services/apiDashboard';
 
 // Animation variants for cards
 const containerVariants = {

@@ -28,68 +28,74 @@ export function useCart() {
   }, [cart, isLoading]);
 
   // Add product to cart with notification handling
-  const addToCart = useCallback((product, onSuccess) => {
-    setIsMutating(true);
+  const addToCart = useCallback(
+    (product, onSuccess) => {
+      setIsMutating(true);
 
-    setTimeout(() => {
-      try {
-        let result = null;
+      setTimeout(() => {
+        try {
+          let result = null;
 
-        setCart((prev) => {
-          const existing = prev.find((item) => item.id === product.id);
+          setCart((prev) => {
+            const existing = prev.find((item) => item.id === product.id);
 
-          if (existing) {
-            const updated = prev.map((item) =>
-              item.id === product.id
-                ? { ...item, quantity: item.quantity + (product.quantity || 1) }
-                : item
-            );
+            if (existing) {
+              const updated = prev.map((item) =>
+                item.id === product.id
+                  ? {
+                      ...item,
+                      quantity: item.quantity + (product.quantity || 1),
+                    }
+                  : item
+              );
 
-            result = {
-              cart: updated,
-              updatedProduct: {
-                ...existing,
-                quantity: existing.quantity + (product.quantity || 1),
-              },
-              action: 'update',
-            };
+              result = {
+                cart: updated,
+                updatedProduct: {
+                  ...existing,
+                  quantity: existing.quantity + (product.quantity || 1),
+                },
+                action: 'update',
+              };
 
-            return updated;
-          } else {
-            const newProduct = { ...product, quantity: product.quantity || 1 };
-            const updated = [...prev, newProduct];
+              return updated;
+            } else {
+              const newProduct = {
+                ...product,
+                quantity: product.quantity || 1,
+              };
+              const updated = [...prev, newProduct];
 
-            result = {
-              cart: updated,
-              updatedProduct: newProduct,
-              action: 'add',
-            };
+              result = {
+                cart: updated,
+                updatedProduct: newProduct,
+                action: 'add',
+              };
 
-            return updated;
-          }
-        });
+              return updated;
+            }
+          });
 
-        // Show a toast notification
-        toast.success('🛒 Đã thêm vào giỏ hàng');
-        
-        // Add notification using the notification context - but only once per action
-        addNotification({
-          name: product.name || 'Sản phẩm'
-        });
+          // Add notification using the notification context - but only once per action
+          addNotification({
+            name: product.name || 'Sản phẩm',
+          });
 
-        setTimeout(() => {
-          if (onSuccess && result) {
-            onSuccess(result);
-          }
+          setTimeout(() => {
+            if (onSuccess && result) {
+              onSuccess(result);
+            }
+            setIsMutating(false);
+          }, 50);
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+          toast.error('Có lỗi xảy ra khi thêm vào giỏ hàng');
           setIsMutating(false);
-        }, 50);
-      } catch (error) {
-        console.error('Error adding to cart:', error);
-        toast.error('Có lỗi xảy ra khi thêm vào giỏ hàng');
-        setIsMutating(false);
-      }
-    }, 300);
-  }, [addNotification]);
+        }
+      }, 300);
+    },
+    [addNotification]
+  );
 
   // ✅ ĐÃ SỬA: Remove product from cart
   const removeFromCart = useCallback(
