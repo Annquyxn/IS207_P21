@@ -38,7 +38,6 @@ export function useAdmin() {
           data.length > 0 &&
           data.some((record) => record.role === 'admin');
 
-        console.log('Has admin role:', hasAdminRole);
         setIsAdmin(hasAdminRole);
         setLoading(false);
       } catch (error) {
