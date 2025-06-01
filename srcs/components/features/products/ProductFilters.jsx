@@ -2,7 +2,19 @@ import Icon from '@/components/ui/Icon';
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 // Constants được tách ra ngoài để tránh re-render không cần thiết
-const BRANDS = ['Tất cả', 'AMD', 'Intel', 'Asus', 'Acer', 'Giga', 'HP'];
+const BRANDS = [
+  'Tất cả',
+  'AMD',
+  'Intel',
+  'Asus',
+  'Acer',
+  'Giga',
+  'HP',
+  'Lenovo',
+  'MSI',
+  'Dell',
+  'Apple',
+];
 const SORT_OPTIONS = [
   { value: 'default', label: 'Mặc định' },
   { value: 'price-asc', label: 'Giá tăng dần' },
@@ -10,7 +22,7 @@ const SORT_OPTIONS = [
 ];
 
 const FILTER_OPTIONS = {
-  Giá: ['Dưới 1 triệu', '1-3 triệu', '3-5 triệu', 'Trên 5 triệu'],
+  Giá: ['5-9 triệu', '9-15 triệu', 'trên 15 triệu'],
   'Dòng CPU': ['AMD Ryzen', 'Intel Core i7', 'Intel Core i9'],
   Socket: ['LGA 1200', 'AM4', 'LGA 1700'],
 };

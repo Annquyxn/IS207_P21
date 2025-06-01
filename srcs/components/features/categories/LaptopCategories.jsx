@@ -15,6 +15,7 @@ const LaptopCategories = ({ onClose }) => {
         'Laptop Đồ họa',
         'Ultrabook',
         'Laptop Doanh nhân',
+        'Tất cả sản phẩm',
       ],
     },
     'Laptop Gaming': {
@@ -230,6 +231,8 @@ const LaptopCategories = ({ onClose }) => {
       navigate('/san-pham?category=cpu-amd-r7');
     } else if (category === 'AMD Ryzen 9') {
       navigate('/san-pham?category=cpu-amd-r9');
+    } else if (category === 'Tất cả sản phẩm') {
+      navigate('/san-pham');
     } else {
       const el = document.getElementById(category);
       if (el) {

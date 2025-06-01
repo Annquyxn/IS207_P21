@@ -1,119 +1,67 @@
 import { supabase } from '@/components/services/supabase';
 
+const CATEGORY_TABLE_MAP = {
+  laptop: 'laptop',
+  ssd: 'ssd',
+  keyboard: 'keyboards',
+  headphone: 'headphone',
+  pccooling: 'pccooling',
+  mouse: 'mouse',
+  pcgaming: 'pcgaming',
+  product: 'product',
+  'laptop-do-hoa': 'laptop_do_hoa',
+  'laptop-doanh-nhan': 'laptop_doanh_nhan',
+  'laptop-gaming': 'laptop_gaming',
+  'laptop-van-phong': 'laptop_van_phong',
+  'laptop-asus-oled': 'laptop_asus_oled',
+  'laptop-asus-vivobook': 'laptop_asus_vivobook',
+  'laptop-asus-zenbook': 'laptop_asus_zenbook',
+  'laptop-asus-tuf': 'laptop_tuf_gaming',
+  'laptop-rog-strix': 'laptop_rog_strix',
+  'laptop-rog-zephyrus': 'laptop_rog_zephyrus',
+  'laptop-acer-aspire': 'laptop_acer_aspire',
+  'laptop-acer-swift': 'laptop_acer_swift',
+  'laptop-acer-predator-helios': 'laptop_acer_predator_helios',
+  'laptop-acer-nitro': 'laptop_acer_nitro',
+  'laptop-msi-cyborg': 'laptop_msi_cyborg',
+  'laptop-msi-katana': 'laptop_msi_katana',
+  'laptop-msi-modern': 'laptop_msi_modern',
+  'laptop-msi-prestige': 'laptop_msi_prestige',
+  'laptop-msi-raider': 'laptop_msi_raider',
+  'laptop-lenovo-ideapad': 'laptop_lenovo_ideapad',
+  'laptop-lenovo-legion': 'laptop_lenovo_legion',
+  'laptop-lenovo-thinkbook': 'laptop_lenovo_thinkbook',
+  'laptop-lenovo-thinkpad': 'laptop_lenovo_thinkpad',
+  'laptop-lenovo-yoga': 'laptop_lenovo_yoga',
+  'laptop-dell-alienware': 'laptop_dell_alienware',
+  'laptop-dell-g15': 'laptop_dell_g15',
+  'laptop-dell-inspiron': 'laptop_dell_inspiron',
+  'laptop-dell-xps': 'laptop_dell_xps',
+  'laptop-dell-latitude': 'laptop_dell_latitude',
+  'laptop-dell-vostro': 'laptop_dell_vostro',
+  'laptop-hp-omen': 'laptop_hp_omen',
+  'laptop-hp-victus': 'laptop_hp_victus',
+  'laptop-chay-ai': 'laptop_chay_ai',
+  'laptop-duoi-15-trieu': 'laptop_duoi_15tr',
+  'laptop-tren-20-trieu': 'laptop_tren_20tr',
+  'laptop-tu-15-den-20-trieu': 'laptop_tu_15_den_20_trieu',
+  'cpu-intel-i3': 'cpu_intel_i3',
+  'cpu-intel-i5': 'cpu_intel_i5',
+  'cpu-intel-i7': 'cpu_intel_i7',
+  'cpu-intel-i9': 'cpu_intel_i9',
+  'cpu-amd-r3': 'cpu_amd_r3',
+  'cpu-amd-r5': 'cpu_amd_r5',
+  'cpu-amd-r7': 'cpu_amd_r7',
+  'cpu-amd-r9': 'cpu_amd_r9',
+};
+
 export function formatCurrency(value) {
   if (!value || isNaN(value)) return '₫0';
-  return `₫${Number(value).toLocaleString('vi-VN', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  })}`;
+  return `₫${Number(value).toLocaleString('vi-VN')}`;
 }
 
 export async function fetchProducts(category = 'laptop') {
-  let tableName = 'laptop';
-
-  if (category === 'ssd') {
-    tableName = 'ssd';
-  } else if (category === 'keyboard') {
-    tableName = 'keyboards';
-  } else if (category === 'headphone') {
-    tableName = 'headphone';
-  } else if (category === 'pccooling') {
-    tableName = 'pccooling';
-  } else if (category === 'mouse') {
-    tableName = 'mouse';
-  } else if (category === 'pcgaming') {
-    tableName = 'pcgaming';
-  } else if (category === 'laptop') {
-    tableName = 'laptop';
-  } else if (category === 'laptop-do-hoa') {
-    tableName = 'laptop_do_hoa';
-  } else if (category === 'laptop-doanh-nhan') {
-    tableName = 'laptop_doanh_nhan';
-  } else if (category === 'laptop-gaming') {
-    tableName = 'laptop_gaming';
-  } else if (category === 'laptop-van-phong') {
-    tableName = 'laptop_van_phong';
-  } else if (category === 'laptop-asus-oled') {
-    tableName = 'laptop_asus_oled';
-  } else if (category === 'laptop-asus-vivobook') {
-    tableName = 'laptop_asus_vivobook';
-  } else if (category === 'laptop-asus-zenbook') {
-    tableName = 'laptop_asus_zenbook';
-  } else if (category === 'laptop-asus-tuf') {
-    tableName = 'laptop_tuf_gaming';
-  } else if (category === 'laptop-rog-strix') {
-    tableName = 'laptop_rog_strix';
-  } else if (category === 'laptop-rog-zephyrus') {
-    tableName = 'laptop_rog_zephyrus';
-  } else if (category === 'laptop-acer-aspire') {
-    tableName = 'laptop_acer_aspire';
-  } else if (category === 'laptop-acer-swift') {
-    tableName = 'laptop_acer_swift';
-  } else if (category === 'laptop-acer-predator-helios') {
-    tableName = 'laptop_acer_predator_helios';
-  } else if (category === 'laptop-acer-nitro') {
-    tableName = 'laptop_acer_nitro';
-  } else if (category === 'laptop-msi-cyborg') {
-    tableName = 'laptop_msi_cyborg';
-  } else if (category === 'laptop-msi-katana') {
-    tableName = 'laptop_msi_katana';
-  } else if (category === 'laptop-msi-modern') {
-    tableName = 'laptop_msi_modern';
-  } else if (category === 'laptop-msi-prestige') {
-    tableName = 'laptop_msi_prestige';
-  } else if (category === 'laptop-msi-raider') {
-    tableName = 'laptop_msi_raider';
-  } else if (category === 'laptop-lenovo-ideapad') {
-    tableName = 'laptop_lenovo_ideapad';
-  } else if (category === 'laptop-lenovo-legion') {
-    tableName = 'laptop_lenovo_legion';
-  } else if (category === 'laptop-lenovo-thinkbook') {
-    tableName = 'laptop_lenovo_thinkbook';
-  } else if (category === 'laptop-lenovo-thinkpad') {
-    tableName = 'laptop_lenovo_thinkpad';
-  } else if (category === 'laptop-lenovo-yoga') {
-    tableName = 'laptop_lenovo_yoga';
-  } else if (category === 'laptop-dell-alienware') {
-    tableName = 'laptop_dell_alienware';
-  } else if (category === 'laptop-dell-g15') {
-    tableName = 'laptop_dell_g15';
-  } else if (category === 'laptop-dell-inspiron') {
-    tableName = 'laptop_dell_inspiron';
-  } else if (category === 'laptop-dell-xps') {
-    tableName = 'laptop_dell_xps';
-  } else if (category === 'laptop-dell-latitude') {
-    tableName = 'laptop_dell_latitude';
-  } else if (category === 'laptop-dell-vostro') {
-    tableName = 'laptop_dell_vostro';
-  } else if (category === 'laptop-hp-omen') {
-    tableName = 'laptop_hp_omen';
-  } else if (category === 'laptop-hp-victus') {
-    tableName = 'laptop_hp_victus';
-  } else if (category === 'laptop-chay-ai') {
-    tableName = 'laptop_chay_ai';
-  } else if (category === 'laptop-duoi-15-trieu') {
-    tableName = 'laptop_duoi_15tr';
-  } else if (category === 'laptop-tren-20-trieu') {
-    tableName = 'laptop_tren_20tr';
-  } else if (category === 'laptop-tu-15-den-20-trieu') {
-    tableName = 'laptop_tu_15_den_20_trieu';
-  } else if (category === 'cpu-intel-i3') {
-    tableName = 'cpu_intel_i3';
-  } else if (category === 'cpu-intel-i5') {
-    tableName = 'cpu_intel_i5';
-  } else if (category === 'cpu-intel-i7') {
-    tableName = 'cpu_intel_i7';
-  } else if (category === 'cpu-intel-i9') {
-    tableName = 'cpu_intel_i9';
-  } else if (category === 'cpu-amd-r3') {
-    tableName = 'cpu_amd_r3';
-  } else if (category === 'cpu-amd-r5') {
-    tableName = 'cpu_amd_r5';
-  } else if (category === 'cpu-amd-r7') {
-    tableName = 'cpu_amd_r7';
-  } else if (category === 'cpu-amd-r9') {
-    tableName = 'cpu_amd_r9';
-  }
+  const tableName = CATEGORY_TABLE_MAP[category] || 'laptop';
 
   const { data, error } = await supabase.from(tableName).select('*');
 
@@ -153,7 +101,6 @@ export async function fetchProducts(category = 'laptop') {
   });
 }
 
-// Get current logged in user ID
 export async function getUserId() {
   try {
     const {
