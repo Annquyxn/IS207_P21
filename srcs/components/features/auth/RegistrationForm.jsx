@@ -21,7 +21,7 @@ function RegistrationForm() {
     <AnimatedDiv className='w-full'>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='space-y-6 w-full max-w-[320px] mx-auto'
+        className='space-y-4 sm:space-y-6 w-full max-w-[320px] mx-auto'
       >
         {error && (
           <div className='p-3 bg-red-50 border border-red-200 rounded-lg'>
@@ -39,7 +39,7 @@ function RegistrationForm() {
           <input
             type='text'
             placeholder='Họ và Tên'
-            className={`w-full px-4 py-2.5 border text-base rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
+            className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 border text-sm sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.fullName ? 'border-red-500' : 'border-gray-300'
             }`}
             {...register('fullName', { required: 'Vui lòng nhập họ và tên' })}
@@ -55,7 +55,7 @@ function RegistrationForm() {
           <input
             type='email'
             placeholder='Email'
-            className={`w-full px-4 py-2.5 border text-base rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
+            className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 border text-sm sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.email ? 'border-red-500' : 'border-gray-300'
             }`}
             {...register('email', {
@@ -75,7 +75,7 @@ function RegistrationForm() {
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder='Mật khẩu'
-            className={`w-full px-4 py-2.5 border text-base rounded-md pr-12 focus:outline-none focus:ring-2 focus:ring-red-500 ${
+            className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 border text-sm sm:text-base rounded-md pr-10 sm:pr-12 focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.password ? 'border-red-500' : 'border-gray-300'
             }`}
             {...register('password', {
@@ -89,12 +89,12 @@ function RegistrationForm() {
           <button
             type='button'
             onClick={() => setShowPassword(!showPassword)}
-            className='absolute right-3 top-1/2 -translate-y-1/2'
+            className='absolute right-2 sm:right-3 top-1/2 -translate-y-1/2'
           >
             {showPassword ? (
-              <HiEyeOff className='w-5 h-5 text-gray-600' />
+              <HiEyeOff className='w-4 h-4 sm:w-5 sm:h-5 text-gray-600' />
             ) : (
-              <HiEye className='w-5 h-5 text-gray-600' />
+              <HiEye className='w-4 h-4 sm:w-5 sm:h-5 text-gray-600' />
             )}
           </button>
           {errors.password && (
@@ -108,7 +108,7 @@ function RegistrationForm() {
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder='Xác nhận mật khẩu'
-            className={`w-full px-4 py-2.5 border text-base rounded-md pr-12 focus:outline-none focus:ring-2 focus:ring-red-500 ${
+            className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 border text-sm sm:text-base rounded-md pr-10 sm:pr-12 focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
             }`}
             {...register('confirmPassword', {
@@ -128,7 +128,7 @@ function RegistrationForm() {
           <button
             type='submit'
             disabled={loading || success}
-            className={`w-full py-2.5 bg-red-600 text-white text-base font-semibold rounded-md transition-all ${
+            className={`w-full py-2 sm:py-2.5 bg-red-600 text-white text-sm sm:text-base font-semibold rounded-md transition-all ${
               loading || success
                 ? 'opacity-70 cursor-not-allowed'
                 : 'hover:bg-red-700 hover:scale-103'
@@ -136,7 +136,7 @@ function RegistrationForm() {
           >
             {loading ? (
               <div className='flex items-center justify-center gap-2'>
-                <Spinner className='w-5 h-5' /> Đang đăng ký...
+                <Spinner className='w-4 h-4 sm:w-5 sm:h-5' /> Đang đăng ký...
               </div>
             ) : success ? (
               'Đăng ký thành công!'
