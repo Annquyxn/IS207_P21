@@ -111,11 +111,13 @@ function LoginForm() {
         </div>
 
         {/* Right: Social login */}
+
         <div className='flex flex-col justify-center px-8 py-8 bg-gray-50 border-t lg:border-t-0 lg:border-l border-gray-200 order-2 lg:order-2'>
           <div className='w-full max-w-[320px] mx-auto flex flex-col justify-center h-full'>
             <p className='text-gray-600 text-base text-center mb-4'>
               Hoặc đăng nhập bằng
             </p>
+
             <SocialLogin actionType='login' />
           </div>
         </div>

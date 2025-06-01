@@ -1,6 +1,3 @@
-import React from 'react';
-import IconSvg from '@/components/features/notify/IconSvg';
-
 function NotificationItem({
   title,
   description,
