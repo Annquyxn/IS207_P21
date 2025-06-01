@@ -26,58 +26,45 @@ function ProductPage() {
     category: categoryParam || null,
   });
 
-  // Update category filter when URL parameter changes
   useEffect(() => {
-    setFilters((prev) => ({
-      ...prev,
-      category: categoryParam || null,
-    }));
-  }, [categoryParam]);
-
-  useEffect(() => {
-    const getProducts = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const data = await fetchProducts(filters.category);
+        const data = await fetchProducts(categoryParam || 'product');
         setProducts(data);
         setError(null);
       } catch (err) {
         console.error('Error fetching products:', err);
-        setError('Failed to load products. Please try again later.');
+        setError('Không thể tải dữ liệu. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
       }
     };
 
-    getProducts();
-  }, [filters.category]);
+    fetchData();
+  }, [categoryParam]);
 
   const processedProducts = useMemo(() => {
     let filtered = products;
 
     if (selectedBrand !== 'all') {
-      filtered = filtered.filter((p) => p.brand === selectedBrand);
+      filtered = filtered.filter(
+        (p) => (p.brand || '').toLowerCase() === selectedBrand.toLowerCase()
+      );
     }
 
     if (filters.priceRange) {
       filtered = filtered.filter((p) => {
-        try {
-          const price = parsePrice(p.salePrice);
-          switch (filters.priceRange) {
-            case 'Dưới 1 triệu':
-              return price < 1_000_000;
-            case '1-3 triệu':
-              return price >= 1_000_000 && price <= 3_000_000;
-            case '3-5 triệu':
-              return price >= 3_000_000 && price <= 5_000_000;
-            case 'Trên 5 triệu':
-              return price > 5_000_000;
-            default:
-              return true;
-          }
-        } catch (e) {
-          console.error('Error parsing price:', e);
-          return false;
+        const price = p.salePriceRaw || parsePrice(p.salePrice);
+        switch (filters.priceRange) {
+          case '5-9 triệu':
+            return price >= 5_000_000 && price <= 9_000_000;
+          case '9-15 triệu':
+            return price >= 9_000_000 && price <= 15_000_000;
+          case 'trên 15 triệu':
+            return price > 15_000_000;
+          default:
+            return true;
         }
       });
     }
@@ -95,21 +82,14 @@ function ProductPage() {
     }
 
     return [...filtered].sort((a, b) => {
-      if (sortBy === 'price-asc') {
-        const priceA = parsePrice(a.salePrice);
-        const priceB = parsePrice(b.salePrice);
-        return priceA - priceB;
-      }
-      if (sortBy === 'price-desc') {
-        const priceA = parsePrice(a.salePrice);
-        const priceB = parsePrice(b.salePrice);
-        return priceB - priceA;
-      }
+      const priceA = a.salePriceRaw || parsePrice(a.salePrice);
+      const priceB = b.salePriceRaw || parsePrice(b.salePrice);
+      if (sortBy === 'price-asc') return priceA - priceB;
+      if (sortBy === 'price-desc') return priceB - priceA;
       return 0;
     });
   }, [products, selectedBrand, filters, sortBy]);
 
-  // Reset visible products when filters change
   useEffect(() => {
     setVisibleProducts(processedProducts.slice(0, 10));
   }, [processedProducts]);
@@ -122,12 +102,70 @@ function ProductPage() {
         currentLength,
         currentLength + 10
       );
-      // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 500));
       setVisibleProducts((prev) => [...prev, ...nextProducts]);
     } finally {
       setLoadingMore(false);
     }
+  };
+
+  const getCategoryLabel = (slug) => {
+    const map = {
+      product: 'Tất cả sản phẩm',
+      keyboard: 'Bàn phím',
+      mouse: 'Chuột máy tính',
+      ssd: 'Ổ cứng SSD',
+      headphone: 'Tai nghe',
+      pccooling: 'Tản nhiệt PC',
+      'laptop-van-phong': 'Laptop Văn phòng',
+      'laptop-gaming': 'Laptop Gaming',
+      'laptop-doanh-nhan': 'Laptop Doanh nhân',
+      'laptop-do-hoa': 'Laptop Đồ họa',
+      'laptop-chay-ai': 'Laptop chạy AI',
+      'laptop-asus-oled': 'Laptop ASUS OLED',
+      'laptop-asus-vivobook': 'Laptop ASUS Vivobook',
+      'laptop-asus-zenbook': 'Laptop ASUS Zenbook',
+      'laptop-asus-tuf': 'Laptop ASUS TUF Gaming',
+      'laptop-rog-strix': 'Laptop ROG Strix',
+      'laptop-rog-zephyrus': 'Laptop ROG Zephyrus',
+      'laptop-acer-aspire': 'Laptop Acer Aspire',
+      'laptop-acer-swift': 'Laptop Acer Swift',
+      'laptop-acer-predator-helios': 'Laptop Acer Predator Helios',
+      'laptop-acer-nitro': 'Laptop Acer Nitro',
+      'laptop-msi-cyborg': 'Laptop MSI Cyborg',
+      'laptop-msi-katana': 'Laptop MSI Katana',
+      'laptop-msi-modern': 'Laptop MSI Modern',
+      'laptop-msi-prestige': 'Laptop MSI Prestige',
+      'laptop-msi-raider': 'Laptop MSI Raider',
+      'laptop-lenovo-ideapad': 'Laptop Lenovo IdeaPad',
+      'laptop-lenovo-thinkbook': 'Laptop Lenovo ThinkBook',
+      'laptop-lenovo-thinkpad': 'Laptop Lenovo ThinkPad',
+      'laptop-lenovo-legion': 'Laptop Lenovo Legion',
+      'laptop-lenovo-yoga': 'Laptop Lenovo Yoga',
+      'laptop-dell-inspiron': 'Laptop Dell Inspiron',
+      'laptop-dell-xps': 'Laptop Dell XPS',
+      'laptop-dell-g15': 'Laptop Dell G15',
+      'laptop-dell-alienware': 'Laptop Dell Alienware',
+      'laptop-dell-latitude': 'Laptop Dell Latitude',
+      'laptop-dell-vostro': 'Laptop Dell Vostro',
+      'laptop-hp-victus': 'Laptop HP Victus',
+      'laptop-hp-omen': 'Laptop HP Omen',
+      'laptop-duoi-15-trieu': 'Laptop dưới 15 triệu',
+      'laptop-tu-15-den-20-trieu': 'Laptop 15–20 triệu',
+      'laptop-tren-20-trieu': 'Laptop trên 20 triệu',
+      'cpu-intel-i3': 'CPU Intel Core i3',
+      'cpu-intel-i5': 'CPU Intel Core i5',
+      'cpu-intel-i7': 'CPU Intel Core i7',
+      'cpu-intel-i9': 'CPU Intel Core i9',
+      'cpu-amd-r3': 'CPU AMD Ryzen 3',
+      'cpu-amd-r5': 'CPU AMD Ryzen 5',
+      'cpu-amd-r7': 'CPU AMD Ryzen 7',
+      'cpu-amd-r9': 'CPU AMD Ryzen 9',
+    };
+    return (
+      map[slug] ||
+      slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+    );
   };
 
   return (
@@ -145,13 +183,14 @@ function ProductPage() {
             }
           />
         </div>
+
         <ActiveFilters
           selectedBrand={selectedBrand}
           filters={filters}
           onClearBrand={() => setSelectedBrand('all')}
-          onClearFilter={(key) =>
-            setFilters((prev) => ({ ...prev, [key]: null }))
-          }
+          onClearFilter={(key) => {
+            setFilters((prev) => ({ ...prev, [key]: null }));
+          }}
           onClearAll={() => {
             setSelectedBrand('all');
             setFilters({
@@ -173,17 +212,13 @@ function ProductPage() {
           </div>
         ) : (
           <>
-            {categoryParam && (
-              <h2 className='text-2xl font-bold mb-4'>
-                {categoryParam === 'keyboard' && 'Bàn phím'}
-                {categoryParam === 'ssd' && 'SSD Laptop'}
-                {categoryParam === 'headphone' && 'Tai Nghe'}
-                {categoryParam === 'pccoling' && 'Tản nhiệt PC'}
-              </h2>
-            )}
+            <h2 className='text-2xl font-bold mb-4'>
+              {getCategoryLabel(categoryParam || 'product')}
+            </h2>
             <ProductRow
               products={visibleProducts}
-              isCategoryPage={!!categoryParam}
+              isCategoryPage={true}
+              hideTitle={true}
               onLoadMore={loadMore}
               hasMore={visibleProducts.length < processedProducts.length}
               loadingMore={loadingMore}
