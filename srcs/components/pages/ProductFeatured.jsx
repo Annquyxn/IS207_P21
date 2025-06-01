@@ -23,12 +23,12 @@ function ProductFeatured() {
   ];
 
   return (
-    <main className='bg-gray-200 w-full min-h-screen p-6 flex justify-center'>
+    <main className='bg-gray-200 w-full min-h-screen p-3 sm:p-4 lg:p-6 flex justify-center'>
       <div className='max-w-[1200px] w-full'>
-        <h1 className='text-3xl sm:text-4xl font-extrabold text-center text-red-600 mb-2'>
+        <h1 className='text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-red-600 mb-1 sm:mb-2 px-2'>
           Sản Phẩm Nổi Bật
         </h1>
-        <p className='text-center text-gray-600 text-base sm:text-lg mb-8'>
+        <p className='text-center text-gray-600 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 px-4 sm:px-2'>
           Khám phá những thiết bị công nghệ hot nhất được đánh giá cao bởi khách
           hàng
         </p>
@@ -36,8 +36,11 @@ function ProductFeatured() {
         {categoryList.map(({ key, label, products, loading, error }) => {
           if (loading) {
             return (
-              <div key={key} className='flex justify-center items-center py-12'>
-                <Spinner className='w-6 h-6 text-red-500' />
+              <div
+                key={key}
+                className='flex justify-center items-center py-8 sm:py-12'
+              >
+                <Spinner className='w-5 sm:w-6 h-5 sm:h-6 text-red-500' />
               </div>
             );
           }
@@ -45,8 +48,10 @@ function ProductFeatured() {
           if (error || !products || !products.length) return null;
 
           return (
-            <section key={key} className='mb-8 overflow-visible'>
-              <h2 className='text-xl font-bold mb-4'>{label}</h2>
+            <section key={key} className='mb-6 sm:mb-8 overflow-visible'>
+              <h2 className='text-lg sm:text-xl font-bold mb-3 sm:mb-4 px-2 sm:px-0'>
+                {label}
+              </h2>
               <ProductRow
                 products={products}
                 isCategoryPage={false}

@@ -15,7 +15,7 @@ function LeftColumn() {
   ];
 
   return (
-    <div className='flex gap-5 px-2'>
+    <div className='flex flex-col sm:flex-row gap-3 sm:gap-5 px-2'>
       {images.map((src, idx) => (
         <Link
           key={idx}

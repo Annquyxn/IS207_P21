@@ -18,23 +18,26 @@ function HomePage() {
   };
 
   return (
-    <main className='bg-white max-w-[1200px] mx-auto px-4 py-2'>
-      <div className='grid grid-cols-12 gap-5' style={{ height: 'auto' }}>
-        <div className='md:col-span-9 h-full mt-6'>
+    <main className='bg-white max-w-[1200px] mx-auto px-2 sm:px-4 py-2'>
+      <div
+        className='grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-5'
+        style={{ height: 'auto' }}
+      >
+        <div className='md:col-span-9 h-full mt-3 sm:mt-6'>
           <CenterColumn />
         </div>
-        <div className='md:col-span-3 h-full'>
+        <div className='hidden md:block md:col-span-3 h-full mt-3 md:mt-0'>
           <RightColumn />
         </div>
       </div>
 
-      <div className='grid grid-cols-12 gap-5'>
+      <div className='hidden md:grid grid-cols-12 gap-3 sm:gap-5'>
         <div className='col-span-12'>
           <LeftColumn />
         </div>
       </div>
 
-      <div className='mt-8'>
+      <div className='mt-6 sm:mt-8'>
         <ProductFeatured />
       </div>
 

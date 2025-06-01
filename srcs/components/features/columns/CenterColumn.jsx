@@ -68,7 +68,7 @@ function CenterColumn() {
           <Link
             to={bannerLinks[idx]}
             key={idx}
-            className='w-full h-[408px] overflow-hidden object-contain'
+            className='w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[408px] overflow-hidden object-contain'
           >
             <img
               src={src}
