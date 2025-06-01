@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import Spinner from '@/components/ui/Spinner';
 import {
   getAllUsers,
-  updateUserRole,
+  updateUser,
   deleteUserById,
 } from '@/components/features/auth/apiUsers';
 import {
@@ -16,8 +16,8 @@ import {
   FiAlertCircle,
 } from 'react-icons/fi';
 import UserStatCard from '../../features/admin/user/UserStatCard';
-import UserTable from '../../features/admin/user/UserTable';
 import AnimatedDiv from '../../ui/AnimatedDiv';
+import UserRow from '../../features/admin/user/UserRow';
 
 const UserManager = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,13 +47,13 @@ const UserManager = () => {
     },
   });
 
-  const handleRoleUpdate = async (id, newRole) => {
+  const handleSaveUserUpdate = async (id, updates) => {
     try {
-      await updateUserRole(id, newRole);
-      toast.success('Cập nhật vai trò thành công');
+      await updateUser(id, updates);
+      toast.success('Cập nhật thông tin người dùng thành công');
       await refetch();
     } catch (err) {
-      toast.error('Không thể cập nhật vai trò người dùng');
+      toast.error('Không thể cập nhật thông tin người dùng');
     }
   };
 
@@ -70,10 +70,16 @@ const UserManager = () => {
   };
 
   const filteredUsers = (users || []).filter((user) => {
+    const name = user.full_name || '';
+    const email = user.email || '';
+    const searchLower = searchTerm.toLowerCase();
+
     const searchMatch =
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.full_name?.toLowerCase().includes(searchTerm.toLowerCase());
+      name.toLowerCase().includes(searchLower) ||
+      email.toLowerCase().includes(searchLower);
+
     const roleMatch = roleFilter === 'all' || user.role === roleFilter;
+
     return searchMatch && roleMatch;
   });
 
@@ -186,34 +192,30 @@ const UserManager = () => {
         </div>
 
         <div className='overflow-x-auto'>
-          <table className='min-w-full divide-y divide-gray-200'>
-            <thead className='bg-gray-50'>
-              <tr>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Người dùng
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Email
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Vai trò
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Ngày tạo
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Thao tác
-                </th>
-              </tr>
-            </thead>
-            <tbody className='bg-white divide-y divide-gray-200'>
-              <UserTable
-                users={sortedUsers}
-                handleRoleUpdate={handleRoleUpdate}
-                handleDeleteUser={handleDeleteUser}
-              />
-            </tbody>
-          </table>
+          <div className='min-w-full'>
+            <div className='grid grid-cols-[2fr_2.5fr_1.5fr_1.2fr_1fr] gap-4 bg-gray-100 px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider'>
+              <div>Người dùng</div>
+              <div>Email</div>
+              <div>Vai trò</div>
+              <div>Ngày tạo</div>
+              <div>Thao tác</div>
+            </div>
+
+            {sortedUsers.length === 0 ? (
+              <div className='px-6 py-4 text-gray-500'>
+                Không tìm thấy người dùng nào
+              </div>
+            ) : (
+              sortedUsers.map((user) => (
+                <UserRow
+                  key={user.id}
+                  user={user}
+                  handleDeleteUser={handleDeleteUser}
+                  handleSaveUserUpdate={handleSaveUserUpdate}
+                />
+              ))
+            )}
+          </div>
         </div>
 
         <div className='mt-5 flex items-center justify-between'>
