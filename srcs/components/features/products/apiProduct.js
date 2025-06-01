@@ -152,3 +152,23 @@ export async function fetchProducts(category = 'laptop') {
     };
   });
 }
+
+// Get current logged in user ID
+export async function getUserId() {
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) {
+      console.error('Error fetching user:', error.message);
+      return null;
+    }
+
+    return user?.id || null;
+  } catch (error) {
+    console.error('Error in getUserId:', error);
+    return null;
+  }
+}
