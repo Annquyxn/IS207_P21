@@ -200,7 +200,7 @@ function Header() {
                 onClick={handleUserMenuClick}
               >
                 <img
-                  src={'/public/default-user.jpg'}
+                  src={'/default-user.jpg'}
                   alt='avatar'
                   className='w-8 h-8 rounded-full object-cover border-2 border-white'
                 />
