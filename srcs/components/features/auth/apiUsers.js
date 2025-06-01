@@ -29,15 +29,15 @@ export async function getUserById(userId) {
 }
 
 //Cập nhật vai trò (role) của user
-export async function updateUserRole(userId, role) {
+export async function updateUser(id, updates) {
   const { error } = await supabase
     .from('profiles')
-    .update({ role })
-    .eq('id', userId);
+    .update(updates)
+    .eq('id', id);
 
   if (error) {
-    console.error('Lỗi khi cập nhật vai trò:', error);
-    throw new Error('Không thể cập nhật vai trò người dùng');
+    console.error('Lỗi khi cập nhật người dùng:', error);
+    throw new Error('Không thể cập nhật thông tin người dùng');
   }
 
   return true;
