@@ -9,14 +9,15 @@ export default function ChatBotContainer() {
   const closeChat = () => setIsOpen(false);
 
   return (
-    <>
+    // Ẩn chatbot trên mobile (< 1024px) để tối ưu trải nghiệm
+    <div className='hidden lg:block'>
       {!isOpen ? (
         <ChatButton onClick={toggleChat} />
       ) : (
-        <div className='fixed bottom-[80px] right-10 z-50'>
+        <div className='fixed bottom-[80px] right-4 lg:right-10 z-50'>
           <ChatTab onClose={closeChat} />
         </div>
       )}
-    </>
+    </div>
   );
 }

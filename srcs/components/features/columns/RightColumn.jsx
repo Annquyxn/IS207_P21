@@ -13,7 +13,7 @@ function RightColumn() {
   ];
 
   return (
-    <div className='flex flex-col gap-5 px-2 pt-2 h-full'>
+    <div className='flex flex-col gap-3 sm:gap-4 md:gap-5 px-2 pt-2 h-full'>
       {images.map((src, idx) => (
         <Link
           key={idx}
