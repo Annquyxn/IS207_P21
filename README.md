@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center"><b>PHÁT TRIỂN ỨNG DỤNG WEB - IS207</b></h1>
+<h1 align="center"><b>PHÂN TÍCH THIẾT KẾ HỆ THỐNG THÔNG TIN - IS201</b></h1>
 
 ## GIỚI THIỆU MÔN HỌC
 
